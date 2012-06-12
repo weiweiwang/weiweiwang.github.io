@@ -50,7 +50,7 @@ ftp_upload: $(OUTPUTDIR)/index.html
 
 github: $(OUTPUTDIR)/index.html
 	ghp-import $(OUTPUTDIR)
-	git push origin gh-pages
+	git push origin gh-pages:master
 
 .PHONY: html help clean ftp_upload ssh_upload dropbox_upload github
     
