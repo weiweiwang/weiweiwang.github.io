@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Cloud or not - redis</title>
+        <title>Cloud or not - sql_nosql</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href=".././theme/css/main.css" type="text/css" />
         <link href=".././feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Cloud or not ATOM Feed" />
@@ -31,7 +31,7 @@
                 
                     <li ><a href=".././category/misc.html">misc</a></li>
                 
-                    <li ><a href=".././category/sql_nosql.html">sql_nosql</a></li>
+                    <li class="active"><a href=".././category/sql_nosql.html">sql_nosql</a></li>
                 
                 </ul></nav>
         </header><!-- /#banner -->
@@ -421,21 +421,142 @@
 </ol><p>There are <a href=".././get-familar-with-redis.html#disqus_thread">comments</a>.</p>
                 </article>
                 
-                    
+            </aside><!-- /#featured -->
+            
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                        <ol id="posts-list" class="hfeed">
+            
+        
+        
+        
+        
+
+        
+         
+            
+            <li><article class="hentry">    
+                <header>
+                        <h1><a href=".././mysql-master-slave-replication-resync.html" rel="bookmark" title="Permalink to mysql master slave replication resync">mysql master slave replication resync</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-06-14T15:45:35.422513">
+                2012/六月/14 星期四
+        </abbr>
+
+        
+        <address class="vcard author">
+                By <a class="url fn" href=".././author/wangweiwei.html">wangweiwei</a>
+        </address>
+        
+<p>In <a href=".././category/sql_nosql.html">sql_nosql</a>. </p>
+<p>tags: <a href=".././tag/mysql.html">mysql</a><a href=".././tag/replication.html">replication</a></p>
+
+
+</footer><!-- /.post-info -->
+                <h1>master（可以是一个slave）</h1>
+<p>192.168.0.77</p>
+<h1>slave</h1>
+<p>192.168.0.78</p>
+<h1>主从复制步骤和方法</h1>
+<h2>master</h2>
+<h3>执行锁表操作</h3>
+<div class="codehilite"><pre><span class="n">flush</span> <span class="n">tables</span> <span class="n">with</span> <span class="n">read</span> <span class="n">lock</span><span class="p">;</span>
+</pre></div>
+
+
+<h3>查看当前状态</h3>
+<div class="codehilite"><pre><span class="n">show</span> <span class="n">master</span> <span class="n">status</span>
+</pre></div>
+
+
+<h3>dump</h3>
+<div class="codehilite"><pre><span class="n">bin</span><span class="o">/</span><span class="n">mysqldump</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p</span> <span class="o">--</span><span class="n">default</span><span class="o">-</span><span class="n">character</span><span class="o">-</span><span class="n">set</span><span class="p">=</span><span class="n">utf8</span> <span class="p">{</span><span class="n">database</span><span class="p">}</span> <span class="o">&gt;</span> <span class="p">{</span><span class="n">database</span><span class="p">}.</span><span class="n">dump</span>
+</pre></div>
+
+
+<h3>解锁</h3>
+<div class="codehilite"><pre><span class="n">unlock</span> <span class="n">tables</span><span class="p">;</span>
+</pre></div>
+
+
+<h2>slave</h2>
+<h3>停止slave</h3>
+<div class="codehilite"><pre><span class="n">mysql</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p</span> <span class="o">-</span><span class="n">e</span> &quot;<span class="n">stop</span> <span class="n">slave</span><span class="p">;</span>&quot;
+</pre></div>
+
+
+<h3>导入</h3>
+<div class="codehilite"><pre><span class="n">mysql</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p ...</span></pre></div>
+                <a class="readmore" href=".././mysql-master-slave-replication-resync.html">read more</a>
+                <p>There are <a href=".././mysql-master-slave-replication-resync.html#disqus_thread">comments</a>.</p>
+                </div><!-- /.entry-content -->
+            </article></li>
+        
+        
+        
+
+        
+         
+            
+            <li><article class="hentry">    
+                <header>
+                        <h1><a href=".././mongodb-cluster-configuration.html" rel="bookmark" title="Permalink to mongodb cluster configuration">mongodb cluster configuration</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-06-14T15:45:13.678689">
+                2012/六月/14 星期四
+        </abbr>
+
+        
+        <address class="vcard author">
+                By <a class="url fn" href=".././author/wangweiwei.html">wangweiwei</a>
+        </address>
+        
+<p>In <a href=".././category/sql_nosql.html">sql_nosql</a>. </p>
+<p>tags: <a href=".././tag/nosql.html">nosql</a><a href=".././tag/mongodb.html">mongodb</a><a href=".././tag/cluster.html">cluster</a><a href=".././tag/replica-set.html">replica-set</a><a href=".././tag/sharding.html">sharding</a></p>
+
+
+</footer><!-- /.post-info -->
+                <h1>caution</h1>
+<p>在实际部署的时候请注意替换下面例子中的ip地址,下面所有操作假设实在mongodb安装根目录中，比如/opt/mongodb</p>
+<h1>shard a: 27018</h1>
+<h2>节点</h2>
+<ul>
+<li>192.168.0.77</li>
+<li>192.168.0.78</li>
+<li>192.168.0.58 仲裁节点</li>
+</ul>
+<h2>部署</h2>
+<div class="codehilite"><pre><span class="n">mkdir</span> <span class="n">data</span><span class="o">/</span><span class="n">shard_a</span>
+<span class="n">mkdir</span> <span class="n">data</span><span class="o">/</span><span class="n">key</span>
+<span class="n">echo</span> &quot;<span class="n">demo</span> <span class="n">shard</span> <span class="n">key</span>&quot; <span class="o">&gt;</span> <span class="n">data</span><span class="o">/</span><span class="n">key</span><span class="o">/</span><span class="n">shard_key</span>
+<span class="n">chmod</span> <span class="n">go</span><span class="o">-</span><span class="n">rw</span> <span class="n">data</span><span class="o">/</span><span class="n">key</span><span class="o">/</span><span class="n">shard_key</span>
+<span class="n">numactl</span> <span class="o">--</span><span class="n">interleave</span><span class="p">=</span><span class="n">all</span> <span class="n">bin</span><span class="o">/</span><span class="n">mongod</span> <span class="o">--</span><span class="n">shardsvr</span> <span class="o">--</span><span class="n">replSet ...</span></pre></div>
+                <a class="readmore" href=".././mongodb-cluster-configuration.html">read more</a>
+                <p>There are <a href=".././mongodb-cluster-configuration.html#disqus_thread">comments</a>.</p>
+                </div><!-- /.entry-content -->
+            </article></li>
+        
+        
+            
 <p class="paginator">
     
     Page 1 / 1
     
 </p>
 
-                
-            </aside><!-- /#featured -->
-            
-        
-        
         
 
     
+    </ol><!-- /#posts-list -->
+    </section><!-- /#content -->
+
 
 
         <section id="extras" class="body">

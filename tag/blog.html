@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Cloud or not - wangweiwei</title>
+        <title>Cloud or not - blog</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href=".././theme/css/main.css" type="text/css" />
         <link href=".././feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Cloud or not ATOM Feed" />
@@ -181,190 +181,21 @@
 <p>这里的siteShortName替换成在注册页面所填写的siteShortName。</p><p>There are <a href=".././blogging-with-pelican+markdown+github.html#disqus_thread">comments</a>.</p>
                 </article>
                 
-            </aside><!-- /#featured -->
-            
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                        <ol id="posts-list" class="hfeed">
-            
-        
-        
-        
-        
-
-        
-         
-            
-            <li><article class="hentry">    
-                <header>
-                        <h1><a href=".././get-familar-with-redis.html" rel="bookmark" title="Permalink to get familar with redis:a great data structure server">get familar with redis:a great data structure server</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-        <abbr class="published" title="2012-06-15T14:03:34.601488">
-                2012/六月/15 星期五
-        </abbr>
-
-        
-        <address class="vcard author">
-                By <a class="url fn" href=".././author/wangweiwei.html">wangweiwei</a>
-        </address>
-        
-<p>In <a href=".././category/sql_nosql.html">sql_nosql</a>. </p>
-<p>tags: <a href=".././tag/redis.html">redis</a><a href=".././tag/nosql.html">nosql</a><a href=".././tag/memcache.html">memcache</a></p>
-
-
-</footer><!-- /.post-info -->
-                <h1>intro</h1>
-<p>redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:<a href="http://antirez.com/post/redis-memcached-benchmark.html">redis-memcached-benchmark</a>,有同学质疑这个给出了个相反的<a href="http://dormando.livejournal.com/525147.html">benchmark</a>，当然redis作者antirez又给出了一个<a href="http://antirez.com/post/update-on-memcached-redis-benchmark.html">新的评测</a>,不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。我很懒，没有对这个做过测试。</p>
-<p>使用redis你可以做很多事情:</p>
-<ol>
-<li>做一个k-v系统用，不过这个k-v系统没有mongodb强大，不支持value查询，只能简单的get/set。</li>
-<li>做一个任务优先队列使用，list结构支持这样的各种api</li>
-<li>做一个消息队列使用，redis提供pub/sub这样的api来提供消息队列服务。</li>
-<li>数据统计，实时计数服务。微博上的各种数字都可以用这个服务来实时计数。</li>
-<li>做类似与memcached的内存cache，还可以持久化，性能也超级赞～</li>
-</ol>
-<h1>install</h1>
-<ul>
-<li>下载最新的redis版本<a href="http://redis.io/download" title="redis-download">redis download page</a></li>
-<li>
-<p>加上你下载到/tmp目录下了，解压编译安装</p>
-<div class="codehilite"><pre><span class="n">tar ...</span></pre></div></li></ul>
-                <a class="readmore" href=".././get-familar-with-redis.html">read more</a>
-                <p>There are <a href=".././get-familar-with-redis.html#disqus_thread">comments</a>.</p>
-                </div><!-- /.entry-content -->
-            </article></li>
-        
-        
-        
-
-        
-         
-            
-            <li><article class="hentry">    
-                <header>
-                        <h1><a href=".././mongodb-cluster-configuration.html" rel="bookmark" title="Permalink to mongodb cluster configuration">mongodb cluster configuration</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-        <abbr class="published" title="2012-06-14T15:45:13.678689">
-                2012/六月/14 星期四
-        </abbr>
-
-        
-        <address class="vcard author">
-                By <a class="url fn" href=".././author/wangweiwei.html">wangweiwei</a>
-        </address>
-        
-<p>In <a href=".././category/sql_nosql.html">sql_nosql</a>. </p>
-<p>tags: <a href=".././tag/nosql.html">nosql</a><a href=".././tag/mongodb.html">mongodb</a><a href=".././tag/cluster.html">cluster</a><a href=".././tag/replica-set.html">replica-set</a><a href=".././tag/sharding.html">sharding</a></p>
-
-
-</footer><!-- /.post-info -->
-                <h1>caution</h1>
-<p>在实际部署的时候请注意替换下面例子中的ip地址,下面所有操作假设实在mongodb安装根目录中，比如/opt/mongodb</p>
-<h1>shard a: 27018</h1>
-<h2>节点</h2>
-<ul>
-<li>192.168.0.77</li>
-<li>192.168.0.78</li>
-<li>192.168.0.58 仲裁节点</li>
-</ul>
-<h2>部署</h2>
-<div class="codehilite"><pre><span class="n">mkdir</span> <span class="n">data</span><span class="o">/</span><span class="n">shard_a</span>
-<span class="n">mkdir</span> <span class="n">data</span><span class="o">/</span><span class="n">key</span>
-<span class="n">echo</span> &quot;<span class="n">demo</span> <span class="n">shard</span> <span class="n">key</span>&quot; <span class="o">&gt;</span> <span class="n">data</span><span class="o">/</span><span class="n">key</span><span class="o">/</span><span class="n">shard_key</span>
-<span class="n">chmod</span> <span class="n">go</span><span class="o">-</span><span class="n">rw</span> <span class="n">data</span><span class="o">/</span><span class="n">key</span><span class="o">/</span><span class="n">shard_key</span>
-<span class="n">numactl</span> <span class="o">--</span><span class="n">interleave</span><span class="p">=</span><span class="n">all</span> <span class="n">bin</span><span class="o">/</span><span class="n">mongod</span> <span class="o">--</span><span class="n">shardsvr</span> <span class="o">--</span><span class="n">replSet ...</span></pre></div>
-                <a class="readmore" href=".././mongodb-cluster-configuration.html">read more</a>
-                <p>There are <a href=".././mongodb-cluster-configuration.html#disqus_thread">comments</a>.</p>
-                </div><!-- /.entry-content -->
-            </article></li>
-        
-        
-        
-
-        
-         
-            
-            <li><article class="hentry">    
-                <header>
-                        <h1><a href=".././mysql-master-slave-replication-resync.html" rel="bookmark" title="Permalink to mysql master slave replication resync">mysql master slave replication resync</a></h1>
-                </header>
-                
-                <div class="entry-content">
-                <footer class="post-info">
-        <abbr class="published" title="2012-06-14T15:45:35.422513">
-                2012/六月/14 星期四
-        </abbr>
-
-        
-        <address class="vcard author">
-                By <a class="url fn" href=".././author/wangweiwei.html">wangweiwei</a>
-        </address>
-        
-<p>In <a href=".././category/sql_nosql.html">sql_nosql</a>. </p>
-<p>tags: <a href=".././tag/mysql.html">mysql</a><a href=".././tag/replication.html">replication</a></p>
-
-
-</footer><!-- /.post-info -->
-                <h1>master（可以是一个slave）</h1>
-<p>192.168.0.77</p>
-<h1>slave</h1>
-<p>192.168.0.78</p>
-<h1>主从复制步骤和方法</h1>
-<h2>master</h2>
-<h3>执行锁表操作</h3>
-<div class="codehilite"><pre><span class="n">flush</span> <span class="n">tables</span> <span class="n">with</span> <span class="n">read</span> <span class="n">lock</span><span class="p">;</span>
-</pre></div>
-
-
-<h3>查看当前状态</h3>
-<div class="codehilite"><pre><span class="n">show</span> <span class="n">master</span> <span class="n">status</span>
-</pre></div>
-
-
-<h3>dump</h3>
-<div class="codehilite"><pre><span class="n">bin</span><span class="o">/</span><span class="n">mysqldump</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p</span> <span class="o">--</span><span class="n">default</span><span class="o">-</span><span class="n">character</span><span class="o">-</span><span class="n">set</span><span class="p">=</span><span class="n">utf8</span> <span class="p">{</span><span class="n">database</span><span class="p">}</span> <span class="o">&gt;</span> <span class="p">{</span><span class="n">database</span><span class="p">}.</span><span class="n">dump</span>
-</pre></div>
-
-
-<h3>解锁</h3>
-<div class="codehilite"><pre><span class="n">unlock</span> <span class="n">tables</span><span class="p">;</span>
-</pre></div>
-
-
-<h2>slave</h2>
-<h3>停止slave</h3>
-<div class="codehilite"><pre><span class="n">mysql</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p</span> <span class="o">-</span><span class="n">e</span> &quot;<span class="n">stop</span> <span class="n">slave</span><span class="p">;</span>&quot;
-</pre></div>
-
-
-<h3>导入</h3>
-<div class="codehilite"><pre><span class="n">mysql</span> <span class="o">-</span><span class="n">uroot</span> <span class="o">-</span><span class="n">p ...</span></pre></div>
-                <a class="readmore" href=".././mysql-master-slave-replication-resync.html">read more</a>
-                <p>There are <a href=".././mysql-master-slave-replication-resync.html#disqus_thread">comments</a>.</p>
-                </div><!-- /.entry-content -->
-            </article></li>
-        
-        
-            
+                    
 <p class="paginator">
     
     Page 1 / 1
     
 </p>
 
+                
+            </aside><!-- /#featured -->
+            
+        
+        
         
 
     
-    </ol><!-- /#posts-list -->
-    </section><!-- /#content -->
-
 
 
         <section id="extras" class="body">
