@@ -5,15 +5,21 @@ tags: redis,nosql,memcache
 
 
 #intro
-redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:[redis-memcached-benchmark](http://antirez.com/post/redis-memcached-benchmark.html),有同学质疑这个给出了个相反的[benchmark](http://dormando.livejournal.com/525147.html)，当然redis作者antirez又给出了一个[新的评测](http://antirez.com/post/update-on-memcached-redis-benchmark.html),不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。我很懒，没有对这个做过测试。
+redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:[redis-memcached-benchmark](http://antirez.com/post/redis-memcached-benchmark.html),有同学质疑这个给出了个相反的[benchmark](http://dormando.livejournal.com/525147.html)，当然redis作者antirez又给出了一个[新的评测](http://antirez.com/post/update-on-memcached-redis-benchmark.html),不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。
 
-使用redis你可以做很多事情:
+## 关于作者
+![antirez avatar](images/antirez.png)
+
+Salvatore Sanfilippo,also known [antirez](http://antirez.com/), programmer@VMWare，同时还是一家移动设备开发公司Kiurma的股东，意大利人。此兄的about页面上提到他主要都是在做open source code，并且几乎所有代码都放在[这里](http://github.com/antirez)，目前主要精力都在redis上，[这里](http://antirez.com/post/redis-manifesto.html)有antirez写的redis宣言。
+
+## 使用redis你可以做哪些事情
 
 1. 做一个k-v系统用，不过这个k-v系统没有mongodb强大，不支持value查询，只能简单的get/set。
 2. 做一个任务优先队列使用，list结构支持这样的各种api
 3. 做一个消息队列使用，redis提供pub/sub这样的api来提供消息队列服务。
 4. 数据统计，实时计数服务。微博上的各种数字都可以用这个服务来实时计数。
 5. 做类似与memcached的内存cache，还可以持久化，性能也超级赞～
+6. more...
 
 # install
 * 下载最新的redis版本[redis download page](http://redis.io/download "redis-download")
