@@ -28,11 +28,13 @@ Salvatore Sanfilippo,also known [antirez](http://antirez.com/), programmer@VMWar
 		tar xvf redis-2.4.14.tar.gz
 		cd redis-2.4.14
 		make
+		make test
 		sudo make PREFIX=/opt/redis install
 		sudo mkdir /opt/redis/etc
 		sudo cp redis.conf /opt/redis/etc
 		sudo mkdir -p /opt/redis/var/{db,run,log}
 		sudo vim /opt/redis/etc/redis.conf 根据目录结构做相应修改，主要修改的就是包含/var路径的几行
+如果跑测试提示tclsh不存在，请下载tcl8.5: sudo apt-get install tcl8.5
 * 启动服务
 
 		sudo bin/redis-server etc/redis.conf
@@ -322,6 +324,79 @@ Salvatore Sanfilippo,also known [antirez](http://antirez.com/), programmer@VMWar
 	2) "4"
 	3) "2"
 	4) "4"
+## Transaction
+
+	redis 127.0.0.1:6379> multi
+	OK
+	redis 127.0.0.1:6379> incr foo
+	QUEUED
+	redis 127.0.0.1:6379> incr bar
+	QUEUED
+	redis 127.0.0.1:6379> incr bar
+	QUEUED
+	redis 127.0.0.1:6379> exec
+	1) (integer) 1
+	2) (integer) 1
+	3) (integer) 2
+	redis 127.0.0.1:6379> 
+EXEC调用的过程中多个命令作为一个原子命令执行，在执行中间redis不会同时执行其他客户端的命令。在调用EXEC之前调用DISCARD会清除命令队列并退出事务。
+
+事务中的命令即使执行失败也不会rollback，要么全执行，要么全不执行，命令的结果不影响事务。
+
+事务中的命令在事务执行前都是没有结果返回的，所以无法在事务中进行check-and-set这样的操作。
+
+如果exec执行的过程中server down机（crash or kill)，同时配置启用了aof，那么aof中记录的可能不是完整的日志，这时候如果重启会出现错误无法启动，需要先用redis-check-aof修复问题后重启。
+
+	redis 127.0.0.1:6379> multi
+	OK
+	redis 127.0.0.1:6379> lpop bar
+	QUEUED
+	redis 127.0.0.1:6379> incr bar
+	QUEUED
+	redis 127.0.0.1:6379> exec
+	1) (error) ERR Operation against a key holding the wrong kind of value
+	2) (integer) 3
+还有就是语法错误的命令不会被放入执行队列:
+
+	redis 127.0.0.1:6379> multi
+	OK
+	redis 127.0.0.1:6379> incr a b c
+	(error) ERR wrong number of arguments for 'incr' command
+	redis 127.0.0.1:6379> incr bar
+	QUEUED
+	redis 127.0.0.1:6379> exec
+	1) (integer) 4
+Watch CAS(check-and-set)
+terminal 1:
+
+	redis 127.0.0.1:6379> watch a
+	OK
+	redis 127.0.0.1:6379> multi
+	OK
+	redis 127.0.0.1:6379> incr a
+	QUEUED
+	redis 127.0.0.1:6379> exec
+	(nil)
+
+terminal 2:
+	
+	redis 127.0.0.1:6379> set a 5
+	OK
+如果watch的key是有失效期的，并且在watch之后被redis失效删除了，那么EXEC会正常执行。
+
+## Pipeline
+批量发送一堆命令，然后一次性获取命令的执行结果。
+
+	Pipeline pipeline = jedis.pipelined();
+	long start = System.currentTimeMillis();
+	for (int i = 0; i < 100000; i++) {
+	    pipeline.set("" + i, "" + i);
+	}
+	List<Object> results = pipeline.execute();
+	long end = System.currentTimeMillis();
+	System.out.println("Pipelined SET: " + ((end - start)/1000.0) + " seconds");
+
+
 
 ## 新浪和instagram的redis实践
 * [新浪](http://blog.nosqlfan.com/html/3295.html)
