@@ -8,6 +8,7 @@ tags: tcpdump,android
 
 # 使用
 详细使用请参考http://www.tcpdump.org/里面的文档
+
 机器是需要root过才能使用tcpdump的。
 
 	adb push c:/wherever_you_put/tcpdump /data/local/tcpdump
