@@ -1,6 +1,6 @@
 title: Compress js and css with YUI Compressor Maven Mojo
 slug: compress-js-css-with-yui-compressor-maven-pojo
-category: misc
+category: programming 
 tags: js,css,yui,compressor,maven
 
 # 配置

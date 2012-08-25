@@ -1,6 +1,6 @@
 title: 常用shell命令
 slug: common-shell-command
-category: misc
+category: linux
 tags: bash,shell,log
 
 # 测试文件

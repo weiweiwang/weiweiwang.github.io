@@ -57,7 +57,7 @@ tags: java,jvm,garbage collection
 * System.gc()被显示调用，这个一般我们会通过jvm参数禁止程序主动触发Full GC，因为可能的误用会导致很多不可知的问题无法追踪。
 * 上一次GC之后Heap的各域分配策略动态变化
 
-## Garbage Collector
+## Java Garbage Collector
 ### 串行收集器
 单线程垃圾回收，适用于单处理器机器。开关:-XX: +UseSerialGC。这个在线上的服务中一般不会使用，效率太差。
 
@@ -65,12 +65,12 @@ tags: java,jvm,garbage collection
 对年轻代进行并行垃圾回收，因此可以减少垃圾回收时间。一般在多线程多处理器机器上使用。开关: -XX:+UseParallelGC。并行收集器在J2SE5.0更新6上引入，在Java SE6.0中进行了增强：可以堆年老代进行并行收集。如果年老代不使用并发收集的话，是使用单线程进行垃圾回收，因此会较慢，开关：-XX:+UseParallelOldGC。参数-XX:ParallelGCThreads=<N>可以控制并发回收的线程数目，一般设置成处理器个数。
 
 ### 并发收集器
-这个处理器用cpu时间换取程序较少的延时，适合对响应时间要求比较高的应用中。开关：-XX:+UseConcMarkSweepGC。对于大型的线上WEB Server(tomcat,jetty)推荐试用这个并发收集器。
+这个处理器用cpu时间换取程序较少的延时，适合对响应时间要求比较高的应用中。开关：-XX:+UseConcMarkSweepGC。对于大型的线上WEB Server(tomcat,jetty)推荐使用这个并发收集器。
 
 # 针对并发收集器的JVM GC参数调整
 
 ## jstat的使用
-这是一个jvm统计信息监控工具，可以获取程序运行时的内存试用，gc相关的信息。详细请看[http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html](http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html)
+这是一个jvm统计信息监控工具，可以获取程序运行时的内存使用，gc相关的信息。详细请看[http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html](http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html)
 
 ### gcutil
 格式jstat -gcutil pid sampling-interval
@@ -81,7 +81,7 @@ tags: java,jvm,garbage collection
 	71.31   0.00  48.04  53.15  60.82  18950   60.231    64    3.875   64.107
 	0.00  35.37  88.95  53.53  60.82  18951   60.235    64    3.875   64.110
 
-从输出的第二行可以看出，发生了一次YGC，S1和E的内存gc收集到S0。S1变成0了，E反而变大了，这跟我们采样的时间有关系，两次采样中，发生了一次GC，在这次GC的时候E肯定是变小了，但是后续又会慢慢变大。从gcutil的输出我们可以看出P,O,E区的变化情况，根据这个变化情况可以做JVM参数-Xms,-Xmx,-Xmn的调整。比如我一开始没有设置Perm区大小，导致Perm区占用90+%，会有不必要的Full GC因此产生，所以通过试用-XX:PermSize=64M，-XX:MaxPermSize=64M调整了之后Perm区的使用就比较正常了60%左右。
+从输出的第二行可以看出，发生了一次YGC，S1和E的内存gc收集到S0。S1变成0了，E反而变大了，这跟我们采样的时间有关系，两次采样中，发生了一次GC，在这次GC的时候E肯定是变小了，但是后续又会慢慢变大。从gcutil的输出我们可以看出P,O,E区的变化情况，根据这个变化情况可以做JVM参数-Xms,-Xmx,-Xmn的调整。比如我一开始没有设置Perm区大小，导致Perm区占用90+%，会有不必要的Full GC因此产生，所以通过使用-XX:PermSize=64M调整了之后Perm区的使用就比较正常了60%左右。
 
 -Xms,-Xmx最好设置成一样的值，这样可以避免每次垃圾回收后JVM重新分配内存。
 -Xmn设置年轻代的大小，这个值对GC影响很大，Sun官方推荐配置为整个堆的3/8。
@@ -159,6 +159,7 @@ ps命令可以查看程序的启动命令，启动时间，用户，pid，cpu,me
 * -Xms 初始堆大小
 * -Xmx 最大堆大小
 * -Xmn 新生代大小
+* -Xss 线程堆栈大小,32位Solaris JVM上默认值是512kB,32位Linux和Windows是320kB，64位JVM是1024kB。通常我们不需要这么大的stack size，可以调整为256k以减少内存消耗
 * -XX:MaxPermSize 持久代最大值
 * -XX:PermSize   持久代初始值
 * -XX:+UseSerialGC:设置串行收集器
@@ -178,11 +179,10 @@ ps命令可以查看程序的启动命令，启动时间，用户，pid，cpu,me
 
 年轻代设置为堆大小的3/8，内存可以设置为2G以上，Perm区设置64M，开启-XX:+UseConcMarkSweepGC，比如下面的配置：
 
-	 nohup java -Xms4g -Xmx4g -Xmn1536m \
+	 nohup java -Xms4g -Xmx4g -Xmn1536m -Xss256k\
 	 -server \
 	 -XX:PermSize=64M \
 	 -XX:MaxPermSize=64M \
-	 -XX:+UseParNewGC \
 	 -XX:+UseConcMarkSweepGC \
 	 -XX:+UseAdaptiveSizePolicy \
 	 -XX:+CMSClassUnloadingEnabled \
@@ -192,7 +192,7 @@ ps命令可以查看程序的启动命令，启动时间，用户，pid，cpu,me
 	 -XX:CMSMaxAbortablePrecleanTime=5 \
 	 -XX:+HeapDumpOnOutOfMemoryError \
 
-然后再观察程序的运行状况(top,ps,jstat)再做细微的调整。
+然后观察程序的运行状况(top,ps,jstat)再做细微的调整。
 
 # 参考
 [jvm垃圾回收参数配置](http://blog.sina.com.cn/s/blog_628961a10100gho5.html)
