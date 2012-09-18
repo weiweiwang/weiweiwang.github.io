@@ -88,4 +88,4 @@ tags: java,cpu,usage,top,jstack,kill
 	          proxy_read_timeout 60;
 	          proxy_send_timeout 60;
 	        }
-
+当然也可以修改restlet源代码解决，不过这样后续升级restlet的时候会麻烦一些。
