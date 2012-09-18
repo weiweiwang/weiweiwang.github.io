@@ -76,7 +76,7 @@ tags: java,cpu,usage,top,jstack,kill
 	EncodingReader encodingReader = new EncodingReader("修改gzip");
 	encodingReader.addValues(new ArrayList());
 
-这个bug虽然命中概率很低，但是一旦命中，程序瞬间就崩溃了，这个问题在我们一个服务里遇到，只要用户的某次请求的header出现非法字符，一个线程就被占用并且是100% cpu占用，虽然这样的请求可能一天只有一个，但几天之后服务器cpu load就高的不行，只能重启程序解决。当然这样肯定不是长远的解决方案，更好的方案是在前端nginx上override出问题的header，来避免这样的请求进入到restlet代码层，目前看来进入restlet代码层，我们的程序就无能为力了。nginx的location配置大致如下:
+这个bug虽然命中概率很低，但是一旦命中，程序瞬间就崩溃了，这个问题在我们一个服务里遇到，只要用户的某次请求的header出现非法字符，一个线程就被占用并且是100% cpu占用，虽然这样的请求可能一天只有一个，但几天之后服务器cpu load就高的不行，只能重启程序解决。当然这样肯定不是长远的解决方案，更好的方案是在前端nginx上override出问题的header，来避免这样的请求进入到restlet代码层，目前看来进入restlet代码层，我们的程序就无能为力了。比如出问题的header是Content-Encoding,那么nginx的location可以配置如下:
 
 	location / {
 	          proxy_pass http://xxx_upstream;
