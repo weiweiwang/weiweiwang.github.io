@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- #
 
 AUTHOR = u"wangweiwei"
-SITENAME = u"Cloud or not"
+SITENAME = u"Careless Whisper"
 SITEURL = '/'
 
 TIMEZONE = 'Asia/Shanghai'
