@@ -2,6 +2,9 @@ title: ElasticSearch Configuration and Performance Tuning
 slug: elasticsearch-configuration-and-performance-tuning 
 category: programming
 tags: elasticsearch configuration,performance tuning
+date: 2012-12-12
+
+[TOC]
 
 #下载与安装
 ## 下载
@@ -174,20 +177,20 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 	    }
 	}
 
-### 测试
-#### 增加一条数据：
+## 测试
+### 增加一条数据：
 
 	curl -XPUT http://localhost:9200/test/test/1 -d '{"name":"test","address":"中关村","id":"1"}'
 
-#### 查询中关村(汉字需要编码）
+### 查询中关村(汉字需要编码）
 
     curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3%E6%9D%91&pretty=true'
 
-#### 查询中关(汉字需要编码)
+### 查询中关(汉字需要编码)
 
 	curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3&pretty=true'
 
-#### 使用query string查询
+### 使用query string查询
 
 	curl 'localhost:9200/test/test/_search' -d '{
 	    "from" : 0,
@@ -233,7 +236,7 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 
      python convert_sogou_celldict_to_mmseg4j.py sogou_dict_dir mmseg_dict_dir
 
-注意sogou词典scel文件请用英文名称命名，转换后会拼接成words-{原来的scel文件名称}.dic。转换完成后将这些文件拷贝到elasticsearch/config/mmseg目录下即可。
+注意sogou词典scel文件请用英文名称命名，转换后会拼接成words-{原来的scel文件名称}.dic。转换完成后将这些文件拷贝到elasticsearch/config/mmseg目录下即可。词库文件[下载](http://pinyin.sogou.com/dict/)。
 
 
 # 性能优化

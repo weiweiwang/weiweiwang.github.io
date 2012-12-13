@@ -2,7 +2,7 @@ title: In Project Maven Dependency:Maven本地依赖配置
 slug: in-project-maven-dependency
 category: programming
 tags: maven,dependency,in-project
-
+date: 2012-08-10
 
 # In Project Repository
 

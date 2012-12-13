@@ -23,7 +23,7 @@ Salvatore Sanfilippo,also known [antirez](http://antirez.com/), programmer@VMWar
 
 # install
 * 下载最新的redis版本[redis download page](http://redis.io/download "redis-download")
-* 加上你下载到/tmp目录下了，解压编译安装
+* 假设你下载到/tmp目录下了，解压编译安装
 
 		tar xvf redis-2.4.14.tar.gz
 		cd redis-2.4.14

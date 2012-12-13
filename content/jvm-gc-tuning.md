@@ -2,6 +2,9 @@ title: Java虚拟机GC调整
 slug: jvm-gc-tuning
 category: programming
 tags: java,jvm,garbage collection
+date: 2012-08-25
+
+[TOC]
 
 # Java垃圾回收介绍
 我们先来看一张对象生存期的图。横轴是对象分配后的生存期，纵轴是相应生存期的字节总数。从这张图我们可以看出绝大多数对象的生存期是很短暂的。

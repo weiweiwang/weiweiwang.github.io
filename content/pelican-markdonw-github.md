@@ -2,7 +2,7 @@ title:Blogging with pelican+markdown+github
 slug:blogging-with-pelican+markdown+github
 category:misc
 tags:blog,pelican,markdown,github
-
+date: 2012-06-18
 
 这篇文章很多内容来自于xieyu的一篇博文[markdown+pelican+github=Perfect blog platform](http://xieyu.github.com/pelican-github-markdown.html), 本着引用注明出处的原则，我得先声明这一点:-)
 

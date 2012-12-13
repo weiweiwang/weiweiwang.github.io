@@ -2,6 +2,9 @@ title: 优化网站访问速度
 slug: optimize-web-speed
 category: programming
 tags: cdn,optimize,speed,webpage,gzip
+date: 2012-11-11
+
+[TOC]
 
 #减少HTTP请求数
 减少页面上css,js,图片的文件个数。
