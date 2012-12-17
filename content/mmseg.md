@@ -1,0 +1,44 @@
+title: mmseg分词方法学习
+slug: mmseg
+category: search
+tags: mmseg,lucene,analyzer,mmseg4j
+date: 2012-12-17
+
+[TOC]
+
+# 参考
+论文页面<http://technology.chtsai.org/mmseg/>
+java版实现[mmseg4j](https://code.google.com/p/mmseg4j/)
+
+
+# 基本原理
+## Simple maximum matching
+只找最长的匹配，比如C1C2C3C4C5这样的句子，词典里的数据是C1C2,C1C2C3，那么字符串开始位置开始搜索最长的匹配即为分词结果。
+
+## Complex maximum matching
+这个是在Simple maximum matching基础上的改进。这个方法同时考虑歧义的多个匹配，并加入连续的后面两个词，构成一个3-word chunk。选择最长的chunk中的第一个词。
+
+	1. _C1_ _C2_ _C3C4_
+	2. _C1C2_ _C3C4_ _C5_
+	3. _C1C2_ _C3C4_ _C5C6_
+
+## 歧义消除规则
+* Maximum matching
+对于Simple方法，取最长的匹配，对于Complex方法，取最长的chunk的第一个词。如果有多个切分方法的长度一样，使用下面的规则。
+
+* Largest average word length
+
+	1. _C1_ _C2_ _C3_
+	2. _C1C2C3_
+
+* Smallest variance of word lengths
+
+	1. _C1C2_ _C3C4_ _C5C6_
+	2. _C1C2C3_ _C4_ _C5C6_
+
+* Largest sum of degree of morphemic freedom of one-character words
+morphemic freedom理解为语素的自由度，简单点可以认为是词的统计词频。
+
+	max ( degree=sum(freedom(single-word)) ) 
+
+

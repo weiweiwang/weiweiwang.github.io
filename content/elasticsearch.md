@@ -1,6 +1,6 @@
 title: ElasticSearch Configuration and Performance Tuning
 slug: elasticsearch-configuration-and-performance-tuning 
-category: programming
+category: search
 tags: elasticsearch configuration,performance tuning
 date: 2012-12-12
 
@@ -139,7 +139,7 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 		       type: snowball
 		       language: English
 
-这里需要注意的是我这里使用了mmseg分词工具，如果你不需要的话可以去掉相应的配置，mmseg分词插件的安装说明参看：[https://github.com/medcl/elasticsearch-analysis-mmseg](https://github.com/medcl/elasticsearch-analysis-mmseg)，如果你下载后的分词发现在并发情况下有bug（异常，分词结果错误），请用源码编译安装，源码里的这个bug已经修复。
+这里需要注意的是我这里使用了mmseg分词工具，如果你不需要的话可以去掉相应的配置，mmseg分词插件的安装说明参看：[https://github.com/medcl/elasticsearch-analysis-mmseg](https://github.com/medcl/elasticsearch-analysis-mmseg)，如果你下载后的分词发现在并发情况下有bug（异常，分词结果错误），请用源码编译安装，源码里的这个bug已经修复。关于mmseg的说明可以参看<http://weiweiwang.github.com/mmseg.html>
 
 ### mappings的配置
 
@@ -176,6 +176,10 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 		}
 	    }
 	}
+
+这个mapping的配置可以放置到config/mappings/{index}/{type}.json文件中，也可以通过命令设置
+
+        curl -XPUT 'localhost:9200/test/test/_mapping' -d @test.json
 
 ## 测试
 ### 增加一条数据：
