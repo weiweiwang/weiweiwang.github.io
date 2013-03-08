@@ -30,6 +30,7 @@ DISQUS_SITENAME='cloudornot'
 LINKS =  (
 		('Xieyu','http://xieyu.github.com'),
 		(u'刘未鹏','http://mindhacks.cn'),
+                (u'薛亦晨','http://blog.silentxyc.com/'),
          )
 
 # Social widget
@@ -40,6 +41,8 @@ SOCIAL = (
 DEFAULT_PAGINATION = 20
 
 THEME='sneakyidea'
+
+MENUITEMS = (('Tags', 'tags.html'),)
 
 GOOGLE_ANALYTICS='UA-7072537-7'
 
