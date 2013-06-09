@@ -81,6 +81,24 @@ awk是一种编程语言，用于在linux/unix下对文本和数据进行处理�
 
 	awk -F'\t' 'BEGIN{max=0;min=1000000000;}$7 ~/GET/{if($13>max)max=$13;if($13<min)min=$13;sum+=$13;}END{print max,min,sum/NR,NR}' access.log
 
+## 切割http请求参数的样例
+
+		{
+		 split($9,params,"&");
+		 for(idx in params)
+		 {
+		   p=params[idx];
+		   i=index(p,"=")
+		   if(i>0)
+		   {
+		     k=substr(p,1,i-1);
+		     v=substr(p,i+1);
+		     query[k]=v;
+		     print k"\t"v;
+		   };
+		 }
+		}
+
 
 #sed
 sed是一种在线编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为“模式空间”（pattern space），接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。接着处理下一行，这样不断重复，直到文件末尾。文件内容并没有改变，除非你使用重定向存储输出。Sed主要用来自动编辑一个或多个文件；简化对文件的反复操作；编写转换程序等。以下介绍的是Gnu版本的Sed 3.02。以上文字摘自[sed学习笔记](http://www.tsnc.edu.cn/tsnc_wgrj/doc/sed.htm)。sed语法也比较复杂，学习的话可以参考上面的sed学习笔记。

@@ -41,4 +41,6 @@ morphemic freedom理解为语素的自由度，简单点可以认为是词的统
 
 	max ( degree=sum(freedom(single-word)) ) 
 
-
+# 其他分词工具
+* [jieba](https://github.com/fxsjy/jieba)
+* [ansj](https://github.com/ansjsun/ansj_seg)

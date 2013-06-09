@@ -27,4 +27,5 @@ date: 2013-02-25
 		adb shell pm list instrumentation
 		adb shell am instrument -w <test_package_name>/<runner_class>
 
-
+# 混淆相关
+(参看)[http://www.deepbluelambda.org/programming/clojure/creating-android-applications-with-clojure--slimming-things-down-with-proguard]
