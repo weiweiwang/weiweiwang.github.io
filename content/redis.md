@@ -416,3 +416,5 @@ terminal 2:
 # reference
 1. [redis author's blog](http://antirez.com/)
 2. [nosqlfan.com](http://blog.nosqlfan.com)
+3. [redis-faina](https://github.com/Instagram/redis-faina)
+4. [redis-rdb-tools](https://github.com/sripathikrishnan/redis-rdb-tools)

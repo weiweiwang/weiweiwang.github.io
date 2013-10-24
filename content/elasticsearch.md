@@ -286,6 +286,8 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 ### refresh_interval调大一些，比如60s或者更大
 如果不要求实时搜索，可以调大这个值，注意这个值调大之后，新加入的索引并不是立刻就能搜索到，要超过这个interval之后才能检索到。
 
+### 放大招了
+上SSD硬盘，可以参考[这里](http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/)
 
 # 参考
 [http://www.tuicool.com/articles/NbM7zi](http://www.tuicool.com/articles/NbM7zi)
@@ -293,3 +295,5 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 [http://www.elasticsearch.org/](http://www.elasticsearch.org/)
 
 [http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html](http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html)
+
+[http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/](http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/)

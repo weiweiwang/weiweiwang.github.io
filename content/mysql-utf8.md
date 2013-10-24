@@ -1,0 +1,64 @@
+title: mysql utf8编码配置
+slug: mysql-character-set-utf8
+category: sql_nosql
+tags: mysql,character set,utf8
+date: 2013-06-16
+
+[TOC]
+
+#查看当前的编码
+		mysql> show variables like '%char%';
+		+--------------------------+----------------------------+
+		| Variable_name            | Value                      |
+		+--------------------------+----------------------------+
+		| character_set_client     | latin1                     |
+		| character_set_connection | latin1                     |
+		| character_set_database   | latin1                     |
+		| character_set_filesystem | binary                     |
+		| character_set_results    | latin1                     |
+		| character_set_server     | latin1                     |
+		| character_set_system     | utf8                       |
+		| character_sets_dir       | /usr/share/mysql/charsets/ |
+		+--------------------------+----------------------------+
+		8 rows in set (0.00 sec)
+
+用status命令查看也可以看到几种配置对应的编码：
+
+		mysql> status;
+		--------------
+		mysql  Ver 14.14 Distrib 5.1.67, for redhat-linux-gnu (x86_64) using readline 5.1
+
+		Connection id:		2807
+		Current database:	
+		Current user:		root@localhost
+		SSL:			Not in use
+		Current pager:		stdout
+		Using outfile:		''
+		Using delimiter:	;
+		Server version:		5.1.67 Source distribution
+		Protocol version:	10
+		Connection:		Localhost via UNIX socket
+		Server characterset:	latin1
+		Db     characterset:	latin1
+		Client characterset:	latin1
+		Conn.  characterset:	latin1
+		UNIX socket:		/var/lib/mysql/mysql.sock
+		Uptime:			63 days 28 min 58 sec
+
+		Threads: 1  Questions: 19  Slow queries: 0  Opens: 15  Flush tables: 1  Open tables: 8  Queries per second avg: 0.0
+		--------------
+
+
+
+#修改配置文件/etc/my.cnf(或者/etc/mysql/my.cnf)
+从status命令我们可以看到有四个编码需要修改:Server,DB,Client,Connection
+
+		[client]
+		default-character-set = utf8
+
+		[mysqld]
+		default-character-set=utf8
+
+
+# 重启mysql
+		service mysqld restart 或者 /etc/init.d/mysqld restart
