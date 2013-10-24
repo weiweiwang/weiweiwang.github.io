@@ -1,5 +1,5 @@
 title: mongodb cluster configuration
-slug: mongodb-cluster-configuration
+slug: mongodb-performance
 category: sql_nosql
 tags: nosql,mongodb,cluster,replica-set,sharding
 date: 2012-06-18
