@@ -1,53 +1,2208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Cloud or not</title><link href="/" rel="alternate"></link><link href="//feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2012-06-12T10:02:05+08:00</updated><entry><title>get familar with redis:a great data structure server</title><link href="//get-familar-with-redis.html" rel="alternate"></link><updated>2012-06-12T10:02:05+08:00</updated><author><name>wangweiwei</name></author><id>//get-familar-with-redis.html</id><summary type="html">&lt;h1&gt;intro&lt;/h1&gt;
-&lt;p&gt;redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:&lt;a href="http://antirez.com/post/redis-memcached-benchmark.html"&gt;redis-memcached-benchmark&lt;/a&gt;,有同学质疑这个给出了个相反的&lt;a href="http://dormando.livejournal.com/525147.html"&gt;benchmark&lt;/a&gt;，当然redis作者antirez又给出了一个&lt;a href="http://antirez.com/post/update-on-memcached-redis-benchmark.html"&gt;新的评测&lt;/a&gt;,不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。我很懒，没有对这个做过测试。&lt;/p&gt;
-&lt;p&gt;使用redis你可以做很多事情:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Careless Whisper</title><link href="%22http://example.com%22/" rel="alternate"></link><link href="%22http://example.com%22/feeds/all.atom.xml" rel="self"></link><id>"http://example.com"/</id><updated>2013-11-16T00:00:00+08:00</updated><entry><title>In project repository for maven:Maven本地依赖配置</title><link href="%22http://example.com%22/in-project-maven-dependency,in-project-repository.html" rel="alternate"></link><updated>2013-11-16T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2013-11-16:in-project-maven-dependency,in-project-repository.html</id><summary type="html">&lt;h1 id="in-project-repository"&gt;In Project Repository&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;repository&amp;gt;
+    &amp;lt;id&amp;gt;lib&amp;lt;/id&amp;gt;
+    &amp;lt;name&amp;gt;lib&amp;lt;/name&amp;gt;
+    &amp;lt;releases&amp;gt;
+        &amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt;
+        &amp;lt;checksumPolicy&amp;gt;ignore&amp;lt;/checksumPolicy&amp;gt;
+    &amp;lt;/releases&amp;gt;
+    &amp;lt;snapshots&amp;gt;
+        &amp;lt;enabled&amp;gt;false&amp;lt;/enabled&amp;gt;
+    &amp;lt;/snapshots&amp;gt;
+    &amp;lt;url&amp;gt;file://${project.basedir}/lib&amp;lt;/url&amp;gt;
+&amp;lt;/repository&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="lib-structure"&gt;Lib structure&lt;/h1&gt;
+&lt;p&gt;对于groupId=x.y.z的目录结构如下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;lib
+  |-- x
+      |-- y
+          |-- z
+              |-- ${artifactId}
+                  |-- ${version}
+                      |-- ${artifactId}-${version}.pom
+                      |-- ${artifactId}-${version}.pom.sha1
+                      |-- ${artifactId}-${version}.jar
+                      |-- ${artifactId}-${version}.jar.sha1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;由于上面的repository设置了ingore checksum,所以sha1的文件不是必须的&lt;/p&gt;
+&lt;h1 id="artifactid-versionpom"&gt;如何生成${artifactId}-${version}.pom&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;mvn install:install-file -Dfile=xxx.jar -DgroupId=x.y.z -DartifactId=${artifactId} -Dversion=${version} -Dpackaging=jar -DgeneratePom=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;生成完之后拷贝到lib目录下的对应位置即可。&lt;/p&gt;</summary><category term="maven"></category><category term="dependency"></category><category term="in-project"></category></entry><entry><title>django环境安装</title><link href="%22http://example.com%22/django-environment-setup.html" rel="alternate"></link><updated>2013-06-16T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2013-06-16:django-environment-setup.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#django"&gt;django&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysqldb"&gt;mysqldb&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#ubuntu"&gt;ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#centos"&gt;centos&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#tutorial"&gt;tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#centos-python27"&gt;centos python升级到2.7&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="django"&gt;django&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    pip install django
+    pip install flup(for fastcgi deploy)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysqldb"&gt;mysqldb&lt;/h1&gt;
+&lt;p&gt;依赖参考：https://raw.github.com/farcepest/MySQLdb1/master/INSTALL&lt;/p&gt;
+&lt;h2 id="ubuntu"&gt;ubuntu&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    sudo apt-get install python-mysqldb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="centos"&gt;centos&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    yum install MySQL-python.x86_64
+            或者
+    yum install mysql-devel.x86_64
+    pip install MySQL-python
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="tutorial"&gt;tutorial&lt;/h1&gt;
+&lt;p&gt;https://docs.djangoproject.com/en/1.5/intro/tutorial01/&lt;/p&gt;
+&lt;h1 id="centos-python27"&gt;centos python升级到2.7&lt;/h1&gt;
+&lt;p&gt;http://www.qwolf.com/?p=1166&lt;/p&gt;
+&lt;p&gt;http://toomuchdata.com/2012/06/25/how-to-install-python-2-7-3-on-centos-6-2/&lt;/p&gt;</summary><category term="mysql"></category><category term="character set"></category><category term="utf8"></category></entry><entry><title>mysql utf8编码配置</title><link href="%22http://example.com%22/mysql-character-set-utf8.html" rel="alternate"></link><updated>2013-06-16T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2013-06-16:mysql-character-set-utf8.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;查看当前的编码&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#etcmycnfetcmysqlmycnf"&gt;修改配置文件/etc/my.cnf(或者/etc/mysql/my.cnf)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql"&gt;重启mysql&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;查看当前的编码&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    mysql&amp;gt; show variables like '%char%';
+    +--------------------------+----------------------------+
+    | Variable_name            | Value                      |
+    +--------------------------+----------------------------+
+    | character_set_client     | latin1                     |
+    | character_set_connection | latin1                     |
+    | character_set_database   | latin1                     |
+    | character_set_filesystem | binary                     |
+    | character_set_results    | latin1                     |
+    | character_set_server     | latin1                     |
+    | character_set_system     | utf8                       |
+    | character_sets_dir       | /usr/share/mysql/charsets/ |
+    +--------------------------+----------------------------+
+    8 rows in set (0.00 sec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用status命令查看也可以看到几种配置对应的编码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    mysql&amp;gt; status;
+    --------------
+    mysql  Ver 14.14 Distrib 5.1.67, for redhat-linux-gnu (x86_64) using readline 5.1
+
+    Connection id:      2807
+    Current database:   
+    Current user:       root@localhost
+    SSL:            Not in use
+    Current pager:      stdout
+    Using outfile:      ''
+    Using delimiter:    ;
+    Server version:     5.1.67 Source distribution
+    Protocol version:   10
+    Connection:     Localhost via UNIX socket
+    Server characterset:    latin1
+    Db     characterset:    latin1
+    Client characterset:    latin1
+    Conn.  characterset:    latin1
+    UNIX socket:        /var/lib/mysql/mysql.sock
+    Uptime:         63 days 28 min 58 sec
+
+    Threads: 1  Questions: 19  Slow queries: 0  Opens: 15  Flush tables: 1  Open tables: 8  Queries per second avg: 0.0
+    --------------
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="etcmycnfetcmysqlmycnf"&gt;修改配置文件/etc/my.cnf(或者/etc/mysql/my.cnf)&lt;/h1&gt;
+&lt;p&gt;从status命令我们可以看到有四个编码需要修改:Server,DB,Client,Connection&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    [client]
+    default-character-set = utf8
+
+    [mysqld]
+    default-character-set=utf8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql"&gt;重启mysql&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    service mysqld restart 或者 /etc/init.d/mysqld restart
+&lt;/code&gt;&lt;/pre&gt;</summary><category term="mysql"></category><category term="character set"></category><category term="utf8"></category></entry><entry><title>全国城市区号信息</title><link href="%22http://example.com%22/cities-in-china-with-area-code-and-pinyin.html" rel="alternate"></link><updated>2013-03-28T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2013-03-28:cities-in-china-with-area-code-and-pinyin.html</id><summary type="html">&lt;h1 id="372"&gt;372个城市&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    山东
+    0531|济南|jinan|历下,市中,槐荫,天桥,历城,长清,平阴,济阳,商河,章丘
+    0532|青岛|qingdao|市南,市北,四方,黄岛,崂山,李沧,城阳,胶州,即墨,平度,胶南,莱西
+    0533|淄博|zibo|淄川,张店,博山,临淄,周村,桓台,高青,沂源
+    0632|枣庄|zaozhuang|市中,薛城,峄城,台儿庄,山亭,滕州
+    0546|东营|dongying|东营,河口,垦利,利津,广饶
+    0535|烟台|yantai|芝罘,福山,牟平,莱山,长岛,龙口,莱阳,莱州,蓬莱,招远,栖霞,海阳
+    0536|潍坊|weifang|潍城,寒亭,坊子,奎文,临朐,昌乐,青州,诸城,寿光,安丘,高密,昌邑
+    0537|济宁|jining|市中,任城,微山,鱼台,金乡,嘉祥,汶上,泗水,梁山,曲阜,兖州,邹城
+    0538|泰安|taian|泰山,岱岳,宁阳,东平,新泰,肥城
+    0631|威海|weihai|环翠,文登,荣成,乳山
+    0633|日照|rizhao|东港,岚山,五莲,莒县
+    0634|莱芜|laiwu|莱城,钢城
+    0539|临沂|linyi|兰山,罗庄,河东,沂南,郯城,沂水,苍山,费县,平邑,莒南,蒙阴,临沭
+    0534|德州|dezhou|德城,陵县,宁津,庆云,临邑,齐河,平原,夏津,武城,乐陵,禹城
+    0635|聊城|liaocheng|东昌府,阳谷,莘县,茌平,东阿,冠县,高唐,临清
+    0543|滨州|binzhou|滨城,惠民,阳信,无棣,沾化,博兴,邹平
+    0530|菏泽|heze|牡丹,曹县,单县,成武,巨野,郓城,鄄城,定陶,东明
+    四川
+    028|成都|chengdu|锦江,青羊,金牛,武侯,成华,龙泉驿,青白江,新都,温江,金堂,双流,郫县,大邑,蒲江,新津,都江堰,彭州,邛崃,崇州
+    0813|自贡|zigong|自流井,贡井,大安,沿滩,荣县,富顺
+    0812|攀枝花|panzhihua|东区,西区,仁和,米易,盐边
+    0830|泸州|luzhou|江阳,纳溪,龙马潭,泸县,合江,叙永,古蔺
+    0838|德阳|deyang|旌阳,中江,罗江,广汉,什邡,绵竹
+    0816|绵阳|mianyang|涪城,游仙,三台,盐亭,安县,梓潼,北川,平武,江油
+    0839|广元|guangyuan|市中,元坝,朝天,旺苍,青川,剑阁,苍溪
+    0825|遂宁|suining|船山,安居,蓬溪,射洪,大英
+    0832|内江|neijiang|市中,东兴,威远,资中,隆昌
+    0833|乐山|leshan|市中,沙湾,五通桥,金口河,犍为,井研,夹江,沐川,峨边,马边,峨眉山
+    0817|南充|nanchong|顺庆,高坪,嘉陵,南部,营山,蓬安,仪陇,西充,阆中
+    0833|眉山|meishan|东坡,仁寿,彭山,洪雅,丹棱,青神
+    0831|宜宾|yibin|翠屏,宜宾,南溪,江安,长宁,高县,珙县,筠连,兴文,屏山
+    0826|广安|guanganshi|广安,岳池,武胜,邻水,华蓥
+    0818|达州|dazhou|通川,达县,宣汉,开江,大竹,渠县,万源
+    0835|雅安|yaan|雨城,名山,荥经,汉源,石棉,天全,芦山,宝兴
+    0827|巴中|bazhong|巴州,通江,南江,平昌
+    0832|资阳|ziyang|雁江,安岳,乐至,简阳
+    0837|阿坝|aba|汶川,理县,茂县,松潘,九寨沟,金川,小金,黑水,马尔康,壤塘,阿坝,若尔盖,红原
+    0836|甘孜|ganzi|康定,泸定,丹巴,九龙,雅江,道孚,炉霍,甘孜,新龙,德格,白玉,石渠,色达,理塘,巴塘,乡城,稻城,得荣
+    0834|凉山|liangshan|西昌,木里,盐源,德昌,会理,会东,宁南,普格,布拖,金阳,昭觉,喜德,冕宁,越西,甘洛
+    江苏
+    025|南京|nanjing|玄武,白下,秦淮,建邺,鼓楼,下关,浦口,栖霞,雨花台,江宁,六合,溧水,高淳
+    0510|无锡|wuxi|崇安,南长,北塘,锡山,惠山,滨湖,江阴,宜兴
+    0516|徐州|xuzhou|鼓楼,云龙,九里,贾汪,泉山,丰县,沛县,铜山,睢宁,新沂,邳州
+    0519|常州|changzhou|天宁,钟楼,戚墅堰,新北,武进,溧阳,金坛
+    0512|苏州|suzhou|沧浪,平江,金阊,虎丘,吴中,相城,常熟,张家港,昆山,吴江,太仓
+    0513|南通|nantong|崇川,港闸,海安,如东,启东,如皋,通州,海门
+    0518|连云港|lianyungang|连云,新浦,海州,赣榆,东海,灌云,灌南
+    0517|淮安|huaian|清河,楚州,淮阴,清浦,涟水,洪泽,盱眙,金湖
+    0515|盐城|yancheng|亭湖,盐都,响水,滨海,阜宁,射阳,建湖,东台,大丰
+    0514|扬州|yangzhou|广陵,邗江,维扬,宝应,仪征,高邮,江都
+    0511|镇江|zhenjiang|京口,润州,丹徒,丹阳,扬中,句容
+    0523|泰州|taizhou|海陵,高港,兴化,靖江,泰兴,姜堰
+    0527|宿迁|suqian|宿城,宿豫,沭阳,泗阳,泗洪
+    河南
+    0371|郑州|zhengzhou|中原,二七,管城,金水,上街,惠济,中牟,巩义,荥阳,新密,新郑,登封
+    0378|开封|kaifengshi|龙亭,顺河,鼓楼,禹王台,金明,杞县,通许,尉氏,开封,兰考
+    0379|洛阳|luoyang|老城,西工,廛河,涧西,吉利,洛龙,孟津,新安,栾川,嵩县,汝阳,宜阳,洛宁,伊川,偃师
+    0375|平顶山|pingdingshan|新华,卫东,石龙,湛河,宝丰,叶县,鲁山,郏县,舞钢,汝州
+    0372|安阳|anyangshi|文峰,北关,殷都,龙安,安阳,汤阴,滑县,内黄,林州
+    0392|鹤壁|hebi|鹤山,山城,淇滨,浚县,淇县
+    0373|新乡|xinxiangshi|红旗,卫滨,凤泉,牧野,新乡,获嘉,原阳,延津,封丘,长垣,卫辉,辉县
+    0391|焦作|jiaozuo|解放,中站,马村,山阳,修武,博爱,武陟,温县,济源,沁阳,孟州
+    0393|濮阳|puyangshi|华龙,清丰,南乐,范县,台前,濮阳
+    0374|许昌|xuchangshi|魏都,许昌,鄢陵,襄城,禹州,长葛
+    0395|漯河|luohe|源汇,郾城,召陵,舞阳,临颍
+    0398|三门峡|sanmenxia|湖滨,渑池,陕县,卢氏,义马,灵宝
+    0377|南阳|nanyang|宛城,卧龙,南召,方城,西峡,镇平,内乡,淅川,社旗,唐河,新野,桐柏,邓州
+    0370|商丘|shangqiu|梁园,睢阳,民权,宁陵,柘城,虞城,夏邑,永城
+    0376|信阳|xinyang|浉河,平桥,罗山,光山,新县,商城,固始,潢川,淮滨,息县
+    0394|周口|zhoukou|川汇,扶沟,西华,商水,沈丘,郸城,淮阳,太康,鹿邑,项城
+    0396|驻马店|zhumadian|驿城,西平,上蔡,平舆,正阳,确山,泌阳,汝南,遂平,新蔡
+    贵州
+    0851|贵阳|guiyang|南明,云岩,花溪,乌当,白云,小河,开阳,息烽,修文,清镇
+    0858|六盘水|liupanshui|钟山,六枝,水城,盘县
+    0852|遵义|zunyi|红花岗,汇川,遵义,桐梓,绥阳,正安,道真,务川,凤冈,湄潭,余庆,习水,赤水,仁怀
+    0853|安顺|anshun|西秀,平坝,普定,镇宁,关岭,紫云
+    0856|铜仁|tongren|铜仁,江口,玉屏,石阡,思南,印江,德江,沿河,松桃,万山
+    0859|黔西南|qianxinan|兴义,兴仁,普安,晴隆,贞丰,望谟,册亨,安龙
+    0857|毕节|bijieshi|毕节,大方,黔西,金沙,织金,纳雍,威宁,赫章
+    0855|黔东南|qiandongnan|凯里,黄平,施秉,三穗,镇远,岑巩,天柱,锦屏,剑河,台江,黎平,榕江,从江,雷山,麻江,丹寨
+    0854|黔南|qiannan|都匀,福泉,荔波,贵定,瓮安,独山,平塘,罗甸,长顺,龙里,惠水,三都
+    新疆
+    0991|乌鲁木齐|wulumuqi|天山,沙依巴克,新市,水磨沟,头屯河,达坂城,东山,乌鲁木齐
+    0990|克拉玛依|kelamayi|独山子,克拉玛依,白碱滩,乌尔禾,和布克赛尔
+    0995|吐鲁番|tulufan|吐鲁番,鄯善,托克逊
+    0902|哈密|hami|哈密,巴里坤,伊吾
+    0994|昌吉|changji|昌吉,阜康,米泉,呼图壁,玛纳斯,奇台,吉木萨尔,木垒,五家渠
+    0909|博尔塔拉|boertala|博乐,精河,温泉
+    0996|巴音郭楞|bayinguoleng|库尔勒,轮台,尉犁,若羌,且末,焉耆,和静,和硕,博湖
+    0997|阿克苏|akesu|阿克苏,温宿,库车,沙雅,新和,拜城,乌什,阿瓦提,柯坪,阿合奇,阿拉尔
+    0908|克孜勒苏|kezileisu|阿图什,阿克陶,乌恰
+    0998|喀什|kashen|喀什,疏附,疏勒,英吉沙,泽普,莎车,叶城,麦盖提,岳普湖,伽师,巴楚,塔什库尔干,图木舒克
+    0903|和田|hetian|和田,和田,墨玉,皮山,洛浦,策勒,于田,民丰
+    0999|伊犁|yili|伊宁,伊宁,察布查尔,霍城,巩留,新源,昭苏,特克斯,尼勒克
+    0992|奎屯|kuitun|乌苏
+    0901|塔城|tacheng|塔城,额敏,托里,裕民
+    0906|阿勒泰|aleitai|阿勒泰,布尔津,富蕴,福海,哈巴河,青河,吉木乃
+    0993|石河子|shihezi|沙湾
+    浙江
+    0571|杭州|hangzhou|上城,下城,江干,拱墅,西湖,滨江,萧山,余杭,桐庐,淳安,建德,富阳,临安
+    0574|宁波|ningbo|海曙,江东,江北,北仑,镇海,鄞州,象山,宁海,余姚,慈溪,奉化
+    0577|温州|wenzhou|鹿城,龙湾,瓯海,洞头,永嘉,平阳,苍南,文成,泰顺,瑞安,乐清
+    0573|嘉兴|jiaxing|秀城,秀洲,嘉善,海盐,海宁,平湖,桐乡
+    0572|湖州|huzhou|吴兴,南浔,德清,长兴,安吉
+    0575|绍兴|shaoxingshi|越城,绍兴,新昌,诸暨,上虞,嵊州
+    0579|金华|jinhua|婺城,金东,武义,浦江,磐安,兰溪,义乌,东阳,永康
+    0570|衢州|quzhou|柯城,衢江,常山,开化,龙游,江山
+    0580|舟山|zhoushan|定海,普陀,岱山,嵊泗
+    0576|台州|taizhou|椒江,黄岩,路桥,玉环,三门,天台,仙居,温岭,临海
+    0578|丽水|lishui|莲都,青田,缙云,遂昌,松阳,云和,庆元,景宁,龙泉
+    天津
+    022|天津|tianjin
+    青海
+    0971|西宁|xining|城东,城中,城西,城北,大通,湟中,湟源
+    0972|海东|haidong|平安,民和,乐都,互助,化隆,循化
+    0970|海北|haibei|门源,祁连,海晏,刚察
+    0973|黄南|huangnan|同仁,尖扎,泽库,河南
+    0974|海南州|hainanzhou|共和,同德,贵德,兴海,贵南
+    0975|果洛|guoluo|玛沁,班玛,甘德,达日,久治,玛多
+    0976|玉树|yushu|玉树,杂多,称多,治多,囊谦,曲麻莱
+    0979|海西|haixi|格尔木,德令哈,乌兰,都兰,天峻
+    湖北
+    027|武汉|wuhan|江岸,江汉,硚口,汉阳,武昌,青山,洪山,东西湖,汉南,蔡甸,江夏,黄陂,新洲
+    0714|黄石|huangshi|黄石港,西塞山,下陆,铁山,阳新,大冶
+    0719|十堰|shiyan|茅箭,张湾,郧县,郧西,竹山,竹溪,房县,丹江口
+    0717|宜昌|yichang|西陵,伍家岗,点军,猇亭,夷陵,远安,兴山,秭归,长阳,五峰,宜都,当阳,枝江
+    0710|襄樊|xiangfan|襄城,樊城,襄阳,南漳,谷城,保康,老河口,枣阳,宜城
+    0711|鄂州|ezhou|梁子湖,华容,鄂城
+    0724|荆门|jingmen|东宝,掇刀,京山,沙洋,钟祥
+    0712|孝感|xiaogan|孝南,孝昌,大悟,云梦,应城,安陆,汉川
+    0716|荆州|jingzhoushi|沙市,荆州,公安,监利,江陵,石首,洪湖,松滋
+    0713|黄冈|huanggang|黄州,团风,红安,罗田,英山,浠水,蕲春,黄梅,麻城,武穴
+    0715|咸宁|xianning|咸安,嘉鱼,通城,崇阳,通山,赤壁
+    0722|随州|suizhou|曾都,广水
+    0718|恩施|enshi|恩施,利川,建始,巴东,宣恩,咸丰,来凤,鹤峰
+    0728|仙桃|xiantao
+    0728|潜江|qianjiang
+    0728|天门|tianmen
+    0719|神农架|shennongjia
+    江西
+    0791|南昌|nanchangshi|东湖,西湖,青云谱,湾里,青山湖,南昌,新建,安义,进贤
+    0798|景德镇|jingdezhen|昌江,珠山,浮梁,乐平
+    0799|萍乡|pingxiang|安源,湘东,莲花,上栗,芦溪
+    0792|九江|jiujiangshi|庐山,浔阳,九江,武宁,修水,永修,德安,星子,都昌,湖口,彭泽,瑞昌
+    0790|新余|xinyu|渝水,分宜
+    0701|鹰潭|yingtan|月湖,余江,贵溪
+    0797|赣州|ganzhou|章贡,赣县,信丰,大余,上犹,崇义,安远,龙南,定南,全南,宁都,于都,兴国,会昌,寻乌,石城,瑞金,南康
+    0796|吉安|jianshi|吉州,青原,吉安,吉水,峡江,新干,永丰,泰和,遂川,万安,安福,永新,井冈山
+    0795|宜春|yichun|袁州,奉新,万载,上高,宜丰,靖安,铜鼓,丰城,樟树,高安
+    0794|抚州|fuzhou|临川,南城,黎川,南丰,崇仁,乐安,宜黄,金溪,资溪,东乡,广昌
+    0793|上饶|shangraoshi|信州,上饶,广丰,玉山,铅山,横峰,弋阳,余干,鄱阳,万年,婺源,德兴
+    海南
+    0898|海口|haikou|秀英,龙华,琼山,美兰
+    0898|三亚|sanya|五指山,琼海,儋州,文昌,万宁,东方,定安,屯昌,澄迈,临高,白沙,昌江,乐东,陵水,保亭,琼中,西沙,南沙,中沙
+    黑龙江
+    0451|哈尔滨|haerbin|道里,南岗,道外,香坊,动力,平房,松北,呼兰,依兰,方正,宾县,巴彦,木兰,通河,延寿,阿城,双城,尚志,五常
+    0452|齐齐哈尔|qiqihaer|龙沙,建华,铁锋,昂昂溪,富拉尔基,碾子山,梅里斯,龙江,依安,泰来,甘南,富裕,克山,克东,拜泉,讷河
+    0467|鸡西|jixi|鸡冠,恒山,滴道,梨树,城子河,麻山,鸡东,虎林,密山
+    0468|鹤岗|hegang|向阳,工农,南山,兴安,东山,兴山,萝北,绥滨
+    0469|双鸭山|shuangyashan|尖山,岭东,四方台,宝山,集贤,友谊,宝清,饶河
+    0459|大庆|daqing|萨尔图,龙凤,让胡路,红岗,大同,肇州,肇源,林甸,杜尔伯特
+    0458|伊春|yichunshi|伊春,南岔,友好,西林,翠峦,新青,美溪,金山屯,五营,乌马河,汤旺河,带岭,乌伊岭,红星,上甘岭,嘉荫,铁力
+    0454|佳木斯|jiamusi|永红,向阳,前进,东风,桦南,桦川,汤原,抚远,同江,富锦,七台河,新兴,桃山,茄子河,勃利
+    0453|牡丹江|mudanjiang|东安,阳明,爱民,西安,东宁,林口,绥芬河,海林,宁安,穆棱
+    0456|黑河|heihe|爱辉,嫩江,逊克,孙吴,北安,五大连池
+    0455|绥化|suihua|北林,望奎,兰西,青冈,庆安,明水,绥棱,安达,肇东,海伦
+    0457|大兴安岭|daxinganling|呼玛,塔河,漠河
+    云南
+    0871|昆明|kunming|五华,盘龙,官渡,西山,东川,呈贡,晋宁,富民,宜良,石林,嵩明,禄劝,寻甸,安宁
+    0874|曲靖|qujing|麒麟,马龙,陆良,师宗,罗平,富源,会泽,沾益,宣威
+    0877|玉溪|yuxi|红塔,江川,澄江,通海,华宁,易门,峨山,新平,元江
+    0875|保山|baoshan|隆阳,施甸,腾冲,龙陵,昌宁
+    0870|昭通|zhaotong|昭阳,鲁甸,巧家,盐津,大关,永善,绥江,镇雄,彝良,威信,水富
+    0888|丽江|lijiang|古城,玉龙,永胜,华坪,宁蒗
+    0879|普洱|puer|思茅,翠云,墨江,景东,景谷,镇沅,江城,孟连,澜沧,西盟
+    0883|临沧|lincang|临翔,凤庆,云县,永德,镇康,双江,耿马,沧源
+    0878|楚雄|chuxiong|楚雄,双柏,牟定,南华,姚安,大姚,永仁,元谋,武定,禄丰,红河
+    0873|个旧|gejiu|开远,蒙自,屏边,建水,石屏,弥勒,泸西,元阳,红河,金平,绿春,河口
+    0876|文山|wenshan|文山,砚山,西畴,麻栗坡,马关,丘北,广南,富宁
+    0691|西双版纳|xishuangbanna|景洪,勐海,勐腊
+    0872|大理|dali|大理,漾濞,祥云,宾川,弥渡,南涧,巍山,永平,云龙,洱源,剑川,鹤庆
+    0692|德宏|dehong|瑞丽,潞西,梁河,盈江,陇川
+    0886|怒江|nujiang|泸水,福贡,贡山,兰坪
+    0887|迪庆|diqing|香格里拉,德钦,维西
+    福建
+    0591|福州|fuzhou|鼓楼,台江,仓山,马尾,晋安,闽侯,连江,罗源,闽清,永泰,平潭,福清,长乐
+    0592|厦门|xiamen|思明,海沧,湖里,集美,同安,翔安
+    0594|莆田|putian|城厢,涵江,荔城,秀屿,仙游
+    0598|三明|sanming|梅列,三元,明溪,清流,宁化,大田,尤溪,沙县,将乐,泰宁,建宁,永安
+    0595|泉州|quanzhou|鲤城,丰泽,洛江,泉港,惠安,安溪,永春,德化,金门,石狮,晋江,南安
+    0596|漳州|zhangzhou|芗城,龙文,云霄,漳浦,诏安,长泰,东山,南靖,平和,华安,龙海
+    0599|南平|nanping|延平,顺昌,浦城,光泽,松溪,政和,邵武,武夷山,建瓯,建阳
+    0597|龙岩|longyan|新罗,长汀,永定,上杭,武平,连城,漳平
+    0593|宁德|ningde|蕉城,霞浦,古田,屏南,寿宁,周宁,柘荣,福安,福鼎
+    广西
+    0771|南宁|nanning|兴宁,青秀,江南,西乡塘,良庆,邕宁,武鸣,隆安,马山,上林,宾阳,横县
+    0772|柳州|liuzhou|城中,鱼峰,柳南,柳北,柳江,柳城,鹿寨,融安,融水,三江
+    0773|桂林|guilin|秀峰,叠彩,象山,七星,雁山,阳朔,临桂,灵川,全州,兴安,永福,灌阳,龙胜,资源,平乐,荔蒲,恭城
+    0774|梧州|wuzhou|万秀,蝶山,长洲,苍梧,藤县,蒙山,岑溪
+    0779|北海|beihai|海城,银海,铁山港,合浦
+    0770|防城港|fangchenggang|港口,防城,上思,东兴
+    0777|钦州|qinzhou|钦南,钦北,灵山,浦北
+    0775|贵港|guigang|港北,港南,覃塘,平南,桂平,玉林,玉州,容县,陆川,博白,兴业,北流
+    0776|百色|bose|右江,田阳,田东,平果,德保,靖西,那坡,凌云,乐业,田林,西林,隆林
+    0774|贺州|hezhou|八步,昭平,钟山,富川
+    0778|河池|hechi|金城江,南丹,天峨,凤山,东兰,罗城,环江,巴马,都安,大化,宜州
+    0772|来宾|laibin|兴宾,忻城,象州,武宣,金秀,合山
+    0771|崇左|chongzuo|江洲,扶绥,宁明,龙州,大新,天等,凭祥
+    重庆
+    023|重庆|zhongqing
+    甘肃
+    0931|兰州|lanzhou|城关,七里河,西固,安宁,红古,永登,皋兰,榆中
+    0937|嘉峪关|jiayuguan
+    0935|金昌|jinchang|金川,永昌
+    0943|白银|baiyinshi|白银,平川,靖远,会宁,景泰
+    0938|天水|tianshui|秦城,北道,清水,秦安,甘谷,武山,张家川
+    0935|武威|wuwei|凉州,民勤,古浪,天祝
+    0936|张掖|zhangye|甘州,肃南,民乐,临泽,高台,山丹
+    0933|平凉|pingliang|崆峒,泾川,灵台,崇信,华亭,庄浪,静宁
+    0937|酒泉|jiuquan|肃州,金塔,安西,肃北,阿克塞,玉门,敦煌
+    0934|庆阳|qingyang|西峰,庆城,环县,华池,合水,正宁,宁县,镇原
+    0932|定西|dingxi|安定,通渭,陇西,渭源,临洮,漳县,岷县
+    0939|陇南|longnan|武都,成县,文县,宕昌,康县,西和,礼县,徽县,两当
+    0930|临夏|linxia|临夏,临夏,康乐,永靖,广河,和政,东乡族,积石山
+    0941|甘南|gannan|合作,临潭,卓尼,舟曲,迭部,玛曲,碌曲,夏河
+    河北
+    0311|石家庄|shijiazhuang|长安,桥东,桥西,新华,井陉,裕华,井陉,正定,栾城,行唐,灵寿,高邑,深泽,赞皇,无极,平山,元氏,赵县,辛集,藁城,晋州,新乐,鹿泉
+    0315|唐山|tangshan|路南,路北,古冶,开平,丰南,丰润,滦县,滦南,乐亭,迁西,玉田,唐海,遵化,迁安
+    0335|秦皇岛|qinhuangdao|海港,山海关,北戴河,青龙,昌黎,抚宁,卢龙
+    0310|邯郸|handan|邯山,丛台,复兴,峰峰,邯郸,临漳,成安,大名,涉县,磁县,肥乡,永年,邱县,鸡泽,广平,馆陶,魏县,曲周,武安
+    0319|邢台|xingtaishi|桥东,桥西,邢台,临城,内丘,柏乡,隆尧,任县,南和,宁晋,巨鹿,新河,广宗,平乡,威县,清河,临西,南宫,沙河
+    0312|保定|baoding|新市,北市,南市,满城,清苑,涞水,阜平,徐水,定兴,唐县,高阳,容城,涞源,望都,安新,易县,曲阳,蠡县,顺平,博野,雄县,涿州,定州,安国,高碑店
+    0313|张家口|zhangjiakou|桥东,桥西,宣化,下花园,宣化,张北,康保,沽源,尚义,蔚县,阳原,怀安,万全,怀来,涿鹿,赤城,崇礼
+    0314|承德|chengde|双桥,双滦,鹰手营子,承德,兴隆,平泉,滦平,隆化,丰宁,宽城,围场
+    0317|沧州|cangzhou|新华,运河,沧县,青县,东光,海兴,盐山,肃宁,南皮,吴桥,献县,孟村,泊头,任丘,黄骅,河间
+    0316|廊坊|langfang|安次,广阳,固安,永清,香河,大城,文安,大厂,霸州,三河
+    0318|衡水|hengshui|桃城,枣强,武邑,武强,饶阳,安平,故城,景县,阜城,冀州,深州
+    陕西
+    029|西安|xian|新城,碑林,莲湖,灞桥,未央,雁塔,阎良,临潼,长安,蓝田,周至,户县,高陵
+    0919|铜川|tongchuan|王益,印台,耀州,宜君
+    0917|宝鸡|baoji|渭滨,金台,陈仓,凤翔,岐山,扶风,眉县,陇县,千阳,麟游,凤县,太白
+    029|咸阳|xianyang|秦都,杨凌,渭城,三原,泾阳,乾县,礼泉,永寿,彬县,长武,旬邑,淳化,武功,兴平
+    0913|渭南|weinan|临渭,华县,潼关,大荔,合阳,澄城,蒲城,白水,富平,韩城,华阴
+    0911|延安|yanan|宝塔,延长,延川,子长,安塞,志丹,吴起,甘泉,富县,洛川,宜川,黄龙,黄陵
+    0916|汉中|hanzhong|汉台,南郑,城固,洋县,西乡,勉县,宁强,略阳,镇巴,留坝,佛坪
+    0912|榆林|yulin|榆阳,神木,府谷,横山,靖边,定边,绥德,米脂,佳县,吴堡,清涧,子洲
+    0915|安康|ankang|汉滨,汉阴,石泉,宁陕,紫阳,岚皋,平利,镇坪,旬阳,白河
+    0914|商洛|shangluo|商州,洛南,丹凤,商南,山阳,镇安,柞水
+    宁夏
+    0951|银川|yinchuan|兴庆,西夏,金凤,永宁,贺兰,灵武
+    0952|石嘴山|shizuishan|大武口,惠农,平罗
+    0953|吴忠|wuzhong|利通,盐池,同心,青铜峡
+    0954|固原|guyuan|原州,西吉,隆德,泾源,彭阳
+    0955|中卫|zhongwei|沙坡头,中宁,海原
+    北京
+    010|北京|beijing
+    吉林
+    0431|长春|changchun|南关,宽城,朝阳,二道,绿园,双阳,农安,九台,榆树,德惠
+    0432|吉林|jilin|昌邑,龙潭,船营,丰满,永吉,蛟河,桦甸,舒兰,磐石
+    0434|四平|siping|铁西,铁东,梨树,伊通,公主岭,双辽
+    0437|辽源|liaoyuan|龙山,西安,东丰,东辽
+    0435|通化|tonghua|东昌,二道江,通化,辉南,柳河,梅河口,集安
+    0439|白山|baishan|八道江,抚松,靖宇,长白,江源,临江
+    0438|松原|songyuan|宁江,前郭尔罗斯,长岭,乾安,扶余
+    0436|白城|baicheng|洮北,镇赉,通榆,洮南,大安
+    0433|延边|yanbian|延吉,图们,敦化,珲春,龙井,和龙,汪清,安图
+    广东
+    020|广州|guangzhou|荔湾,越秀,海珠,天河,白云,黄埔,番禺,花都,南沙,萝岗,增城,从化
+    0751|韶关|shaoguan|武江,浈江,曲江,始兴,仁化,翁源,乳源,新丰,乐昌,南雄
+    0755|深圳|shenzhen|罗湖,福田,南山,宝安,龙岗,盐田
+    0756|珠海|zhuhai|香洲,斗门,金湾
+    0754|汕头|shantou|龙湖,金平,濠江,潮阳,潮南,澄海,南澳
+    0757|佛山|foshan|禅城,南海,顺德,三水,高明
+    0750|江门|jiangmen|蓬江,江海,新会,台山,开平,鹤山,恩平
+    0759|湛江|zhanjiang|赤坎,霞山,坡头,麻章,遂溪,徐闻,廉江,雷州,吴川
+    0668|茂名|maoming|茂南,茂港,电白,高州,化州,信宜
+    0758|肇庆|zhaoqing|端州,鼎湖,广宁,怀集,封开,德庆,高要,四会
+    0752|惠州|huizhou|惠城,惠阳,博罗,惠东,龙门
+    0753|梅州|meizhou|梅江,梅县,大埔,丰顺,五华,平远,蕉岭,兴宁
+    0660|汕尾|shanwei|海丰,陆河,陆丰
+    0762|河源|heyuan|源城,紫金,龙川,连平,和平,东源
+    0662|阳江|yangjiang|江城,阳西,阳东,阳春
+    0763|清远|qingyuan|清城,佛冈,阳山,连山,连南,清新,英德,连州
+    0769|东莞|dongguanshi
+    0760|中山|zhongshan
+    0768|潮州|chaozhou|湘桥,潮安,饶平
+    0663|揭阳|jieyang|榕城,揭东,揭西,惠来,普宁
+    0766|云浮|yunfu|云城,新兴,郁南,云安,罗定
+    湖南
+    0731|长沙|changshashi|芙蓉,天心,岳麓,开福,雨花,长沙,望城,宁乡,浏阳
+    0731|株洲|zhuzhoushi|荷塘,芦淞,石峰,天元,株洲,攸县,茶陵,炎陵,醴陵
+    0731|湘潭|xiangtanshi|雨湖,岳塘,湘潭,湘乡,韶山
+    0734|衡阳|hengyangshi|珠晖,雁峰,石鼓,蒸湘,南岳,衡阳,衡南,衡山,衡东,祁东,耒阳,常宁
+    0739|邵阳|shaoyangshi|双清,大祥,北塔,邵东,新邵,邵阳,隆回,洞口,绥宁,新宁,城步,武冈
+    0730|岳阳|yueyangshi|岳阳楼,云溪,君山,岳阳,华容,湘阴,平江,汨罗,临湘
+    0736|常德|changde|武陵,鼎城,安乡,汉寿,澧县,临澧,桃源,石门,津市
+    0744|张家界|zhangjiajie|永定,武陵源,慈利,桑植
+    0737|益阳|yiyang|资阳,赫山,南县,桃江,安化,沅江
+    0735|郴州|chenzhou|北湖,苏仙,桂阳,宜章,永兴,嘉禾,临武,汝城,桂东,安仁,资兴
+    0746|永州|yongzhou|零陵,冷水滩,祁阳,东安,双牌,道县,江永,宁远,蓝山,新田,江华
+    0745|怀化|huaihua|鹤城,中方,沅陵,辰溪,溆浦,会同,麻阳,新晃,芷江,靖州,通道,洪江
+    0738|娄底|loudi|娄星,双峰,新化,冷水江,涟源
+    0743|湘西|xiangxi|吉首,泸溪,凤凰,花垣,保靖,古丈,永顺,龙山
+    安徽
+    0551|合肥|hefei|瑶海,庐阳,蜀山,包河,长丰,肥东,肥西
+    0553|芜湖|wuhu|镜湖,弋江,鸠江,三山,芜湖,繁昌,南陵
+    0552|蚌埠|bengbu|龙子湖,蚌山,禹会,淮上,怀远,五河,固镇
+    0554|淮南|huainan|大通,田家庵,谢家集,八公山,潘集,凤台
+    0555|马鞍山|maanshan|金家庄,花山,雨山,当涂
+    0561|淮北|huaibei|杜集,相山,烈山,濉溪
+    0562|铜陵|tongling|铜官山,狮子山,铜陵
+    0556|安庆|anqing|迎江,大观,宜秀,怀宁,枞阳,潜山,太湖,宿松,望江,岳西,桐城
+    0559|黄山|huangshan|屯溪,黄山,徽州,歙县,休宁,黟县,祁门
+    0550|滁州|chuzhou|琅琊,南谯,来安,全椒,定远,凤阳,天长,明光
+    0558|阜阳|fuyang|颍州,颍东,颍泉,临泉,太和,阜南,颍上,界首
+    0557|宿州|suzhou|埇桥,砀山,萧县,灵璧,泗县
+    0565|巢湖|chaohu|居巢,庐江,无为,含山,和县
+    0564|六安|luan|金安,裕安,寿县,霍邱,舒城,金寨,霍山
+    0558|亳州|bozhou|谯城,涡阳,蒙城,利辛
+    0566|池州|chizhou|贵池,东至,石台,青阳
+    0563|宣城|xuancheng|宣州,郎溪,广德,泾县,绩溪,旌德,宁国
+    山西
+    0351|太原|taiyuan|小店,迎泽,杏花岭,尖草坪,万柏林,晋源,清徐,阳曲,娄烦,古交
+    0352|大同|datong|南郊,新荣,阳高,天镇,广灵,灵丘,浑源,左云,大同
+    0353|阳泉|yangquan|平定,盂县
+    0355|长治|changzhishi|长治,襄垣,屯留,平顺,黎城,壶关,长子,武乡,沁县,沁源,潞城
+    0356|晋城|jincheng|沁水,阳城,陵川,泽州,高平
+    0349|朔州|shuozhou|朔城,平鲁,山阴,应县,右玉,怀仁
+    0354|晋中|jinzhong|榆次,榆社,左权,和顺,昔阳,寿阳,太谷,祁县,平遥,灵石,介休
+    0359|运城|yuncheng|盐湖,临猗,万荣,闻喜,稷山,新绛,绛县,垣曲,夏县,平陆,芮城,永济,河津
+    0350|忻州|xinzhou|忻府,定襄,五台,代县,繁峙,宁武,静乐,神池,五寨,岢岚,河曲,保德,偏关,原平
+    0357|临汾|linfen|尧都,曲沃,翼城,襄汾,洪洞,古县,安泽,浮山,吉县,乡宁,大宁,隰县,永和,蒲县,汾西,侯马,霍州
+    0358|吕梁|luliang|离石,文水,交城,兴县,临县,柳林,石楼,岚县,方山,中阳,交口,孝义,汾阳
+    西藏
+    0891|拉萨|lasa|城关,林周,当雄,尼木,曲水,堆龙德庆,达孜,墨竹工卡
+    0895|昌都|changdu|昌都,江达,贡觉,类乌齐,丁青,察雅,八宿,左贡,芒康,洛隆,边坝
+    0893|山南|shannan|乃东,扎囊,贡嘎,桑日,琼结,曲松,措美,洛扎,加查,隆子,错那,浪卡子
+    0892|日喀则|rikaze|日喀则,南木林,江孜,定日,萨迦,拉孜,昂仁,谢通门,白朗,仁布,康马,定结,仲巴,亚东,吉隆,聂拉木,萨嘎,岗巴
+    0896|那曲|naqu|那曲,嘉黎,比如,聂荣,安多,申扎,索县,班戈,巴青,尼玛
+    0897|阿里|ali|普兰,札达,噶尔,日土,革吉,改则,措勤
+    0894|林芝|linzhi|林芝,工布江达,米林,墨脱,波密,察隅,朗县
+    内蒙古
+    0471|呼和浩特|huhehaote|新城,回民,玉泉,赛罕,土默特左旗,托克托,和林格尔,清水河,武川
+    0472|包头|baotou|东河,昆都仑,青山,石拐,白云矿,九原,土默特右旗,固阳,达尔罕茂明安联合旗
+    0473|乌海|wuhai|海勃湾,海南,乌达
+    0476|赤峰|chifeng|红山,元宝山,松山,阿鲁科尔沁旗,巴林左旗,巴林右旗,林西,克什克腾旗,翁牛特旗,喀喇沁旗,宁城,敖汉旗
+    0475|通辽|tongliao|科尔沁,科尔沁左翼中旗,科尔沁左翼后旗,开鲁,库伦旗,奈曼旗,扎鲁特旗,霍林郭勒
+    0477|鄂尔多斯|eerduosi|东胜,达拉特旗,准格尔旗,鄂托克前旗,鄂托克旗,杭锦旗,乌审旗,伊金霍洛旗
+    0470|呼伦贝尔|hulunbeier|海拉尔,阿荣旗,莫力达瓦旗,鄂伦春旗,鄂温克族旗,陈巴尔虎旗,新巴尔虎左旗,新巴尔虎右旗,满洲里,牙克石,扎兰屯,额尔古纳,根河
+    0478|巴彦淖尔|bayannaoer|临河,五原,磴口,乌拉特前旗,乌拉特中旗,乌拉特后旗,杭锦后旗
+    0474|乌兰察布|wulanchabu|集宁,卓资,化德,商都,兴和,凉城,察哈尔右翼前旗,察哈尔右翼中旗,察哈尔右翼后旗,四子王旗,丰镇
+    0482|兴安盟|xinganmeng|乌兰浩特,阿尔山,科尔沁右翼前旗,科尔沁右翼中旗,扎赉特旗,突泉
+    0479|锡林郭勒|xilinguole|二连浩特,锡林浩特,阿巴嘎旗,苏尼特左旗,苏尼特右旗,东乌珠穆沁旗,西乌珠穆沁旗,太仆寺旗,镶黄旗,正镶白旗,正蓝旗,多伦
+    0483|阿拉善|alashan|阿拉善左旗,阿拉善右旗,额济纳旗
+    上海
+    021|上海|shanghai
+    辽宁
+    024|沈阳|shenyang|和平,沈河,大东,皇姑,铁西,苏家屯,东陵,新城子,于洪,辽中,康平,法库,新民
+    0411|大连|dalian|中山,西岗,沙河口,甘井子,旅顺口,金州,长海,瓦房店,普兰店,庄河
+    0412|鞍山|anshan|铁东,铁西,立山,千山,台安,岫岩,海城
+    0413|抚顺|fushunshi|新抚,东洲,望花,顺城,抚顺,新宾,清原
+    0414|本溪|benxishi|平山,溪湖,明山,南芬,本溪,桓仁
+    0415|丹东|dandong|元宝,振兴,振安,宽甸,东港,凤城
+    0416|锦州|jinzhou|古塔,凌河,太和,黑山,义县,凌海,北宁
+    0417|营口|yingkou|站前,西市,鲅鱼圈,老边,盖州,大石桥
+    0418|阜新|fuxinshi|海州,新邱,太平,清河门,细河,阜新,彰武
+    0419|辽阳|liaoyangshi|白塔,文圣,宏伟,弓长岭,太子河,辽阳,灯塔
+    0427|盘锦|panjin|双台子,兴隆台,大洼,盘山
+    0410|铁岭|tielingshi|银州,清河,铁岭,西丰,昌图,调兵山,开原
+    0421|朝阳|chaoyang|双塔,龙城,朝阳,建平,喀喇沁左翼,北票,凌源
+    0429|葫芦岛|huludao|连山,龙港,南票,绥中,建昌,兴城
+&lt;/code&gt;&lt;/pre&gt;</summary><category term="cities"></category><category term="pinyin"></category><category term="area code"></category></entry><entry><title>重置mysql的root密码</title><link href="%22http://example.com%22/recovery-mysql-root-password.html" rel="alternate"></link><updated>2013-03-08T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2013-03-08:recovery-mysql-root-password.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;查看当前的启动命令&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql"&gt;关闭Mysql&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql_1"&gt;启动不需要认证的mysql&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;重设密码&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql_2"&gt;重启mysql&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;查看当前的启动命令&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    ps auxf|grep mysql
+    /bin/sh /usr/local/mysql/bin/mysqld_safe --datadir=/data/mysql --pid-file=/usr/local/mysql/tmp/mysql.pid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql"&gt;关闭Mysql&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    killall -TERM mysqld
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql_1"&gt;启动不需要认证的mysql&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    nohup /bin/sh /usr/local/mysql/bin/mysqld_safe  --skip-grant-tables --datadir=/data/mysql --pid-file=/usr/local/mysql/tmp/mysql.pid &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_2"&gt;重设密码&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    mysql -uroot
+    update mysql.user set password=PASSWORD('xxx') where user='root';
+    flush privileges;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql_2"&gt;重启mysql&lt;/h1&gt;
+&lt;p&gt;注意这次不需要--skip-grant-tables&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    bin/mysqladmin -uroot -p shutdown
+    nohup /bin/sh /usr/local/mysql/bin/mysqld_safe --datadir=/data/mysql --pid-file=/usr/local/mysql/tmp/mysql.pid &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;</summary><category term="mysql"></category><category term="root"></category><category term="recovery"></category><category term="password"></category></entry><entry><title>Android上的单元测试</title><link href="%22http://example.com%22/android-unit-tests.html" rel="alternate"></link><updated>2013-02-25T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2013-02-25:android-unit-tests.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;工作流程&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#android-application-tests"&gt;Android Application Tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#android-library-project"&gt;Android Library Project&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;命令行&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#application-project"&gt;创建Application Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#library-project"&gt;创建Library Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#test-project"&gt;创建Test Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;编译运行测试&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;混淆相关&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;工作流程&lt;/h1&gt;
+&lt;h2 id="android-application-tests"&gt;Android Application Tests&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Application&lt;/li&gt;
+&lt;li&gt;Test Project&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="android-library-project"&gt;Android Library Project&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Application for the lib-project&lt;/li&gt;
+&lt;li&gt;Test project for the application&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="_2"&gt;命令行&lt;/h1&gt;
+&lt;h2 id="application-project"&gt;创建Application Project&lt;/h2&gt;
+&lt;h2 id="library-project"&gt;创建Library Project&lt;/h2&gt;
+&lt;h2 id="test-project"&gt;创建Test Project&lt;/h2&gt;
+&lt;h2 id="_3"&gt;编译运行测试&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    adb shell pm list instrumentation
+    adb shell am instrument -w &amp;lt;test_package_name&amp;gt;/&amp;lt;runner_class&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_4"&gt;混淆相关&lt;/h1&gt;
+&lt;p&gt;(参看)[http://www.deepbluelambda.org/programming/clojure/creating-android-applications-with-clojure--slimming-things-down-with-proguard]&lt;/p&gt;</summary><category term="unit-test"></category><category term="android"></category></entry><entry><title>mmseg分词方法学习</title><link href="%22http://example.com%22/mmseg.html" rel="alternate"></link><updated>2012-12-17T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-12-17:mmseg.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;基本原理&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#simple-maximum-matching"&gt;Simple maximum matching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#complex-maximum-matching"&gt;Complex maximum matching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;歧义消除规则&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;其他分词工具&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;参考&lt;/h1&gt;
+&lt;p&gt;论文页面&lt;a href="http://technology.chtsai.org/mmseg/"&gt;http://technology.chtsai.org/mmseg/&lt;/a&gt;
+java版实现&lt;a href="https://code.google.com/p/mmseg4j/"&gt;mmseg4j&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="_2"&gt;基本原理&lt;/h1&gt;
+&lt;h2 id="simple-maximum-matching"&gt;Simple maximum matching&lt;/h2&gt;
+&lt;p&gt;只找最长的匹配，比如C1C2C3C4C5这样的句子，词典里的数据是C1C2,C1C2C3，那么字符串开始位置开始搜索最长的匹配即为分词结果。&lt;/p&gt;
+&lt;h2 id="complex-maximum-matching"&gt;Complex maximum matching&lt;/h2&gt;
+&lt;p&gt;这个是在Simple maximum matching基础上的改进。这个方法同时考虑歧义的多个匹配，并加入连续的后面两个词，构成一个3-word chunk。选择最长的chunk中的第一个词。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1. _C1_ _C2_ _C3C4_
+2. _C1C2_ _C3C4_ _C5_
+3. _C1C2_ _C3C4_ _C5C6_
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_3"&gt;歧义消除规则&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Maximum matching
+对于Simple方法，取最长的匹配，对于Complex方法，取最长的chunk的第一个词。如果有多个切分方法的长度一样，使用下面的规则。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Largest average word length&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;em&gt;C1&lt;/em&gt; &lt;em&gt;C2&lt;/em&gt; &lt;em&gt;C3&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;C1C2C3&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Smallest variance of word lengths&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;em&gt;C1C2&lt;/em&gt; &lt;em&gt;C3C4&lt;/em&gt; &lt;em&gt;C5C6&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;C1C2C3&lt;/em&gt; &lt;em&gt;C4&lt;/em&gt; &lt;em&gt;C5C6&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Largest sum of degree of morphemic freedom of one-character words
+morphemic freedom理解为语素的自由度，简单点可以认为是词的统计词频。&lt;/p&gt;
+&lt;p&gt;max ( degree=sum(freedom(single-word)) ) &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="_4"&gt;其他分词工具&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/fxsjy/jieba"&gt;jieba&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ansjsun/ansj_seg"&gt;ansj&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="mmseg"></category><category term="lucene"></category><category term="analyzer"></category><category term="mmseg4j"></category></entry><entry><title>ElasticSearch Configuration and Performance Tuning</title><link href="%22http://example.com%22/elasticsearch-configuration-and-performance-tuning.html" rel="alternate"></link><updated>2012-12-12T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-12-12:elasticsearch-configuration-and-performance-tuning.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;下载与安装&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;下载&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;安装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;启动&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;配置&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;系统配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;内存配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#elasticsearchyml"&gt;elasticsearch.yml配置&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_8"&gt;集群名称&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shardreplica"&gt;shard和replica配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#refresh_interval"&gt;refresh_interval&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cache"&gt;cache设置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#memory-lock"&gt;开启memory lock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_9"&gt;索引和分词的配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mappings"&gt;mappings的配置&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_10"&gt;测试&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_11"&gt;增加一条数据：&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_12"&gt;查询中关村(汉字需要编码）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_13"&gt;查询中关(汉字需要编码)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#query-string"&gt;使用query string查询&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mmseg"&gt;mmseg词典更新&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_14"&gt;性能优化&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_15"&gt;准备工作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_16"&gt;影响性能的因素&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#4g"&gt;内存要足够多，4G或以上&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#memory-lock_1"&gt;如果可能开启memory lock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#65536"&gt;文件句柄数是否足够，建议设置为65536或以上&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#64linuxsolarismmapfs"&gt;如果是64位linux/solaris系统，开启mmapfs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#optimze"&gt;optimze索引文件为一个文件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cache_1"&gt;调整cache保证足够使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#refresh_interval60s"&gt;refresh_interval调大一些，比如60s或者更大&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_17"&gt;放大招了&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_18"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;下载与安装&lt;/h1&gt;
+&lt;h2 id="_2"&gt;下载&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://www.elasticsearch.org/download/"&gt;http://www.elasticsearch.org/download/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="_3"&gt;安装&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;tar xvf elasticsearch-0.19.12.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_4"&gt;启动&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;cd elasticsearch-0.19.12
+bin/elasticsearch -f
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里的-f参数是让程序在前台运行，这样可以看到程序运行的输出日志，正式环境不能这么运行，直接运行bin/elasticsearch就ok了。&lt;/p&gt;
+&lt;h1 id="_5"&gt;配置&lt;/h1&gt;
+&lt;p&gt;上面启动的elasitcsearch没有做任何配置，正式使用的时候至少需要配置内存，一般情况下mapping配置也是不可缺少的。&lt;/p&gt;
+&lt;h2 id="_6"&gt;系统配置&lt;/h2&gt;
+&lt;p&gt;查看ulimit -n确保可以打开的文件句柄数目够大，如果使用memory lock的话还需要确保ulimit -l的大小足够使用。Java的版本至少1.6或者以上（1.7现在也支持的很好了）。ulimit -l和ulimit -n这两个配置的如下方法修改：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+#max open files
+* hard nofile 65535
+* soft nofile 65535
+#max lock memory
+* soft  memlock 16000000
+* hard  memlock 16000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_7"&gt;内存配置&lt;/h2&gt;
+&lt;p&gt;在bin/elasticsearch.in.sh最后增加如下一行：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;JAVA_OPTS="$JAVA_OPTS -Xmx4g -Xms4g -Xmn1g -XX:PermSize=128M -XX:MaxPermSize=128M"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;elasticsearch中的默认配置是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;-Xms2g -Xmx2g -Xss256k -Djava.awt.headless=true -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+HeapDumpOnOutOfMemoryError -Xmx4g -Xms4g -Xmn1g -XX:PermSize=128M -XX:MaxPermSize=128M
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;实际使用的内存大小需要根据实际场景做调节，我目前2000w条数据，8g索引文件，4g内存完全够用。&lt;/p&gt;
+&lt;h2 id="elasticsearchyml"&gt;elasticsearch.yml配置&lt;/h2&gt;
+&lt;h3 id="_8"&gt;集群名称&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;cluster.name: your_cluster_name
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="shardreplica"&gt;shard和replica配置&lt;/h3&gt;
+&lt;p&gt;参考&lt;a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html"&gt;http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;index.number_of_shards: 4
+index.number_of_replicas: 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="refresh_interval"&gt;refresh_interval&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://www.elasticsearch.org/blog/2011/03/23/update-settings.html"&gt;http://www.elasticsearch.org/blog/2011/03/23/update-settings.html&lt;/a&gt;
+refresh_interval这个值的默认值是1s，增加可以提高建立索引的速度，非实时搜索情况下建议设置的大一些，比如下面设置成120s&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;index.refresh_interval: 120s
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="cache"&gt;cache设置&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://www.elasticsearch.org/guide/reference/index-modules/cache.html"&gt;http://www.elasticsearch.org/guide/reference/index-modules/cache.html&lt;/a&gt;
+节点的filter cache大小，默认是heap大小的20%，也可以制定绝对大小，比如下面指定为1g，注意如果设置为20%的时候需要加引号&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;indices.cache.filter.size: 1g
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="memory-lock"&gt;开启memory lock&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;bootstrap.mlockall: true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;使用这个参数请确保memlock的系统配置已经设置，比如在我现在用的centos上需要如下设置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+* soft  memlock 10000000
+* hard  memlock 10000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意这里的单位是k，并且从我配置的经验看，这里的k是1000,而不是1024，所以如果你需要10g内存（也就是10737418240B），这里10000000会不够用的,需要至少设置为10737419才行&lt;/p&gt;
+&lt;h3 id="_9"&gt;索引和分词的配置&lt;/h3&gt;
+&lt;p&gt;参考:&lt;a href="http://www.elasticsearch.org/guide/reference/mapping/conf-mappings.html"&gt;http://www.elasticsearch.org/guide/reference/mapping/conf-mappings.html&lt;/a&gt;
+注意这里开启了mmapfs，如果你是linux/solaris 64bit的系统建议开启&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;index:
+    store:
+    type: mmapfs
+    analysis:
+    analyzer:
+       edgeNGramAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball,edgeNGramFilter]
+       nGramAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball,nGramFilter]
+       standardAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball]
+       mmsegAnalyzer:
+           type: custome
+           tokenizer: mmseg_maxword
+           filter: [standard,lowercase,englishSnowball]
+       complexAnalyzer:
+           type: custome
+           tokenizer: mmseg_complex
+           filter: [standard,lowercase,englishSnowball]
+       simpleAnalyzer:
+           type: custome
+           tokenizer: mmseg_simple
+           filter: [standard,lowercase,englishSnowball]
+    tokenizer:
+       mmseg_maxword:
+           type: mmseg
+           seg_type: "max_word"
+       mmseg_complex:
+           type: mmseg
+           seg_type: "complex"
+       mmseg_simple:
+           type: mmseg
+           seg_type: "simple"
+    filter:
+       nGramFilter:
+           type: nGram
+           min_gram: 1
+           max_gram: 64
+       edgeNGramFilter:
+           type: edgeNGram
+           min_gram: 1
+           max_gram: 64
+           side: front
+       englishSnowball:
+           type: snowball
+           language: English
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里需要注意的是我这里使用了mmseg分词工具，如果你不需要的话可以去掉相应的配置，mmseg分词插件的安装说明参看：&lt;a href="https://github.com/medcl/elasticsearch-analysis-mmseg"&gt;https://github.com/medcl/elasticsearch-analysis-mmseg&lt;/a&gt;，如果你下载后的分词发现在并发情况下有bug（异常，分词结果错误），请用源码编译安装，源码里的这个bug已经修复。关于mmseg的说明可以参看&lt;a href="http://weiweiwang.github.com/mmseg.html"&gt;http://weiweiwang.github.com/mmseg.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="mappings"&gt;mappings的配置&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;{
+    "test":{
+    "_all":{
+        "enabled":false
+    },
+    "_source":{
+        "enabled":false
+    },
+    "properties":{
+        "id":{
+            "type":"string",
+            "index":"not_analyzed",
+            "store":"yes"
+        },
+        "name":{
+            "type":"string",
+            "index":"analyzed",
+            "index_analyzer":"mmsegAnalyzer",
+            "search_analyzer":"mmsegAnalyzer",
+            "store":"yes",
+            "term_vector":"with_positions_offsets"
+        },
+        "address":{
+            "type":"string",
+            "index":"analyzed",
+            "index_analyzer":"mmsegAnalyzer",
+            "search_analyzer":"mmsegAnalyzer",
+            "store":"yes",
+            "term_vector":"with_positions_offsets"
+        }
+    }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个mapping的配置可以放置到config/mappings/{index}/{type}.json文件中，也可以通过命令设置&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    curl -XPUT 'localhost:9200/test/test/_mapping' -d @test.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_10"&gt;测试&lt;/h2&gt;
+&lt;h3 id="_11"&gt;增加一条数据：&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl -XPUT http://localhost:9200/test/test/1 -d '{"name":"test","address":"中关村","id":"1"}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_12"&gt;查询中关村(汉字需要编码）&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3%E6%9D%91&amp;amp;pretty=true'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_13"&gt;查询中关(汉字需要编码)&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3&amp;amp;pretty=true'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="query-string"&gt;使用query string查询&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl 'localhost:9200/test/test/_search' -d '{
+    "from" : 0,
+    "size" : 20,
+    "timeout" : 5000,
+    "query" : {
+        "query_string" : {
+        "query" : "中关村",
+        "fields" : [ "address^1.0", "name^10.0"],
+        "default_operator" : "and",
+        "allow_leading_wildcard" : false
+        }
+    }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;返回&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 0.19178301,
+    "hits" : [ {
+      "_index" : "test",
+      "_type" : "test",
+      "_id" : "1",
+      "_score" : 0.19178301
+    } ]
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mmseg"&gt;mmseg词典更新&lt;/h1&gt;
+&lt;p&gt;从&lt;a href="https://code.google.com/p/sunpinyin/"&gt;https://code.google.com/p/sunpinyin/&lt;/a&gt;下载sunpinyin_importer.tar.bz2，解压后里面有个import_sogou_celldict.py的python脚本，可以根据这个脚本来转换搜狗词库生成mmseg词库。
+我拷贝修改了下可以批量转换:&lt;a href="upload/convert_sogou_celldict_to_mmseg4j.py"&gt;点击下载&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用方法为:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; python convert_sogou_celldict_to_mmseg4j.py sogou_dict_dir mmseg_dict_dir
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意sogou词典scel文件请用英文名称命名，转换后会拼接成words-{原来的scel文件名称}.dic。转换完成后将这些文件拷贝到elasticsearch/config/mmseg目录下即可。词库文件&lt;a href="http://pinyin.sogou.com/dict/"&gt;下载&lt;/a&gt;。&lt;/p&gt;
+&lt;h1 id="_14"&gt;性能优化&lt;/h1&gt;
+&lt;h2 id="_15"&gt;准备工作&lt;/h2&gt;
+&lt;p&gt;参考:&lt;a href="http://www.elasticsearch.org/guide/reference/modules/plugins.html"&gt;http://www.elasticsearch.org/guide/reference/modules/plugins.html&lt;/a&gt;
+安装elasticsearch-head和bigdesk来监控集群&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;bin/plugin -install Aconex/elasticsearch-head
+bin/plugin -install lukas-vlcek/bigdesk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后在浏览器里输入localhost:9200/_plugin/head/就可以访问监控页面。&lt;/p&gt;
+&lt;h2 id="_16"&gt;影响性能的因素&lt;/h2&gt;
+&lt;h3 id="4g"&gt;内存要足够多，4G或以上&lt;/h3&gt;
+&lt;p&gt;通过-Xmx -Xms -Xmn来调整heap内存的分配情况，同时建议参考jstat的使用说明来监控gc，可以参考&lt;a href="http://weiweiwang.github.com/jvm-gc-tuning.html"&gt;http://weiweiwang.github.com/jvm-gc-tuning.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="memory-lock_1"&gt;如果可能开启memory lock&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+#max lock memory
+* soft  memlock 16000000
+* hard  memlock 16000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="65536"&gt;文件句柄数是否足够，建议设置为65536或以上&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+#max open files
+* hard nofile 65535
+* soft nofile 65535
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="64linuxsolarismmapfs"&gt;如果是64位linux/solaris系统，开启mmapfs&lt;/h3&gt;
+&lt;p&gt;上面的例子已经给出了如何开启，参考&lt;a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html"&gt;http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="optimze"&gt;optimze索引文件为一个文件&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl -XPOST 'http://localhost:9200/test/_optimize?max_num_segments=1'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="cache_1"&gt;调整cache保证足够使用&lt;/h3&gt;
+&lt;p&gt;先通过bigdesk监控系统性能，然后确定这个参数如何调整。&lt;/p&gt;
+&lt;h3 id="refresh_interval60s"&gt;refresh_interval调大一些，比如60s或者更大&lt;/h3&gt;
+&lt;p&gt;如果不要求实时搜索，可以调大这个值，注意这个值调大之后，新加入的索引并不是立刻就能搜索到，要超过这个interval之后才能检索到。&lt;/p&gt;
+&lt;h3 id="_17"&gt;放大招了&lt;/h3&gt;
+&lt;p&gt;上SSD硬盘，可以参考&lt;a href="http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/"&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="_18"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://www.tuicool.com/articles/NbM7zi"&gt;http://www.tuicool.com/articles/NbM7zi&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.elasticsearch.org/"&gt;http://www.elasticsearch.org/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html"&gt;http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/"&gt;http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/&lt;/a&gt;&lt;/p&gt;</summary><category term="elasticsearch configuration"></category><category term="performance tuning"></category></entry><entry><title>优化网站访问速度</title><link href="%22http://example.com%22/optimize-web-speed.html" rel="alternate"></link><updated>2012-11-11T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-11-11:optimize-web-speed.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#http"&gt;减少HTTP请求数&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cdn"&gt;使用内容分发网络(CDN)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#expires-and-cache-control"&gt;Expires and Cache-Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gzip"&gt;使用Gzip压缩&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cssjscssjs"&gt;css在前，js在后,不要在CSS中使用js&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cssjshtml"&gt;css，js用外部文件，不要写在html中&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#jscss"&gt;压缩js，css&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#redirect"&gt;减少Redirect&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#etaglast-modified-header"&gt;Etag和Last-Modified Header&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ajaxget"&gt;Ajax请求尽量多是GET请求&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;预加载和延迟加载&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;减少页面复杂度&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;使用多个域来提供性能&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cookie"&gt;减少Cookie体积&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#dom-access"&gt;DOM access&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;图片尺寸优化&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="http"&gt;减少HTTP请求数&lt;/h1&gt;
+&lt;p&gt;减少页面上css,js,图片的文件个数。&lt;/p&gt;
+&lt;h1 id="cdn"&gt;使用内容分发网络(CDN)&lt;/h1&gt;
+&lt;p&gt;解决夸地域访问使用CDN是最好的方式了，省钱又省力。&lt;/p&gt;
+&lt;h1 id="expires-and-cache-control"&gt;Expires and Cache-Control&lt;/h1&gt;
+&lt;p&gt;设置页面的Expires和Cache-Control:max-age来缓存页面，注意这时候服务端的访问统计就会受影响了，建议使用百度统计或者google统计来解决页面访问统计的问题。&lt;/p&gt;
+&lt;h1 id="gzip"&gt;使用Gzip压缩&lt;/h1&gt;
+&lt;p&gt;这个不用多说了，压缩为50%是很正常的，通常压缩比可以达到1/8或者更高(1/10)。这对于传输来说时间减少非常明显。&lt;/p&gt;
+&lt;h1 id="cssjscssjs"&gt;css在前，js在后,不要在CSS中使用js&lt;/h1&gt;
+&lt;p&gt;css放到Head里，js放到页面最后，避免在css中使用js表达式。&lt;/p&gt;
+&lt;h1 id="cssjshtml"&gt;css，js用外部文件，不要写在html中&lt;/h1&gt;
+&lt;p&gt;css和js写在页面里面确实可以减少请求次数，但也存在的问题是这写不经常改变的资源也随着这个页面无法cache了，或者cache时间无法很长（页面需要更新）。所以这个必须折中考虑，并且应该尽量将css和js放在单独的文件中，然后include，这部分资源的cache时间可以设置很长，通过文件名戴上版本号来更新资源。&lt;/p&gt;
+&lt;h1 id="jscss"&gt;压缩js，css&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://developer.yahoo.com/yui/compressor/"&gt;YUI Compressor&lt;/a&gt;你可以试试。&lt;/p&gt;
+&lt;h1 id="redirect"&gt;减少Redirect&lt;/h1&gt;
+&lt;p&gt;301,302这个是不cached&lt;/p&gt;
+&lt;h1 id="etaglast-modified-header"&gt;Etag和Last-Modified Header&lt;/h1&gt;
+&lt;p&gt;这些Header可以有助于产生304,避免相同内容重复传输。&lt;/p&gt;
+&lt;h1 id="ajaxget"&gt;Ajax请求尽量多是GET请求&lt;/h1&gt;
+&lt;p&gt;XMLHttpRequest的POST请求是个两阶段的，先发送header再发送data，如果不是提交数据而是请求数据的情况下，尽量使用GET请求来减少网络耗时。&lt;/p&gt;
+&lt;h1 id="_1"&gt;预加载和延迟加载&lt;/h1&gt;
+&lt;p&gt;有些资源比如在下一个页面是需要的，可以在前一个页面用js来预加载。同时有些资源是在页面渲染完用户采取动作后才需要的，在当前页面就可以采用延迟加载来提高用户体验。&lt;/p&gt;
+&lt;h1 id="_2"&gt;减少页面复杂度&lt;/h1&gt;
+&lt;p&gt;减少DOM元素的个数对提升页面速度是很有帮助的。&lt;a href="http://developer.yahoo.com/yui/"&gt;YUI CSS utilities&lt;/a&gt;可以用来帮助你布局页面。&lt;/p&gt;
+&lt;h1 id="_3"&gt;使用多个域来提供性能&lt;/h1&gt;
+&lt;p&gt;多个域有助于提高下载并发度，但同时dns lookup也是一个考虑因素，一般不建议超过4个域。&lt;/p&gt;
+&lt;h1 id="cookie"&gt;减少Cookie体积&lt;/h1&gt;
+&lt;p&gt;cookie在请求的时候都会携带在header中的，所以不要携带过长或没有意义的cookie。&lt;/p&gt;
+&lt;h1 id="dom-access"&gt;DOM access&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://yuiblog.com/blog/2007/12/20/video-lecomte/"&gt;High Performance Ajax Applications&lt;/a&gt;这个对提高Ajax的效率应该有帮助。&lt;/p&gt;
+&lt;h1 id="_4"&gt;图片尺寸优化&lt;/h1&gt;
+&lt;p&gt;现在网站都用很多图片，效果是好看了，但速度上一定得做好优化。压缩图片体积，合并多张图片用css裁剪都是有效的提高加载速度的方法。&lt;/p&gt;
+&lt;h1 id="_5"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://developer.yahoo.com/performance/rules.html"&gt;Best Practices for Speeding Up Your Web Site&lt;/a&gt;&lt;/p&gt;</summary><category term="cdn"></category><category term="optimize"></category><category term="speed"></category><category term="webpage"></category><category term="gzip"></category></entry><entry><title>随机抽样问题</title><link href="%22http://example.com%22/reservoir-sampling.html" rel="alternate"></link><updated>2012-10-19T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-10-19:reservoir-sampling.html</id><summary type="html">&lt;h1 id="_1"&gt;问题&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    要求从N个元素中随机的抽取k个元素，其中N无法确定。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_2"&gt;伪代码&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    Init : a reservoir with the size： k
+         for i= k+1 to N
+              M=random(1, i);
+              if( M &amp;lt; k)
+                 SWAP the Mth value and ith value
+         end for
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_3"&gt;证明&lt;/h1&gt;
+&lt;p&gt;初始情况: i&amp;lt;=k,i个元素全部放入水库，每个元素出现在水池的概率为1。&lt;/p&gt;
+&lt;p&gt;假设k&amp;lt;=j&amp;lt;=i时结论成立。&lt;/p&gt;
+&lt;p&gt;当j=i+1,第i+1个元素会以k/(i+1)的概率被选中, 前i个元素在本次替换操作完成时出现在水池的概率分解为：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    1) 在i+1选择前出现在水池中,这个概率是k/i
+    2) 并且在i+1次没有被替换掉,这个概率=1-这个元素被替换掉的概率=1-k/(i+1)*(1/k)=i/(i+1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;所以前i个元素出现在水池的概率为(k/i)*(i/(i+1))=k/(i+1)&lt;/p&gt;
+&lt;p&gt;由归纳法可知结论成立。&lt;/p&gt;</summary><category term="random sampling"></category><category term="reservoir sampling"></category></entry><entry><title>Java程序CPU使用分析</title><link href="%22http://example.com%22/java-cpu-usage-analysis.html" rel="alternate"></link><updated>2012-09-18T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-09-18:java-cpu-usage-analysis.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#topcpujava"&gt;用top找出cpu消耗过高的java进程&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cpu"&gt;查看cpu消耗过高的线程。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#jstack"&gt;用jstack分析线程栈&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;跟踪代码定位问题&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="topcpujava"&gt;用top找出cpu消耗过高的java进程&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;top - 11:49:39 up 1 day,  1:53,  8 users,  load average: 0.24, 0.13, 0.22
+Tasks: 210 total,   2 running, 203 sleeping,   0 stopped,   5 zombie
+Cpu(s):  7.8%us,  3.7%sy,  0.1%ni, 87.2%id,  1.0%wa,  0.0%hi,  0.2%si,  0.0%st
+Mem:   3343444k total,  2968552k used,   374892k free,    84140k buffers
+Swap:  1951860k total,   631640k used,  1320220k free,   420808k cached
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+16423 wangweiw  20   0  677m 205m 8900 S  101  6.3   0:14.16 java
+ 6783 wangweiw  20   0 1750m 1.1g  33m S    6 35.8 149:45.22 java
+ 1246 root      20   0  234m  57m  12m S    2  1.8  46:16.49 Xorg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比如我们分16423析这个java进程。&lt;/p&gt;
+&lt;h1 id="cpu"&gt;查看cpu消耗过高的线程。&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;top -H -p 16423
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+16457 wangweiw  20   0  677m 209m 8900 R  100  6.4   2:30.00 java
+16423 wangweiw  20   0  677m 209m 8900 S    0  6.4   0:00.00 java
+16424 wangweiw  20   0  677m 209m 8900 S    0  6.4   0:01.24 java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后我们再分析16457这个线程&lt;/p&gt;
+&lt;h1 id="jstack"&gt;用jstack分析线程栈&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;jstack $pid|grep -A N $nid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此处的pid就是16423, nid就是16457，由于jstack输出中的thread id是16进制的，所以要把16457转换成16进制:4049。grep命令中的-A表示显示后面若干行，比如这里显示了grep到的行的后面10行，这个可以根据输出来调整。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstack 16423|grep -A 10 4049
+"qtp16147692-26" prio=10 tid=0x8e7e5c00 nid=0x4049 runnable [0x8e133000]
+   java.lang.Thread.State: RUNNABLE
+    at org.restlet.engine.http.header.HeaderReader.addValues(HeaderReader.java:254)
+    at org.restlet.engine.http.ServerCall.getRequestEntity(ServerCall.java:215)
+    at org.restlet.engine.http.HttpRequest.getEntity(HttpRequest.java:488)
+    at org.restlet.engine.application.Decoder.beforeHandle(Decoder.java:123)
+    at org.restlet.routing.Filter.handle(Filter.java:204)
+    at org.restlet.routing.Filter.doHandle(Filter.java:159)
+    at org.restlet.engine.application.StatusFilter.doHandle(StatusFilter.java:155)
+    at org.restlet.routing.Filter.handle(Filter.java:206)
+    at org.restlet.routing.Filter.doHandle(Filter.java:159)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_1"&gt;跟踪代码定位问题&lt;/h1&gt;
+&lt;p&gt;此处这个程序是使用了Restlet框架做的一个web服务，addValues这个方法体如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  public void addValues(Collection&amp;lt;V&amp;gt; values) {
+        try {
+            // Skip leading spaces
+            skipSpaces();
+
+            do {
+                // Read the first value
+                V nextValue = readValue();
+                if (canAdd(nextValue, values)) {
+                    // Add the value to the list
+                    values.add(nextValue);
+                }
+
+                // Attempt to skip the value separator
+                skipValueSeparator();
+            } while (peek() != -1);
+        } catch (IOException ioe) {
+            Context.getCurrentLogger().log(Level.INFO,
+                    "Unable to read a header", ioe);
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看到这里有个while循环，再分析下skipSpaces,readValue,peek几个函数后就很容易构造一个死循环的例子：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;EncodingReader encodingReader = new EncodingReader("修改gzip");
+encodingReader.addValues(new ArrayList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个bug虽然命中概率很低，但是一旦命中，程序瞬间就崩溃了，这个问题在我们一个服务里遇到，只要用户的某次请求的header出现非法字符，一个线程就被占用并且是100% cpu占用，虽然这样的请求可能一天只有一个，但几天之后服务器cpu load就高的不行，只能重启程序解决。当然这样肯定不是长远的解决方案，更好的方案是在前端nginx上override出问题的header，来避免这样的请求进入到restlet代码层，目前看来进入restlet代码层，我们的程序就无能为力了。比如出问题的header是Content-Encoding,那么nginx的location可以配置如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;location / {
+          proxy_pass http://xxx_upstream;
+          proxy_set_header Host $host;
+          proxy_set_header Content-Encoding gzip;
+          proxy_set_header        X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_connect_timeout 6;
+          proxy_read_timeout 60;
+          proxy_send_timeout 60;
+        }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当然也可以修改restlet源代码解决，不过这样后续升级restlet的时候会麻烦一些。&lt;/p&gt;</summary><category term="java"></category><category term="cpu"></category><category term="usage"></category><category term="top"></category><category term="jstack"></category><category term="kill"></category></entry><entry><title>Android上用Tcpdump抓包</title><link href="%22http://example.com%22/android-tcpdump.html" rel="alternate"></link><updated>2012-08-25T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-08-25:android-tcpdump.html</id><summary type="html">&lt;h1 id="_1"&gt;下载&lt;/h1&gt;
+&lt;p&gt;下载tcpdump， 还有个地址是http://www.eecs.umich.edu/~timuralp/tcpdump-arm，下载重命名为tcpdump&lt;/p&gt;
+&lt;h1 id="_2"&gt;使用&lt;/h1&gt;
+&lt;p&gt;详细使用请参考http://www.tcpdump.org/里面的文档&lt;/p&gt;
+&lt;p&gt;机器是需要root过才能使用tcpdump的。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb push c:/wherever_you_put/tcpdump /data/local/tcpdump
+adb shell chmod 6755 /data/local/tcpdump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;抓包很简单(需要root权限）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb shell
+su（这个是换成root用户）
+/data/local/tcpdump -p -vv -s 0 -w /sdcard/capture.pcap
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;接着就会看到：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tcpdump: listening on wlan0, link-type EN10MB (Ethernet), capture size 65535 bytes
+Got 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;CTRL—C停止抓包，然后两次exit，再然后：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb pull /sdcard/capture.pcap
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后用wireshark在pc机上就可以分析了。&lt;/p&gt;
+&lt;p&gt;下载wireshark查看数据包，地址是http://www.wireshark.org/download.html，打开这个数据包，就可以查看了。&lt;/p&gt;</summary><category term="tcpdump"></category><category term="android"></category></entry><entry><title>Java虚拟机GC调整</title><link href="%22http://example.com%22/jvm-gc-tuning.html" rel="alternate"></link><updated>2012-08-25T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-08-25:jvm-gc-tuning.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#java"&gt;Java垃圾回收介绍&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;垃圾回收算法&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#reference-counting"&gt;引用计数（Reference Counting）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#-mark-sweep"&gt;标记-清除（Mark-Sweep）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#copying"&gt;复制（Copying）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#-mark-compact"&gt;标记-整理（Mark-Compact）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#incremental-collecting"&gt;增量收集（Incremental Collecting）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#generational-collecting"&gt;分代（Generational Collecting）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gcscavenge-gcfull-gc"&gt;GC的两种类型：Scavenge GC和Full GC。&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#scavenge-gc"&gt;Scavenge GC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#full-gc"&gt;Full GC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#java-garbage-collector"&gt;Java Garbage Collector&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;串行收集器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;并行收集器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;并发收集器&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#jvm-gc"&gt;针对并发收集器的JVM GC参数调整&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#jstat"&gt;jstat的使用&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#gcutil"&gt;gcutil&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gcnew"&gt;gcnew&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gcold"&gt;gcold&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ps-top"&gt;ps, top的使用&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;常用配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#64"&gt;使用64位服务器的线上服务的推荐配置&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="java"&gt;Java垃圾回收介绍&lt;/h1&gt;
+&lt;p&gt;我们先来看一张对象生存期的图。横轴是对象分配后的生存期，纵轴是相应生存期的字节总数。从这张图我们可以看出绝大多数对象的生存期是很短暂的。
+比如程序中随处可见的局部变量。对于那些长期生存的变量，比如程序内部的计数器，cache等都需要长期占用内存，这些也就是图中右边的部分。当然这个图是对大多数程序的统计，不是所有的程序都符合这个图的，比如一个用java写的内存cache服务就可能完全不是这样的分布。
+&lt;img alt="memory generation" src="images/jvm_mem_generation.gif" /&gt;&lt;/p&gt;
+&lt;p&gt;由于大多数程序具有上面所说的特征，所以jvm中的内存按照generation的方式进行管理。当一个generation被填满后，就会对这个generation进行回收。minor回收后仍然存活的对象会被迁移到major generation中。major generaiton满了之后也会进行一次回收。minor,major回收的代价是不同的，minor回收过程中大多数对象都是可以被释放的，而major回收的时候大多数对象都是不可释放的，所以major回收要比minor回收慢的多。由于分代管理的特点，我们在程序内存分配上也就会遇到分代分配内存来减少gc从而提供程序更好的性能。Java中的缺省的代分布大致如下（并行垃圾收集器除外）：
+&lt;img alt="generation_structure" src="images/generation_structure.gif" /&gt;&lt;/p&gt;
+&lt;p&gt;初始化的时候，最大的地址空间虚拟地保留住而没有分配出去，直到真的需要的时候为止。整个保留的对象地址空间被分给了年轻的和年老的代。&lt;/p&gt;
+&lt;p&gt;年轻代包括Eden Space和两个Survivor Space。大部分对象最初在Eden Space被分配出来。一个Survivor Space在任意时刻都是空的，作为Eden的活对象的目的地，另一个是用于下一次收集。对象在幸存者空间之间停留到足够老之后，就会被复制到Tenured Space去了。&lt;/p&gt;
+&lt;p&gt;另一个和Tenured Space有密切关系的代是永久代（permanent），这里保存着虚拟机需要的类和方法等元数据对象。&lt;/p&gt;
+&lt;p&gt;以上内容参考自&lt;a href="http://developer.51cto.com/art/201208/351690.htm"&gt;http://developer.51cto.com/art/201208/351690.htm&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;通过在启动java程序的时候增加命令行参数-XX:+PrintGCDetails可以输出垃圾回收的信息。比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[GC [DefNew: 64575K-&amp;gt;959K(64576K), 0.0457646 secs] 196016K-&amp;gt;133633K(261184K), 0.0459067 secs]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个信息显示，这次小回收收回了 98% 的 DefNew 年轻代的数据，64575K-&amp;gt;959K(64576K) 并在其上消耗了 0.0457646 secs（大约45毫秒）。整个堆的占用率下降了大约51％ 196016K-&amp;gt;133633K(261184K)，而且通过最终的时间 0.0459067 secs 显示在垃圾收集中有轻微的开销（在年轻代之外的时间）。&lt;/p&gt;
+&lt;h2 id="_1"&gt;垃圾回收算法&lt;/h2&gt;
+&lt;h3 id="reference-counting"&gt;引用计数（Reference Counting）&lt;/h3&gt;
+&lt;p&gt;比较古老的回收算法。原理是此对象有一个引用，即增加一个计数，删除一个引用则减少一个计数。垃圾回收时，只用收集计数为0的对象。此算法最致命的是无法处理循环引用的问题。&lt;/p&gt;
+&lt;h3 id="-mark-sweep"&gt;标记-清除（Mark-Sweep）&lt;/h3&gt;
+&lt;p&gt;此算法执行分两阶段。第一阶段从引用根节点开始标记所有被引用的对象，第二阶段遍历整个堆，把未标记的对象清除。此算法需要暂停整个应用，同时，会产生内存碎片。&lt;/p&gt;
+&lt;h3 id="copying"&gt;复制（Copying）&lt;/h3&gt;
+&lt;p&gt;此 算法把内存空间划为两个相等的区域，每次只使用其中一个区域。垃圾回收时，遍历当前使用区域，把正在使用中的对象复制到另外一个区域中。次算法每次只处理 正在使用中的对象，因此复制成本比较小，同时复制过去以后还能进行相应的内存整理，不过出现“碎片”问题。当然，此算法的缺点也是很明显的，就是需要两倍 内存空间。&lt;/p&gt;
+&lt;h3 id="-mark-compact"&gt;标记-整理（Mark-Compact）&lt;/h3&gt;
+&lt;p&gt;此算法结合了 “标记-清除”和“复制”两个算法的优点。也是分两阶段，第一阶段从根节点开始标记所有被引用对象，第二阶段遍历整个堆，把清除未标记对象并且把存活对象 “压缩”到堆的其中一块，按顺序排放。此算法避免了“标记-清除”的碎片问题，同时也避免了“复制”算法的空间问题。&lt;/p&gt;
+&lt;h3 id="incremental-collecting"&gt;增量收集（Incremental Collecting）&lt;/h3&gt;
+&lt;p&gt;实施垃圾回收算法，即：在应用进行的同时进行垃圾回收。不知道什么原因JDK5.0中的收集器没有使用这种算法的。&lt;/p&gt;
+&lt;h3 id="generational-collecting"&gt;分代（Generational Collecting）&lt;/h3&gt;
+&lt;p&gt;基于对对象生命周期分析后得出的垃圾回收算法。把对象分为年青代、年老代、持久代，对不同生命周期的对象使用不同的算法（上述方式中的一个）进行回收。现在的垃圾回收器（从J2SE1.2开始）都是使用此算法的&lt;/p&gt;
+&lt;h2 id="gcscavenge-gcfull-gc"&gt;GC的两种类型：Scavenge GC和Full GC。&lt;/h2&gt;
+&lt;h3 id="scavenge-gc"&gt;Scavenge GC&lt;/h3&gt;
+&lt;p&gt;一般情况下，当新对象生成，并且在Eden申请空间失败时，就好触发Scavenge GC，堆Eden区域进行GC，清除非存活对象，并且把尚且存活的对象移动到Survivor区。然后整理Survivor的两个区。&lt;/p&gt;
+&lt;h3 id="full-gc"&gt;Full GC&lt;/h3&gt;
+&lt;p&gt;对整个堆进行整理，包括Young、Tenured和Perm。Full GC比Scavenge GC要慢，因此应该尽可能减少Full GC。有如下原因可能导致Full GC：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tenured被写满&lt;/li&gt;
+&lt;li&gt;Perm域被写满&lt;/li&gt;
+&lt;li&gt;System.gc()被显示调用，这个一般我们会通过jvm参数禁止程序主动触发Full GC，因为可能的误用会导致很多不可知的问题无法追踪。&lt;/li&gt;
+&lt;li&gt;上一次GC之后Heap的各域分配策略动态变化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="java-garbage-collector"&gt;Java Garbage Collector&lt;/h2&gt;
+&lt;h3 id="_2"&gt;串行收集器&lt;/h3&gt;
+&lt;p&gt;单线程垃圾回收，适用于单处理器机器。开关:-XX: +UseSerialGC。这个在线上的服务中一般不会使用，效率太差。&lt;/p&gt;
+&lt;h3 id="_3"&gt;并行收集器&lt;/h3&gt;
+&lt;p&gt;对年轻代进行并行垃圾回收，因此可以减少垃圾回收时间。一般在多线程多处理器机器上使用。开关: -XX:+UseParallelGC。并行收集器在J2SE5.0更新6上引入，在Java SE6.0中进行了增强：可以堆年老代进行并行收集。如果年老代不使用并发收集的话，是使用单线程进行垃圾回收，因此会较慢，开关：-XX:+UseParallelOldGC。参数-XX:ParallelGCThreads=&lt;N&gt;可以控制并发回收的线程数目，一般设置成处理器个数。&lt;/p&gt;
+&lt;h3 id="_4"&gt;并发收集器&lt;/h3&gt;
+&lt;p&gt;这个处理器用cpu时间换取程序较少的延时，适合对响应时间要求比较高的应用中。开关：-XX:+UseConcMarkSweepGC。对于大型的线上WEB Server(tomcat,jetty)推荐使用这个并发收集器。&lt;/p&gt;
+&lt;h1 id="jvm-gc"&gt;针对并发收集器的JVM GC参数调整&lt;/h1&gt;
+&lt;h2 id="jstat"&gt;jstat的使用&lt;/h2&gt;
+&lt;p&gt;这是一个jvm统计信息监控工具，可以获取程序运行时的内存使用，gc相关的信息。详细请看&lt;a href="http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html"&gt;http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="gcutil"&gt;gcutil&lt;/h3&gt;
+&lt;p&gt;格式jstat -gcutil pid sampling-interval&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstat -gcutil 20181 10000
+S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
+0.00  59.83  21.57  52.84  60.82  18949   60.227    64    3.875   64.102
+71.31   0.00  48.04  53.15  60.82  18950   60.231    64    3.875   64.107
+0.00  35.37  88.95  53.53  60.82  18951   60.235    64    3.875   64.110
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从输出的第二行可以看出，发生了一次YGC，S1和E的内存gc收集到S0。S1变成0了，E反而变大了，这跟我们采样的时间有关系，两次采样中，发生了一次GC，在这次GC的时候E肯定是变小了，但是后续又会慢慢变大。从gcutil的输出我们可以看出P,O,E区的变化情况，根据这个变化情况可以做JVM参数-Xms,-Xmx,-Xmn的调整。比如我一开始没有设置Perm区大小，导致Perm区占用90+%，会有不必要的Full GC因此产生，所以通过使用-XX:PermSize=64M调整了之后Perm区的使用就比较正常了60%左右。&lt;/p&gt;
+&lt;p&gt;-Xms,-Xmx最好设置成一样的值，这样可以避免每次垃圾回收后JVM重新分配内存。
+-Xmn设置年轻代的大小，这个值对GC影响很大，Sun官方推荐配置为整个堆的3/8。&lt;/p&gt;
+&lt;h3 id="gcnew"&gt;gcnew&lt;/h3&gt;
+&lt;p&gt;这个选项可以统计新生代的使用情况。输出格式说明见&lt;a href="http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcnew_option"&gt;http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcnew_option&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstat -gcnew 20181 10000
+ S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
+2072.0 2172.0 1996.6    0.0  4   4 2172.0 1740080.0 1207943.9  26368   83.442
+2144.0 2144.0    0.0 1664.2  4   4 2144.0 1740008.0 104411.5  26369   83.446
+2144.0 2144.0    0.0 1664.2  4   4 2144.0 1740008.0 714089.3  26369   83.446
+2144.0 2144.0    0.0 1664.2  4   4 2144.0 1740008.0 1296241.8  26369   83.446
+2144.0 2088.0 1734.0    0.0  4   4 2088.0 1740008.0 250903.7  26370   83.449
+2144.0 2088.0 1734.0    0.0  4   4 2088.0 1740008.0 858157.7  26370   83.449
+2144.0 2088.0 1734.0    0.0  4   4 2088.0 1740008.0 1436100.2  26370   83.449
+2084.0 2084.0    0.0 1582.4  4   4 2084.0 1740008.0 264672.0  26371   83.452
+2084.0 2084.0    0.0 1582.4  4   4 2084.0 1740008.0 901329.4  26371   83.452
+2084.0 2084.0    0.0 1582.4  4   4 2084.0 1740008.0 1489804.7  26371   83.452
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从这个输出我们可以看出E,S0,S1的使用情况，如果出现不合理的地方我们可以用参数-XX:SurvivorRatio来控制，也可以选择使用-XX:+UseAdaptiveSizePolicy来让JVM自动调整这个比例，建议在使用UseConcMarkSweepGC的时候开启这个选项。这个选项的输出有助于我们调整-Xmn这个参数。&lt;/p&gt;
+&lt;h3 id="gcold"&gt;gcold&lt;/h3&gt;
+&lt;p&gt;这个选项用来统计老生代的使用情况。输出格式见&lt;a href="http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcold_option"&gt;http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcold_option&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstat -gcold 20181 10000
+   PC       PU        OC          OU       YGC    FGC    FGCT     GCT   
+ 65536.0  39881.8    262144.0    223912.1  26397    77    4.644   88.178
+ 65536.0  39881.8    262144.0    223988.4  26398    77    4.644   88.180
+ 65536.0  39881.8    262144.0    223988.4  26398    77    4.644   88.180
+ 65536.0  39881.8    262144.0    223988.4  26398    77    4.644   88.180
+ 65536.0  39881.8    262144.0    224037.7  26399    77    4.644   88.184
+ 65536.0  39881.8    262144.0    224037.7  26399    77    4.644   88.184
+ 65536.0  39881.8    262144.0    224037.7  26399    77    4.644   88.184
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个输出可以观察到P，O两个代的使用情况。比如这个输出我们可以看到Perm区分配了65M，使用了39M，老生代分配了262M，使用了224M左右，老生代使用的还是比较多的，所以可以考虑多给老生代分配一些内存来减少Full GC的次数。&lt;/p&gt;
+&lt;h1 id="ps-top"&gt;ps, top的使用&lt;/h1&gt;
+&lt;p&gt;使用这两个参数可以观察程序的启动时间，cpu和内存的使用情况，在出现不合理的使用之后就可以借助jstat这个工具来分析问题的原因并解决。两个命令的说明参看：&lt;a href="http://os.51cto.com/art/201108/285581.htm"&gt;top&lt;/a&gt;, &lt;a href="http://os.51cto.com/art/200910/158897.htm"&gt;ps&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;下面是top命令的输出片段&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+20181 work      19   0 2790m 2.2g  11m S 35.2  7.0   1981:50 java
+14285 work      15   0 2846m 1.1g  772 S 12.6  3.6  10836:16 redis-server
+29378 work      19   0 2782m 973m  10m S  3.7  3.0   8:17.47 java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从输出我们可以得到如下数据:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;PID：进程的ID&lt;/li&gt;
+&lt;li&gt;USER：进程所有者&lt;/li&gt;
+&lt;li&gt;PR：进程的优先级别，越小越优先被执行&lt;/li&gt;
+&lt;li&gt;NInice：值&lt;/li&gt;
+&lt;li&gt;VIRT：进程占用的虚拟内存&lt;/li&gt;
+&lt;li&gt;RES：进程占用的物理内存&lt;/li&gt;
+&lt;li&gt;SHR：进程使用的共享内存&lt;/li&gt;
+&lt;li&gt;S：进程的状态。S表示休眠，R表示正在运行，Z表示僵死状态，N表示该进程优先值为负数&lt;/li&gt;
+&lt;li&gt;%CPU：进程占用CPU的使用率&lt;/li&gt;
+&lt;li&gt;%MEM：进程使用的物理内存和总内存的百分比&lt;/li&gt;
+&lt;li&gt;TIME+：该进程启动后占用的总的CPU时间，即占用CPU使用时间的累加值，单位1/100秒。&lt;/li&gt;
+&lt;li&gt;COMMAND：进程启动命令名称&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;通过%MEM和%CPU和TIME+可以判断程序是否存在不正确的配置或者程序本身的代码存在问题。&lt;/p&gt;
+&lt;p&gt;ps命令可以查看程序的启动命令，启动时间，用户，pid，cpu,mem等信息。举例:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps uxf|grep java
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+work     15880  0.0  0.0  61164   788 pts/1    S+   14:57   0:00      \_ grep java
+work     29378  5.3  3.0 2849656 1008196 pts/1 Sl   11:59   9:35 java -Xms2g -Xmx2g -Xmn768m -server -XX:PermSize=64M -XX:MaxPermSize=64M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseAdaptiveSizePolicy -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+UseCMSCompactAtFullCollection -XX:+DisableExplicitGC -XX:CMSFullGCsBeforeCompaction=10 -XX:CMSMaxAbortablePrecleanTime=5 -XX:+HeapDumpOnOutOfMemoryError -jar xxx1.jar
+work     20181 27.9  7.0 2825996 2314764 ?     Sl   Aug12 1991:36 java -Xms2g -Xmx2g -Xmn1792m -server -XX:PermSize=64M -XX:MaxPermSize=64M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseAdaptiveSizePolicy -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+UseCMSCompactAtFullCollection -XX:+DisableExplicitGC -XX:CMSFullGCsBeforeCompaction=10 -XX:CMSMaxAbortablePrecleanTime=5 -XX:+HeapDumpOnOutOfMemoryError -jar xxx2.jar
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_5"&gt;常用配置&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-Xms 初始堆大小&lt;/li&gt;
+&lt;li&gt;-Xmx 最大堆大小&lt;/li&gt;
+&lt;li&gt;-Xmn 新生代大小&lt;/li&gt;
+&lt;li&gt;-Xss 线程堆栈大小,32位Solaris JVM上默认值是512kB,32位Linux和Windows是320kB，64位JVM是1024kB。通常我们不需要这么大的stack size，可以调整为256k以减少内存消耗&lt;/li&gt;
+&lt;li&gt;-XX:MaxPermSize 持久代最大值&lt;/li&gt;
+&lt;li&gt;-XX:PermSize   持久代初始值&lt;/li&gt;
+&lt;li&gt;-XX:+UseSerialGC:设置串行收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseParallelGC:设置并行收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseParalledlOldGC:设置并行年老代收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseConcMarkSweepGC:设置并发收集器&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGC 输出GC信息&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGCDetails 输出GC详细信息，比上一个命令的输出更详细&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGCTimeStamps 打印GC时间戳&lt;/li&gt;
+&lt;li&gt;-Xloggc:filename&lt;/li&gt;
+&lt;li&gt;-XX:+UseCMSCompactAtFullCollection：使用并发收集器时，开启对年老代的压缩&lt;/li&gt;
+&lt;li&gt;-XX:CMSFullGCsBeforeCompaction：上面配置开启的情况下，这里设置多少次Full GC后，对年老代进行压缩&lt;/li&gt;
+&lt;li&gt;-XX:+DisableExplicitGC 关闭System.gc()的调用。&lt;/li&gt;
+&lt;li&gt;-XX:+CMSClassUnloadingEnabled 开启GC清理不在使用的Perm区的类对象，这个在代码中存在动态生成类的应用中很重要，比如Groovy。一般的Java应用不太需要。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="64"&gt;使用64位服务器的线上服务的推荐配置&lt;/h2&gt;
+&lt;p&gt;年轻代设置为堆大小的3/8，内存可以设置为2G以上，Perm区设置64M，开启-XX:+UseConcMarkSweepGC，比如下面的配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; nohup java -Xms4g -Xmx4g -Xmn1536m -Xss256k\
+ -server \
+ -XX:PermSize=64M \
+ -XX:MaxPermSize=64M \
+ -XX:+UseConcMarkSweepGC \
+ -XX:+UseAdaptiveSizePolicy \
+ -XX:+CMSClassUnloadingEnabled \
+ -XX:+UseCMSCompactAtFullCollection \
+ -XX:+DisableExplicitGC \
+ -XX:CMSFullGCsBeforeCompaction=10 \
+ -XX:CMSMaxAbortablePrecleanTime=5 \
+ -XX:+HeapDumpOnOutOfMemoryError \
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后观察程序的运行状况(top,ps,jstat)再做细微的调整。&lt;/p&gt;
+&lt;h1 id="_6"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://blog.sina.com.cn/s/blog_628961a10100gho5.html"&gt;jvm垃圾回收参数配置&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://developer.51cto.com/art/201208/351690.htm"&gt;http://developer.51cto.com/art/201208/351690.htm&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://os.51cto.com/art/201005/200741.htm"&gt;Linux监控工具大全&lt;/a&gt;&lt;/p&gt;</summary><category term="java"></category><category term="jvm"></category><category term="garbage collection"></category></entry><entry><title>常用shell命令</title><link href="%22http://example.com%22/common-shell-command.html" rel="alternate"></link><updated>2012-08-19T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-08-19:common-shell-command.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;测试文件&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#testtxt"&gt;test.txt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sort"&gt;sort&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#uniq"&gt;uniq&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#join"&gt;join&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#awk"&gt;awk&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_8"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#http-server"&gt;分析http server的处理速度&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#http"&gt;切割http请求参数的样例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sed"&gt;sed&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_9"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_10"&gt;需要注意的地方&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#1txt"&gt;1.txt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#2txt"&gt;2.txt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#join-with-default-lang"&gt;join with default LANG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#join-with-lc_allc"&gt;join with LC_ALL=C&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;测试文件&lt;/h1&gt;
+&lt;h2 id="testtxt"&gt;test.txt&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;title
+slug
+category
+tag
+slug
+tag
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="sort"&gt;sort&lt;/h1&gt;
+&lt;p&gt;这个命令可以对文件或者输入流进行排序输出。&lt;/p&gt;
+&lt;h2 id="_2"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-t 分隔符，通过这个可以将每一行分隔成若干字段，比如\t分隔的时候要传递-t $'\t'&lt;/li&gt;
+&lt;li&gt;-k 选择排序的字段，比如以第一个字段k1,1，以前两个字段排序的话就是-k1,2&lt;/li&gt;
+&lt;li&gt;-n 以数字排序而非字符串的字典序&lt;/li&gt;
+&lt;li&gt;-r 倒序排列&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_3"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;cat test.txt|sort -t $'\t' -k1,1 -r
+title
+tag
+tag
+slug
+slug
+category
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="uniq"&gt;uniq&lt;/h1&gt;
+&lt;p&gt;这个命令可以统计文件中重复行，需要输入是排序过的。&lt;/p&gt;
+&lt;h2 id="_4"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-f 表示跳过若干个字段，也就是这写字段不作为唯一性检查的key，分隔符是空白字符，无法指定&lt;/li&gt;
+&lt;li&gt;-s 表示跳过若干个字符&lt;/li&gt;
+&lt;li&gt;-c 打印重复行的数目&lt;/li&gt;
+&lt;li&gt;-i 忽略大小写&lt;/li&gt;
+&lt;li&gt;-d 只输出重复行&lt;/li&gt;
+&lt;li&gt;-u 只输出不同的行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;需要注意的是uniq输入需要是sort过的，否则结果不正确。&lt;/p&gt;
+&lt;h2 id="_5"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;cat test.txt|sort -t $'\t' -k1,1|uniq -c
+1 title
+2 tag
+2 slug
+1 category
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="join"&gt;join&lt;/h1&gt;
+&lt;p&gt;这个命令可以join两个文件中的若干列，类似与mysql的join命令, 输入的文件需要是排序过的。&lt;/p&gt;
+&lt;h2 id="_6"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-1 第一个文件的join字段&lt;/li&gt;
+&lt;li&gt;-2 第二个文件的join字段&lt;/li&gt;
+&lt;li&gt;-o 指定输出格式，每个字段的格式是M.N，M是文件编号1或者2,N是字段编号，从1开始。&lt;/li&gt;
+&lt;li&gt;-t 指定分隔符，类似与sort命令中的-t&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_7"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;sort test.txt &amp;gt; 1.txt
+&amp;gt;head -1 1.txt &amp;gt; 2.txt
+&amp;gt;join -1 1 -2 1 -o 1.1 2.1 -t $'\t' 1.txt  2.txt
+category    category
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="awk"&gt;awk&lt;/h1&gt;
+&lt;p&gt;awk是一种编程语言，用于在linux/unix下对文本和数据进行处理。数据可以来自标准输入、一个或多个文件，或其它命令的输出。它支持用户自定义函数和动态正则表达式等先进功能，是linux/unix下的一个强大编程工具。它在命令行中使用，但更多是作为脚本来使用。awk的处理文本和数据的方式是这样的，它逐行扫描文件，从第一行到最后一行，寻找匹配的特定模式的行，并在这些行上进行你想要的操作。如果没有指定处理动作，则把匹配的行显示到标准输出(屏幕)，如果没有指定模式，则所有被操作所指定的行都被处理。awk分别代表其作者姓氏的第一个字母。因为它的作者是三个人，分别是Alfred Aho、Brian Kernighan、Peter Weinberger。gawk是awk的GNU版本，它提供了Bell实验室和GNU的一些扩展。下面介绍的awk是以GUN的gawk为例的，在linux系统中已把awk链接到gawk，所以下面全部以awk进行介绍。以上文字摘自&lt;a href="http://man.lupaworld.com/content/manage/ringkee/awk.htm"&gt;Awk学习笔记&lt;/a&gt;。awk语法比上述命令复杂的多，所以学习的话可以参考上面的学习笔记，这里只举例说明下awk在文本分析上的用途。&lt;/p&gt;
+&lt;h2 id="_8"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-F 指定字段分隔符，awk的字段从1开始，0表示整行。&lt;/li&gt;
+&lt;li&gt;-f 指定从文件读入awk代码，不是直接写在命令后面。&lt;/li&gt;
+&lt;li&gt;-v VAR=VAL 从外部向awk脚本传递参数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="http-server"&gt;分析http server的处理速度&lt;/h2&gt;
+&lt;p&gt;假设我们的access.log每一行的字段使用-t分隔，第13个字段是每个请求的耗时,第七个字段是请求类型GET/POST。下面的脚本就可以统计GET请求的最大耗时，最小耗时,平均耗时，请求总数。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;awk -F'\t' 'BEGIN{max=0;min=1000000000;}$7 ~/GET/{if($13&amp;gt;max)max=$13;if($13&amp;lt;min)min=$13;sum+=$13;}END{print max,min,sum/NR,NR}' access.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="http"&gt;切割http请求参数的样例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    {
+     split($9,params,"&amp;amp;");
+     for(idx in params)
+     {
+       p=params[idx];
+       i=index(p,"=")
+       if(i&amp;gt;0)
+       {
+         k=substr(p,1,i-1);
+         v=substr(p,i+1);
+         query[k]=v;
+         print k"\t"v;
+       };
+     }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="sed"&gt;sed&lt;/h1&gt;
+&lt;p&gt;sed是一种在线编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为“模式空间”（pattern space），接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。接着处理下一行，这样不断重复，直到文件末尾。文件内容并没有改变，除非你使用重定向存储输出。Sed主要用来自动编辑一个或多个文件；简化对文件的反复操作；编写转换程序等。以下介绍的是Gnu版本的Sed 3.02。以上文字摘自&lt;a href="http://www.tsnc.edu.cn/tsnc_wgrj/doc/sed.htm"&gt;sed学习笔记&lt;/a&gt;。sed语法也比较复杂，学习的话可以参考上面的sed学习笔记。&lt;/p&gt;
+&lt;h2 id="_9"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;sed 's/ubuntu/linux/g'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在整行范围内把ubuntu替换为linux。如果没有g标记，则只有每行第一个匹配的字符串会被替换。&lt;/p&gt;
+&lt;h1 id="_10"&gt;需要注意的地方&lt;/h1&gt;
+&lt;p&gt;由于sort命令是基于当前字符集的，而不同字符集的字符大小排序和比较方式，所以经常会出现，sort后的join结果不正确的问题。举例:&lt;/p&gt;
+&lt;h2 id="1txt"&gt;1.txt&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;1002547 14
+10025472 14
+1002549 15
+10025492 15
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="2txt"&gt;2.txt&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;10025471 01
+1002547 14
+10025473 01
+10025476 01
+1002549 135
+10025492 115
+10025498 135
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="join-with-default-lang"&gt;join with default LANG&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;env|grep LANG
+LANG=en_US.UTF-8
+&amp;gt;sort 1.txt &amp;gt; 1.sort.txt
+&amp;gt;sort 2.txt &amp;gt; 2.sort.txt
+&amp;gt;join 1.sort.txt 2.sort.txt
+join: file 2 is not in sorted order
+1002549 15 135
+10025492 15 115
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="join-with-lc_allc"&gt;join with LC_ALL=C&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;export LC_ALL=C
+&amp;gt;sort 1.txt &amp;gt; 1.sort.txt
+&amp;gt;sort 2.txt &amp;gt; 2.sort.txt
+&amp;gt;join 1.sort.txt 2.sort.txt
+1002547 14 14
+1002549 15 135
+10025492 15 115
+&lt;/code&gt;&lt;/pre&gt;</summary><category term="bash"></category><category term="shell"></category><category term="log"></category></entry><entry><title>Compress js and css with YUI Compressor Maven Mojo</title><link href="%22http://example.com%22/compress-js-css-with-yui-compressor-maven-pojo.html" rel="alternate"></link><updated>2012-08-19T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-08-19:compress-js-css-with-yui-compressor-maven-pojo.html</id><summary type="html">&lt;h1 id="_1"&gt;配置&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;pluginRepositories&amp;gt;
+    &amp;lt;pluginRepository&amp;gt;
+        &amp;lt;name&amp;gt;oss.sonatype.org&amp;lt;/name&amp;gt;
+        &amp;lt;id&amp;gt;oss.sonatype.org&amp;lt;/id&amp;gt;
+        &amp;lt;url&amp;gt;http://oss.sonatype.org/content/groups/public&amp;lt;/url&amp;gt;
+    &amp;lt;/pluginRepository&amp;gt;
+&amp;lt;/pluginRepositories&amp;gt;
+&amp;lt;plugin&amp;gt;
+            &amp;lt;groupId&amp;gt;net.alchim31.maven&amp;lt;/groupId&amp;gt;
+            &amp;lt;artifactId&amp;gt;yuicompressor-maven-plugin&amp;lt;/artifactId&amp;gt;
+            &amp;lt;executions&amp;gt;
+                &amp;lt;execution&amp;gt;
+                    &amp;lt;goals&amp;gt;
+                        &amp;lt;goal&amp;gt;compress&amp;lt;/goal&amp;gt;
+                    &amp;lt;/goals&amp;gt;
+                &amp;lt;/execution&amp;gt;
+            &amp;lt;/executions&amp;gt;
+            &amp;lt;configuration&amp;gt;
+                &amp;lt;nosuffix&amp;gt;true&amp;lt;/nosuffix&amp;gt;
+                &amp;lt;sourceDirectory&amp;gt;${project.basedir}/web&amp;lt;/sourceDirectory&amp;gt;
+                &amp;lt;outputDirectory&amp;gt;${project.build.directory}/web&amp;lt;/outputDirectory&amp;gt;
+            &amp;lt;/configuration&amp;gt;
+        &amp;lt;/plugin&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_2"&gt;注意事项&lt;/h1&gt;
+&lt;p&gt;这个plugin拷贝js/css文件到制定的目录中，并且会保留原有的目录结构，比如web目录下有js,css这两个文件夹，那么输出的目录target/web中也会有同样的目录结构。但是如果你的web目录下还有其他文件，比如html等，这个plugin不会帮你拷贝到target/web目录下的，这时候需要结合使用maven-resources插件，举例:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    &amp;lt;resources&amp;gt;
+        &amp;lt;resource&amp;gt;
+            &amp;lt;directory&amp;gt;${project.basedir}/web/public/images&amp;lt;/directory&amp;gt;
+            &amp;lt;targetPath&amp;gt;${project.build.directory}/web/public/images&amp;lt;/targetPath&amp;gt;
+        &amp;lt;/resource&amp;gt;
+        &amp;lt;resource&amp;gt;
+            &amp;lt;directory&amp;gt;${project.basedir}/web/public/static&amp;lt;/directory&amp;gt;
+            &amp;lt;targetPath&amp;gt;${project.build.directory}/web/public/static&amp;lt;/targetPath&amp;gt;
+        &amp;lt;/resource&amp;gt;
+    &amp;lt;/resources&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_3"&gt;参考&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://alchim.sourceforge.net/yuicompressor-maven-plugin/compress-mojo.html"&gt;YUI Compressor Maven Mojo&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</summary><category term="js"></category><category term="css"></category><category term="yui"></category><category term="compressor"></category><category term="maven"></category></entry><entry><title>get familar with redis:a great data structure server</title><link href="%22http://example.com%22/get-familar-with-redis.html" rel="alternate"></link><updated>2012-07-28T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-07-28:get-familar-with-redis.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#intro"&gt;intro&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;关于作者&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#redis"&gt;使用redis你可以做哪些事情&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#install"&gt;install&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#test"&gt;test&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#benchmark"&gt;benchmark&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;系统配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;使用的命令&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;测试结果&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#value-size-32"&gt;value size 32&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-128"&gt;value size 128&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-512"&gt;value size 512&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-2048"&gt;value size 2048&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-2048-with-pipeline-4-and-20-clientsdefault-50-clients"&gt;value size 2048 with pipeline 4 and 20 clients(default 50 clients)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#use-case"&gt;use case&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#cache"&gt;cache系统&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;任务队列&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;消息队列&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;实时计数&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#map"&gt;map使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#set"&gt;set使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sorted-set"&gt;sorted set使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#transaction"&gt;Transaction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pipeline"&gt;Pipeline&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#instagramredis"&gt;新浪和instagram的redis实践&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#lib"&gt;lib&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ebook"&gt;ebook&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#reference"&gt;reference&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="intro"&gt;intro&lt;/h1&gt;
+&lt;p&gt;redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:&lt;a href="http://antirez.com/post/redis-memcached-benchmark.html"&gt;redis-memcached-benchmark&lt;/a&gt;,有同学质疑这个给出了个相反的&lt;a href="http://dormando.livejournal.com/525147.html"&gt;benchmark&lt;/a&gt;，当然redis作者antirez又给出了一个&lt;a href="http://antirez.com/post/update-on-memcached-redis-benchmark.html"&gt;新的评测&lt;/a&gt;,不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。&lt;/p&gt;
+&lt;h2 id="_1"&gt;关于作者&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="antirez avatar" src="images/antirez.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Salvatore Sanfilippo,also known &lt;a href="http://antirez.com/"&gt;antirez&lt;/a&gt;, programmer@VMWare，同时还是一家移动设备开发公司Kiurma的股东，意大利人。此兄的about页面上提到他主要都是在做open source code，并且几乎所有代码都放在&lt;a href="http://github.com/antirez"&gt;这里&lt;/a&gt;，目前主要精力都在redis上，&lt;a href="http://antirez.com/post/redis-manifesto.html"&gt;这里&lt;/a&gt;有antirez写的redis宣言。&lt;/p&gt;
+&lt;h2 id="redis"&gt;使用redis你可以做哪些事情&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;做一个k-v系统用，不过这个k-v系统没有mongodb强大，不支持value查询，只能简单的get/set。&lt;/li&gt;
 &lt;li&gt;做一个任务优先队列使用，list结构支持这样的各种api&lt;/li&gt;
 &lt;li&gt;做一个消息队列使用，redis提供pub/sub这样的api来提供消息队列服务。&lt;/li&gt;
 &lt;li&gt;数据统计，实时计数服务。微博上的各种数字都可以用这个服务来实时计数。&lt;/li&gt;
 &lt;li&gt;做类似与memcached的内存cache，还可以持久化，性能也超级赞～&lt;/li&gt;
+&lt;li&gt;more...&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h1&gt;install&lt;/h1&gt;
+&lt;h1 id="install"&gt;install&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;下载最新的redis版本&lt;a href="http://redis.io/download" title="redis-download"&gt;redis download page&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;加上你下载到/tmp目录下了，解压编译安装&lt;/p&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;tar&lt;/span&gt; &lt;span class="n"&gt;xvf&lt;/span&gt; &lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;4&lt;span class="p"&gt;.&lt;/span&gt;14&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;tar&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gz&lt;/span&gt;
-&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;2&lt;span class="p"&gt;.&lt;/span&gt;4&lt;span class="p"&gt;.&lt;/span&gt;14
-&lt;span class="n"&gt;make&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;conf&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;mkdir&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nb"&gt;log&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;vim&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;conf&lt;/span&gt; 根据目录结构做相应修改，主要修改的就是包含&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;var&lt;/span&gt;路径的几行
-&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;假设你下载到/tmp目录下了，解压编译安装&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar xvf redis-2.4.14.tar.gz
+cd redis-2.4.14
+make
+make test
+sudo make PREFIX=/opt/redis install
+sudo mkdir /opt/redis/etc
+sudo cp redis.conf /opt/redis/etc
+sudo mkdir -p /opt/redis/var/{db,run,log}
+sudo vim /opt/redis/etc/redis.conf 根据目录结构做相应修改，主要修改的就是包含/var路径的几行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果跑测试提示tclsh不存在，请下载tcl8.5: sudo apt-get install tcl8.5
+* 启动服务&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo bin/redis-server etc/redis.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="test"&gt;test&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;cd /opt/redis/
+bin/redis-cli
+redis 127.0.0.1:6379&amp;gt; set test 1
+OK
+redis 127.0.0.1:6379&amp;gt; get test
+"1"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="benchmark"&gt;benchmark&lt;/h1&gt;
+&lt;h2 id="_2"&gt;系统配置&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux pc 2.6.38-15-generic #60-Ubuntu SMP Tue May 22 11:30:47 UTC 2012 i686 i686 i386 GNU/Linux&lt;/li&gt;
+&lt;li&gt;Intel(R) Core(TM) i7-2620M CPU @ 2.70GHz&lt;/li&gt;
+&lt;li&gt;4G memeory&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_3"&gt;使用的命令&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;Usage: redis-benchmark [-h &amp;lt;host&amp;gt;] [-p &amp;lt;port&amp;gt;] [-c &amp;lt;clients&amp;gt;] [-n &amp;lt;requests]&amp;gt; [-k &amp;lt;boolean&amp;gt;]
+ -h &amp;lt;hostname&amp;gt;      Server hostname (default 127.0.0.1)
+ -p &amp;lt;port&amp;gt;          Server port (default 6379)
+ -s &amp;lt;socket&amp;gt;        Server socket (overrides host and port)
+ -c &amp;lt;clients&amp;gt;       Number of parallel connections (default 50)
+ -n &amp;lt;requests&amp;gt;      Total number of requests (default 10000)
+ -d &amp;lt;size&amp;gt;          Data size of SET/GET value in bytes (default 2)
+ -k &amp;lt;boolean&amp;gt;       1=keep alive 0=reconnect (default 1)
+ -r &amp;lt;keyspacelen&amp;gt;   Use random keys for SET/GET/INCR, random values for SADD
+  Using this option the benchmark will get/set keys
+  in the form mykey_rand:000000012456 instead of constant
+  keys, the &amp;lt;keyspacelen&amp;gt; argument determines the max
+  number of values for the random number. For instance
+  if set to 10 only rand:000000000000 - rand:000000000009
+  range will be allowed.
+ -P &amp;lt;numreq&amp;gt;        Pipeline &amp;lt;numreq&amp;gt; requests. Default 1 (no pipeline).
+ -q                 Quiet. Just show query/sec values
+ --csv              Output in CSV format
+ -l                 Loop. Run the tests forever
+ -t &amp;lt;tests&amp;gt;         Only run the comma separated list of tests. The test
+                names are the same as the ones produced as output.
+ -I                 Idle mode. Just open N idle connections and wait.
 
+Examples:
 
+ Run the benchmark with the default configuration against 127.0.0.1:6379:
+   $ redis-benchmark
+
+ Use 20 parallel clients, for a total of 100k requests, against 192.168.1.1:
+   $ redis-benchmark -h 192.168.1.1 -p 6379 -n 100000 -c 20
+
+ Fill 127.0.0.1:6379 with about 1 million keys only using the SET test:
+   $ redis-benchmark -t set -n 1000000 -r 100000000
+
+ Benchmark 127.0.0.1:6379 for a few commands producing CSV output:
+   $ redis-benchmark -t ping,set,get -n 100000 --csv
+
+ Fill a list with 10000 random elements:
+   $ redis-benchmark -r 10000 -n 10000 lpush mylist ele:rand:000000000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_4"&gt;测试结果&lt;/h2&gt;
+&lt;h3 id="value-size-32"&gt;value size 32&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 32
+PING_INLINE: 133333.33 requests per second
+PING_BULK: 135135.14 requests per second
+SET: 123001.23 requests per second
+GET: 105374.08 requests per second
+INCR: 115874.85 requests per second
+LPUSH: 121802.68 requests per second
+LPOP: 119474.31 requests per second
+SADD: 125313.28 requests per second
+SPOP: 129533.68 requests per second
+LPUSH (needed to benchmark LRANGE): 114942.53 requests per second
+LRANGE_100 (first 100 elements): 43936.73 requests per second
+LRANGE_300 (first 300 elements): 11580.78 requests per second
+LRANGE_500 (first 450 elements): 4827.42 requests per second
+LRANGE_600 (first 600 elements): 4644.03 requests per second
+MSET (10 keys): 48146.36 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-128"&gt;value size 128&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 128
+PING_INLINE: 125000.00 requests per second
+PING_BULK: 124843.95 requests per second
+SET: 116822.43 requests per second
+GET: 117785.63 requests per second
+INCR: 122249.39 requests per second
+LPUSH: 132978.72 requests per second
+LPOP: 128534.70 requests per second
+SADD: 117647.06 requests per second
+SPOP: 125000.00 requests per second
+LPUSH (needed to benchmark LRANGE): 123915.73 requests per second
+LRANGE_100 (first 100 elements): 24770.87 requests per second
+LRANGE_300 (first 300 elements): 7216.05 requests per second
+LRANGE_500 (first 450 elements): 4908.70 requests per second
+LRANGE_600 (first 600 elements): 3758.97 requests per second
+MSET (10 keys): 45207.96 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-512"&gt;value size 512&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Pngweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 512
+ING_INLINE: 134589.50 requests per second
+PING_BULK: 135685.20 requests per second
+SET: 110987.79 requests per second
+GET: 109051.26 requests per second
+INCR: 120336.95 requests per second
+LPUSH: 126582.28 requests per second
+LPOP: 125628.14 requests per second
+SADD: 100704.94 requests per second
+SPOP: 134228.19 requests per second
+LPUSH (needed to benchmark LRANGE): 131233.59 requests per second
+LRANGE_100 (first 100 elements): 10895.62 requests per second
+LRANGE_300 (first 300 elements): 3354.02 requests per second
+LRANGE_500 (first 450 elements): 2206.68 requests per second
+LRANGE_600 (first 600 elements): 1614.31 requests per second
+MSET (10 keys): 37750.09 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-2048"&gt;value size 2048&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 2048
+PING_INLINE: 130548.30 requests per second
+PING_BULK: 133511.34 requests per second
+SET: 115340.25 requests per second
+GET: 112994.35 requests per second
+INCR: 122699.38 requests per second
+LPUSH: 118343.20 requests per second
+LPOP: 93720.71 requests per second
+SADD: 123456.79 requests per second
+SPOP: 116009.28 requests per second
+LPUSH (needed to benchmark LRANGE): 103519.67 requests per second
+LRANGE_100 (first 100 elements): 3332.22 requests per second
+LRANGE_300 (first 300 elements): 1011.06 requests per second
+LRANGE_500 (first 450 elements): 635.90 requests per second
+LRANGE_600 (first 600 elements): 432.38 requests per second
+MSET (10 keys): 24021.14 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-2048-with-pipeline-4-and-20-clientsdefault-50-clients"&gt;value size 2048 with pipeline 4 and 20 clients(default 50 clients)&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 2048 -c 20 -P 4
+PING_INLINE: 343642.62 requests per second
+PING_BULK: 395256.91 requests per second
+SET: 156006.23 requests per second
+GET: 152671.75 requests per second
+INCR: 216919.73 requests per second
+LPUSH: 163132.14 requests per second
+LPOP: 183150.19 requests per second
+SADD: 238663.48 requests per second
+SPOP: 302114.81 requests per second
+LPUSH (needed to benchmark LRANGE): 168634.06 requests per second
+LRANGE_100 (first 100 elements): 3061.66 requests per second
+LRANGE_300 (first 300 elements): 947.69 requests per second
+LRANGE_500 (first 450 elements): 613.75 requests per second
+LRANGE_600 (first 600 elements): 436.58 requests per second
+redis-benchmark: redis-benchmark.c:278: createClient: Assertion `c-&amp;gt;randlen &amp;lt; (signed)(sizeof(c-&amp;gt;randptr)/sizeof(char*))' failed.
+Aborted
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="use-case"&gt;use case&lt;/h1&gt;
+&lt;h2 id="cache"&gt;cache系统&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-cli 
+redis 127.0.0.1:6379&amp;gt; set test 1
+OK
+redis 127.0.0.1:6379&amp;gt; get test
+"1"
+redis 127.0.0.1:6379&amp;gt; EXPIRE test 1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; get test
+(nil)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_5"&gt;任务队列&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;启动服务&lt;/p&gt;
-&lt;p&gt;sudo bin/redis-server etc/redis.conf&lt;/p&gt;
+&lt;p&gt;terminal 1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; blpop test 0
+1) "test"
+2) "1"
+(7.54s)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;terminal 2&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; lpush test 1
+(integer) 1
+&lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2 id="_6"&gt;消息队列&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;terminal 1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SUBSCRIBE test_channel
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "test_channel"
+3) (integer) 1
+1) "message"
+2) "test_channel"
+3) "hello"
+1) "message"
+2) "test_channel"
+3) "let's hang out today?"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;terminal 2&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; PUBLISH test_channel 'hello'
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; PUBLISH test_channel 'let's hang out today?'
+Invalid argument(s)
+redis 127.0.0.1:6379&amp;gt; PUBLISH test_channel 'let\'s hang out today?'
+(integer) 1
+&lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;test&lt;/h1&gt;
-&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
-&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;redis&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cli&lt;/span&gt;
-&lt;span class="n"&gt;redis&lt;/span&gt; 127&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;1&lt;span class="p"&gt;:&lt;/span&gt;6379&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; 1
-&lt;span class="n"&gt;redis&lt;/span&gt; 127&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;0&lt;span class="p"&gt;.&lt;/span&gt;1&lt;span class="p"&gt;:&lt;/span&gt;6379&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;h1&gt;lib&lt;/h1&gt;
+&lt;h2 id="_7"&gt;实时计数&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; set test 1
+OK
+redis 127.0.0.1:6379&amp;gt; INCR test
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; get test
+"2"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="map"&gt;map使用&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; hset test f1 '1'
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; HGETALL test
+1) "f1"
+2) "1"
+redis 127.0.0.1:6379&amp;gt; HMSET test f2 '2' f3 '3'
+OK
+redis 127.0.0.1:6379&amp;gt; HGETALL test
+1) "f1"
+2) "1"
+3) "f2"
+4) "2"
+5) "f3"
+6) "3"
+redis 127.0.0.1:6379&amp;gt; HMGET test f1,f2
+1) (nil)
+redis 127.0.0.1:6379&amp;gt; HMGET test f1 f2
+1) "1"
+2) "2"
+redis 127.0.0.1:6379&amp;gt; HMGET test f1 f2 f4
+1) "1"
+2) "2"
+3) (nil)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="set"&gt;set使用&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SADD test 1 2
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; SMEMBERS test
+1) "1"
+2) "2"
+redis 127.0.0.1:6379&amp;gt; sadd test1 2 3
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; SMEMBERS test1
+1) "2"
+2) "3"
+redis 127.0.0.1:6379&amp;gt; SDIFF test test1
+1) "1"
+redis 127.0.0.1:6379&amp;gt; SINTER test test1
+1) "2"
+redis 127.0.0.1:6379&amp;gt; SUNION test test1
+1) "1"
+2) "2"
+3) "3"
+redis 127.0.0.1:6379&amp;gt; SISMEMBER test 1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SREM test 1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SMEMBERS test
+1) "2"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="sorted-set"&gt;sorted set使用&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; ZADD test 3 1 2 2 1 3
+(integer) 3
+redis 127.0.0.1:6379&amp;gt; ZRANGE test 0 -1
+1) "3"
+2) "2"
+3) "1"
+redis 127.0.0.1:6379&amp;gt; ZREVRANGE test 0 -1
+1) "1"
+2) "2"
+3) "3"
+redis 127.0.0.1:6379&amp;gt; ZADD test1 1 1 2 2
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; ZINTERSTORE out 2 test test1 
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; ZRANGE out 0 -1 WITHSCORES
+1) "1"
+2) "4"
+3) "2"
+4) "4"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="transaction"&gt;Transaction&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; incr foo
+QUEUED
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+1) (integer) 1
+2) (integer) 1
+3) (integer) 2
+redis 127.0.0.1:6379&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;EXEC调用的过程中多个命令作为一个原子命令执行，在执行中间redis不会同时执行其他客户端的命令。在调用EXEC之前调用DISCARD会清除命令队列并退出事务。&lt;/p&gt;
+&lt;p&gt;事务中的命令即使执行失败也不会rollback，要么全执行，要么全不执行，命令的结果不影响事务。&lt;/p&gt;
+&lt;p&gt;事务中的命令在事务执行前都是没有结果返回的，所以无法在事务中进行check-and-set这样的操作。&lt;/p&gt;
+&lt;p&gt;如果exec执行的过程中server down机（crash or kill)，同时配置启用了aof，那么aof中记录的可能不是完整的日志，这时候如果重启会出现错误无法启动，需要先用redis-check-aof修复问题后重启。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; lpop bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+1) (error) ERR Operation against a key holding the wrong kind of value
+2) (integer) 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;还有就是语法错误的命令不会被放入执行队列:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; incr a b c
+(error) ERR wrong number of arguments for 'incr' command
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+1) (integer) 4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Watch CAS(check-and-set)
+terminal 1:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; watch a
+OK
+redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; incr a
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+(nil)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;terminal 2:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; set a 5
+OK
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果watch的key是有失效期的，并且在watch之后被redis失效删除了，那么EXEC会正常执行。&lt;/p&gt;
+&lt;h2 id="pipeline"&gt;Pipeline&lt;/h2&gt;
+&lt;p&gt;批量发送一堆命令，然后一次性获取命令的执行结果。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Pipeline pipeline = jedis.pipelined();
+long start = System.currentTimeMillis();
+for (int i = 0; i &amp;lt; 100000; i++) {
+    pipeline.set("" + i, "" + i);
+}
+List&amp;lt;Object&amp;gt; results = pipeline.execute();
+long end = System.currentTimeMillis();
+System.out.println("Pipelined SET: " + ((end - start)/1000.0) + " seconds");
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="instagramredis"&gt;新浪和instagram的redis实践&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://blog.nosqlfan.com/html/3295.html"&gt;新浪&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.nosqlfan.com/html/3379.html"&gt;instagram&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="lib"&gt;lib&lt;/h1&gt;
 &lt;p&gt;请参考官方网站的&lt;a href="http://redis.io/clients"&gt;redis client&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;我用的是java版的client:jedis,这个client支持多机hash，连接池等，但是封装的不够好，使用的适合需要自己封装一层负责连接的申请和释放。&lt;/p&gt;
-&lt;h1&gt;ebook&lt;/h1&gt;
-&lt;p&gt;&lt;a href="http://vdisk.weibo.com/s/xhrM/1313680831"&gt;redis cookbook&lt;/a&gt;&lt;/p&gt;
-&lt;h1&gt;reference&lt;/h1&gt;
+&lt;h1 id="ebook"&gt;ebook&lt;/h1&gt;
+&lt;p&gt;&lt;a href="upload/redis.pdf"&gt;redis cookbook&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="reference"&gt;reference&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href="http://antirez.com/"&gt;redis author's blog&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://blog.nosqlfan.com"&gt;nosqlfan.com&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</summary><category term="redis"></category><category term="nosql"></category><category term="memcache"></category></entry></feed>
+&lt;li&gt;&lt;a href="https://github.com/Instagram/redis-faina"&gt;redis-faina&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/sripathikrishnan/redis-rdb-tools"&gt;redis-rdb-tools&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</summary><category term="redis"></category><category term="nosql"></category><category term="memcache"></category></entry><entry><title>Blogging with pelican+markdown+github</title><link href="%22http://example.com%22/blogging-with-pelican+markdown+github.html" rel="alternate"></link><updated>2012-06-18T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-06-18:blogging-with-pelican+markdown+github.html</id><summary type="html">&lt;p&gt;这篇文章很多内容来自于xieyu的一篇博文&lt;a href="http://xieyu.github.com/pelican-github-markdown.html"&gt;markdown+pelican+github=Perfect blog platform&lt;/a&gt;, 本着引用注明出处的原则，我得先声明这一点:-)&lt;/p&gt;
+&lt;h1 id="_1"&gt;安装一些必备的东东&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;python 2.7或更高版本(是否可以更低版本我不确定，我的版本是2.7)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get install  python2.7
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;安装easy_install&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get install python-setuptools
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;安装pelican和markdown&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo easy_install pelican
+sudo easy_install Markdown
+sudo easy_install ghp-import
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="blog"&gt;创建blog&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;初始化&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mkdir -p ~/myblog
+cd ~/myblog
+pelican-quickstart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;编译测试&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;make html;firefox output/index.html
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;一些小修改&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi pelican.conf.py
+修改TIMEZONE='Asia/Shanghai'
+修改LOCALE=('zh_CN.utf8','en_US.utf8')
+修改DEFAULT_DATE_FORMAT=('%Y/%B/%d %A')
+LINKS和SOCIAL根据需要修改
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用git管理&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git init;git add src pelican.conf.py Makefile;git commit -m "first commit"
+git checkout -b source master;git branch -d master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里删除master分支，是因为github page需要占用master分支，所以选择把blog源文件放到source分支。&lt;/p&gt;
+&lt;h1 id="github"&gt;如何使用github&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;创建github账号并登录&lt;/li&gt;
+&lt;li&gt;登录github,创建仓库,仓库名必须为${username}.github.com,${username}替换为你的github账号&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;增加remote&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git remote add origin https://github.com/${username}/${username}.github.com.git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改~/myblog/Makefile&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;修改git push origin gh-pages为git push -f origin gh-pages:master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里的意思是用ghp-import管理分支，但这个工具是针对project page的，所以需要将master分支每次都更新为gh-pages这个分支。github page分为两种，一种是user/organization page，另一种是project page。我们这里用的是user/organization page，详细说明看&lt;a href="https://help.github.com/articles/user-organization-and-project-pages"&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;测试github&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd ~/myblog;make github此处需要输入github的用户名密码
+用浏览器访问${username}.github.com试试看
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="_2"&gt;写日志&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;vi src/test.md
+输入如下内容
+title: get familar with redis:a great data structure server
+slug: get-familar-with-redis
+category: sql_nosql
+tags: redis,nosql,memcache
+然后运行make clean github再访问你的页面试试看
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_3"&gt;高级主题&lt;/h1&gt;
+&lt;h2 id="google-analytics"&gt;如何配合使用GOOGLE ANALYTICS&lt;/h2&gt;
+&lt;p&gt;默认的notmyidea主题支持google analytics,为你的这个页面申请好google analytics串号，然后在pelican.conf.py中增加如下内容即可&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GOOGLE_ANALYTICS='UA-7072537-7'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_4"&gt;如何增加评论&lt;/h2&gt;
+&lt;p&gt;去disqus注册一个， 然后在pelican.conf.py里面加入如下内容&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;DISQUS_SITENAME = 'siteShortName'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里的siteShortName替换成在注册页面所填写的siteShortName。&lt;/p&gt;</summary><category term="blog"></category><category term="pelican"></category><category term="markdown"></category><category term="github"></category></entry><entry><title>mongodb cluster configuration</title><link href="%22http://example.com%22/mongodb-cluster-configuration.html" rel="alternate"></link><updated>2012-06-18T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-06-18:mongodb-cluster-configuration.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#caution"&gt;caution&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard-a-27018"&gt;shard a: 27018&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard-b-27018"&gt;shard b: 27018&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#config-server-27019"&gt;config server 27019&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mongos-27017"&gt;mongos 27017&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_8"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard"&gt;shard管理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard-db-and-collections"&gt;shard db and collections&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_9"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_10"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="caution"&gt;caution&lt;/h1&gt;
+&lt;p&gt;在实际部署的时候请注意替换下面例子中的ip地址,下面所有操作假设实在mongodb安装根目录中，比如/opt/mongodb&lt;/p&gt;
+&lt;h1 id="shard-a-27018"&gt;shard a: 27018&lt;/h1&gt;
+&lt;h2 id="_1"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.77&lt;/li&gt;
+&lt;li&gt;192.168.0.78&lt;/li&gt;
+&lt;li&gt;192.168.0.58 仲裁节点&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_2"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;mkdir data/shard_a
+mkdir data/key
+echo "demo shard key" &amp;gt; data/key/shard_key
+chmod go-rw data/key/shard_key
+numactl --interleave=all bin/mongod --shardsvr --replSet shard_a --fork --port 27018 --dbpath /home/work/local/mongodb/data/shard_a/ --logpath /home/work/local/mongodb/logs/shard_a.log --logappend --keyFile /home/work/local/mongodb/data/key/shard_key  
+cfg = {
+_id : "shard_a",
+members : [
+    {_id : 0, host : "192.168.0.77:27018"},
+    {_id : 1, host : "192.168.0.78:27018"},
+    {_id : 2, host : "192.168.0.58:27018",arbiterOnly:true}
+]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="shard-b-27018"&gt;shard b: 27018&lt;/h1&gt;
+&lt;h2 id="_3"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.79&lt;/li&gt;
+&lt;li&gt;192.168.0.80&lt;/li&gt;
+&lt;li&gt;192.168.0.59 仲裁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_4"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;mkdir data/shard_b
+mkdir data/key
+echo "demo shard key" &amp;gt; data/key/shard_key
+chmod go-rw data/key/shard_key
+numactl --interleave=all bin/mongod --shardsvr --replSet shard_b --fork --port 27018 --dbpath /home/work/local/mongodb/data/shard_b/ --logpath /home/work/local/mongodb/logs/shard_b.log --logappend --keyFile /home/work/local/mongodb/data/key/shard_key
+cfg = {
+_id : "shard_b",
+members : [
+    {_id : 0, host : "192.168.0.79:27018"},
+    {_id : 1, host : "192.168.0.80:27018"},
+    {_id : 2, host : "192.168.0.59:27018",arbiterOnly:true}
+]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="config-server-27019"&gt;config server 27019&lt;/h1&gt;
+&lt;h2 id="_5"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.77&lt;/li&gt;
+&lt;li&gt;192.168.0.79&lt;/li&gt;
+&lt;li&gt;192.168.0.59&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_6"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;mkdir data/config
+numactl --interleave=all bin/mongod --configsvr -dbpath=/home/work/local/mongodb/data/config/ --fork --logpath /home/work/local/mongodb/logs/config.log --logappend --port 27019  --keyFile /home/work/local/mongodb/data/key/shard_key
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mongos-27017"&gt;mongos 27017&lt;/h1&gt;
+&lt;h2 id="_7"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.78&lt;/li&gt;
+&lt;li&gt;192.168.0.80&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_8"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;numactl --interleave=all bin/mongos --configdb 192.168.0.77:27019,192.168.0.79:27019,192.168.0.59:27019 --port 27017 --logpath /home/work/local/mongodb/logs/mongos.log --fork --logappend  --keyFile /home/work/local/mongodb/data/key/shard_key
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="shard"&gt;shard管理&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;bin/mongo admin
+db.addUser('admin','admin');
+db.auth('admin','admin');
+db.runCommand( { addshard : "shard_a/192.168.0.77:27018,192.168.0.78:27018" } );
+db.runCommand( { addshard : "shard_b/192.168.0.79:27018,192.168.0.80:27018" } );
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="shard-db-and-collections"&gt;shard db and collections&lt;/h1&gt;
+&lt;h2 id="_9"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;db.runCommand( { enablesharding : "demo" } );
+db.runCommand( { shardcollection : "demo.Table", key : {cloumn1: 1,column2:1} } )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_10"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://www.mongodb.org/display/DOCS/Sharding"&gt;mongodb sharding&lt;/a&gt;&lt;/p&gt;</summary><category term="nosql"></category><category term="mongodb"></category><category term="cluster"></category><category term="replica-set"></category><category term="sharding"></category></entry><entry><title>mongodb cluster configuration</title><link href="%22http://example.com%22/mongodb-performance.html" rel="alternate"></link><updated>2012-06-18T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-06-18:mongodb-performance.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;优缺点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;性能评估&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mongodb-vs-tokumx"&gt;mongodb vs tokumx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;优缺点&lt;/h1&gt;
+&lt;h1 id="_2"&gt;性能评估&lt;/h1&gt;
+&lt;h1 id="mongodb-vs-tokumx"&gt;mongodb vs tokumx&lt;/h1&gt;
+&lt;h1 id="_3"&gt;参考&lt;/h1&gt;
+&lt;p&gt;http://blog.engineering.kiip.me/post/20988881092/a-year-with-mongodb&lt;/p&gt;
+&lt;p&gt;https://www.openshift.com/blogs/design-and-performance-tips-for-mongodb-indexes&lt;/p&gt;
+&lt;p&gt;https://github.com/jwilder/mongodb-tools&lt;/p&gt;
+&lt;p&gt;http://www.datastax.com/dev/blog/2012-in-review-performance&lt;/p&gt;</summary><category term="nosql"></category><category term="mongodb"></category><category term="cluster"></category><category term="replica-set"></category><category term="sharding"></category></entry><entry><title>mysql master slave replication resync</title><link href="%22http://example.com%22/mysql-master-slave-replication-resync.html" rel="alternate"></link><updated>2012-06-18T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-06-18:mysql-master-slave-replication-resync.html</id><summary type="html">&lt;h1 id="masterslave"&gt;master（可以是一个slave）&lt;/h1&gt;
+&lt;p&gt;192.168.0.77&lt;/p&gt;
+&lt;h1 id="slave"&gt;slave&lt;/h1&gt;
+&lt;p&gt;192.168.0.78&lt;/p&gt;
+&lt;h1 id="_1"&gt;主从复制步骤和方法&lt;/h1&gt;
+&lt;h2 id="master"&gt;master&lt;/h2&gt;
+&lt;h3 id="_2"&gt;执行锁表操作&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;flush tables with read lock;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_3"&gt;查看当前状态&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;show master status
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="dump"&gt;dump&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;bin/mysqldump -uroot -p --default-character-set=utf8 {database} &amp;gt; {database}.dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_4"&gt;解锁&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;unlock tables;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="slave_1"&gt;slave&lt;/h2&gt;
+&lt;h3 id="slave_2"&gt;停止slave&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;mysql -uroot -p -e "stop slave;"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_5"&gt;导入&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;mysql -uroot -p  {database} &amp;lt;  {database}.dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="master_1"&gt;重新设置master&lt;/h3&gt;
+&lt;p&gt;举例&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;change master to master_host='192.168.0.77',master_user='backup',master_password='backup',master_log_file='mysql-bin.000003',master_log_pos=1650;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="slave_3"&gt;启动slave&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;mysql -uroot -p -e "start slave;"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;gh-pages&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;</summary><category term="mysql"></category><category term="replication"></category></entry></feed>

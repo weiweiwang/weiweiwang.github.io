@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Careless Whisper - replication</title>
+        <meta charset="utf-8" />
+                <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="..">Careless Whisper </a></h1>
+                <nav><ul>
+                                                                                        <li ><a href="../category/android.html">android</a></li>
+                                    <li ><a href="../category/linux.html">linux</a></li>
+                                    <li ><a href="../category/misc.html">misc</a></li>
+                                    <li ><a href="../category/programming.html">programming</a></li>
+                                    <li ><a href="../category/search.html">search</a></li>
+                                    <li ><a href="../category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="../tags.html">Tags</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+                
+        
+            <aside id="featured" class="body"><article>
+                <h1 class="entry-title"><a href="../mysql-master-slave-replication-resync.html">mysql master slave replication resync</a></h1> 
+                <footer class="post-info">
+        <abbr class="published" title="2012-06-18T00:00:00">
+                2012/六月/18 星期一
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/sql_nosql.html">sql_nosql</a>. </p>
+<p>tags: <a href="../tag/mysql.html">mysql</a><a href="../tag/replication.html">replication</a></p></p>
+</footer><!-- /.post-info -->                <h1 id="masterslave">master（可以是一个slave）</h1>
+<p>192.168.0.77</p>
+<h1 id="slave">slave</h1>
+<p>192.168.0.78</p>
+<h1 id="_1">主从复制步骤和方法</h1>
+<h2 id="master">master</h2>
+<h3 id="_2">执行锁表操作</h3>
+<pre><code>flush tables with read lock;
+</code></pre>
+<h3 id="_3">查看当前状态</h3>
+<pre><code>show master status
+</code></pre>
+<h3 id="dump">dump</h3>
+<pre><code>bin/mysqldump -uroot -p --default-character-set=utf8 {database} &gt; {database}.dump
+</code></pre>
+<h3 id="_4">解锁</h3>
+<pre><code>unlock tables;
+</code></pre>
+<h2 id="slave_1">slave</h2>
+<h3 id="slave_2">停止slave</h3>
+<pre><code>mysql -uroot -p -e "stop slave;"
+</code></pre>
+<h3 id="_5">导入</h3>
+<pre><code>mysql -uroot -p  {database} &lt;  {database}.dump
+</code></pre>
+<h3 id="master_1">重新设置master</h3>
+<p>举例</p>
+<pre><code>change master to master_host='192.168.0.77',master_user='backup',master_password='backup',master_log_file='mysql-bin.000003',master_log_pos=1650;
+</code></pre>
+<h3 id="slave_3">启动slave</h3>
+<pre><code>mysql -uroot -p -e "start slave;"
+</code></pre>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>gh-pages</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+                <p>There are <a href="../mysql-master-slave-replication-resync.html#disqus_thread">comments</a>.</p>                </article>
+                </aside><!-- /#featured -->
+            </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        <section id="extras" class="body">
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'cloudornot';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

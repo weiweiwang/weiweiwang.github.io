@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Careless Whisper - optimize</title>
+        <meta charset="utf-8" />
+                <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="..">Careless Whisper </a></h1>
+                <nav><ul>
+                                                                                        <li ><a href="../category/android.html">android</a></li>
+                                    <li ><a href="../category/linux.html">linux</a></li>
+                                    <li ><a href="../category/misc.html">misc</a></li>
+                                    <li ><a href="../category/programming.html">programming</a></li>
+                                    <li ><a href="../category/search.html">search</a></li>
+                                    <li ><a href="../category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="../tags.html">Tags</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+                
+        
+            <aside id="featured" class="body"><article>
+                <h1 class="entry-title"><a href="../optimize-web-speed.html">优化网站访问速度</a></h1> 
+                <footer class="post-info">
+        <abbr class="published" title="2012-11-11T00:00:00">
+                2012/十一月/11 星期日
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/cdn.html">cdn</a><a href="../tag/optimize.html">optimize</a><a href="../tag/speed.html">speed</a><a href="../tag/webpage.html">webpage</a><a href="../tag/gzip.html">gzip</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#http">减少HTTP请求数</a></li>
+<li><a href="#cdn">使用内容分发网络(CDN)</a></li>
+<li><a href="#expires-and-cache-control">Expires and Cache-Control</a></li>
+<li><a href="#gzip">使用Gzip压缩</a></li>
+<li><a href="#cssjscssjs">css在前，js在后,不要在CSS中使用js</a></li>
+<li><a href="#cssjshtml">css，js用外部文件，不要写在html中</a></li>
+<li><a href="#jscss">压缩js，css</a></li>
+<li><a href="#redirect">减少Redirect</a></li>
+<li><a href="#etaglast-modified-header">Etag和Last-Modified Header</a></li>
+<li><a href="#ajaxget">Ajax请求尽量多是GET请求</a></li>
+<li><a href="#_1">预加载和延迟加载</a></li>
+<li><a href="#_2">减少页面复杂度</a></li>
+<li><a href="#_3">使用多个域来提供性能</a></li>
+<li><a href="#cookie">减少Cookie体积</a></li>
+<li><a href="#dom-access">DOM access</a></li>
+<li><a href="#_4">图片尺寸优化</a></li>
+<li><a href="#_5">参考</a></li>
+</ul>
+</div>
+<h1 id="http">减少HTTP请求数</h1>
+<p>减少页面上css,js,图片的文件个数。</p>
+<h1 id="cdn">使用内容分发网络(CDN)</h1>
+<p>解决夸地域访问使用CDN是最好的方式了，省钱又省力。</p>
+<h1 id="expires-and-cache-control">Expires and Cache-Control</h1>
+<p>设置页面的Expires和Cache-Control:max-age来缓存页面，注意这时候服务端的访问统计就会受影响了，建议使用百度统计或者google统计来解决页面访问统计的问题。</p>
+<h1 id="gzip">使用Gzip压缩</h1>
+<p>这个不用多说了，压缩为50%是很正常的，通常压缩比可以达到1/8或者更高(1/10)。这对于传输来说时间减少非常明显。</p>
+<h1 id="cssjscssjs">css在前，js在后,不要在CSS中使用js</h1>
+<p>css放到Head里，js放到页面最后，避免在css中使用js表达式。</p>
+<h1 id="cssjshtml">css，js用外部文件，不要写在html中</h1>
+<p>css和js写在页面里面确实可以减少请求次数，但也存在的问题是这写不经常改变的资源也随着这个页面无法cache了，或者cache时间无法很长（页面需要更新）。所以这个必须折中考虑，并且应该尽量将css和js放在单独的文件中，然后include，这部分资源的cache时间可以设置很长，通过文件名戴上版本号来更新资源。</p>
+<h1 id="jscss">压缩js，css</h1>
+<p><a href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a>你可以试试。</p>
+<h1 id="redirect">减少Redirect</h1>
+<p>301,302这个是不cached</p>
+<h1 id="etaglast-modified-header">Etag和Last-Modified Header</h1>
+<p>这些Header可以有助于产生304,避免相同内容重复传输。</p>
+<h1 id="ajaxget">Ajax请求尽量多是GET请求</h1>
+<p>XMLHttpRequest的POST请求是个两阶段的，先发送header再发送data，如果不是提交数据而是请求数据的情况下，尽量使用GET请求来减少网络耗时。</p>
+<h1 id="_1">预加载和延迟加载</h1>
+<p>有些资源比如在下一个页面是需要的，可以在前一个页面用js来预加载。同时有些资源是在页面渲染完用户采取动作后才需要的，在当前页面就可以采用延迟加载来提高用户体验。</p>
+<h1 id="_2">减少页面复杂度</h1>
+<p>减少DOM元素的个数对提升页面速度是很有帮助的。<a href="http://developer.yahoo.com/yui/">YUI CSS utilities</a>可以用来帮助你布局页面。</p>
+<h1 id="_3">使用多个域来提供性能</h1>
+<p>多个域有助于提高下载并发度，但同时dns lookup也是一个考虑因素，一般不建议超过4个域。</p>
+<h1 id="cookie">减少Cookie体积</h1>
+<p>cookie在请求的时候都会携带在header中的，所以不要携带过长或没有意义的cookie。</p>
+<h1 id="dom-access">DOM access</h1>
+<p><a href="http://yuiblog.com/blog/2007/12/20/video-lecomte/">High Performance Ajax Applications</a>这个对提高Ajax的效率应该有帮助。</p>
+<h1 id="_4">图片尺寸优化</h1>
+<p>现在网站都用很多图片，效果是好看了，但速度上一定得做好优化。压缩图片体积，合并多张图片用css裁剪都是有效的提高加载速度的方法。</p>
+<h1 id="_5">参考</h1>
+<p><a href="http://developer.yahoo.com/performance/rules.html">Best Practices for Speeding Up Your Web Site</a></p>
+                <p>There are <a href="../optimize-web-speed.html#disqus_thread">comments</a>.</p>                </article>
+                </aside><!-- /#featured -->
+            </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        <section id="extras" class="body">
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'cloudornot';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

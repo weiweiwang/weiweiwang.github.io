@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Careless Whisper</title><link>%22http://example.com%22/</link><description></description><atom:link href="%22http://example.com%22/feeds/linux.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 19 Aug 2012 00:00:00 +0800</lastBuildDate><item><title>常用shell命令</title><link>%22http://example.com%22/common-shell-command.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;测试文件&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#testtxt"&gt;test.txt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sort"&gt;sort&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#uniq"&gt;uniq&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#join"&gt;join&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#awk"&gt;awk&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_8"&gt;常用参数说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#http-server"&gt;分析http server的处理速度&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#http"&gt;切割http请求参数的样例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sed"&gt;sed&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_9"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_10"&gt;需要注意的地方&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#1txt"&gt;1.txt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#2txt"&gt;2.txt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#join-with-default-lang"&gt;join with default LANG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#join-with-lc_allc"&gt;join with LC_ALL=C&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;测试文件&lt;/h1&gt;
+&lt;h2 id="testtxt"&gt;test.txt&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;title
+slug
+category
+tag
+slug
+tag
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="sort"&gt;sort&lt;/h1&gt;
+&lt;p&gt;这个命令可以对文件或者输入流进行排序输出。&lt;/p&gt;
+&lt;h2 id="_2"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-t 分隔符，通过这个可以将每一行分隔成若干字段，比如\t分隔的时候要传递-t $'\t'&lt;/li&gt;
+&lt;li&gt;-k 选择排序的字段，比如以第一个字段k1,1，以前两个字段排序的话就是-k1,2&lt;/li&gt;
+&lt;li&gt;-n 以数字排序而非字符串的字典序&lt;/li&gt;
+&lt;li&gt;-r 倒序排列&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_3"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;cat test.txt|sort -t $'\t' -k1,1 -r
+title
+tag
+tag
+slug
+slug
+category
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="uniq"&gt;uniq&lt;/h1&gt;
+&lt;p&gt;这个命令可以统计文件中重复行，需要输入是排序过的。&lt;/p&gt;
+&lt;h2 id="_4"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-f 表示跳过若干个字段，也就是这写字段不作为唯一性检查的key，分隔符是空白字符，无法指定&lt;/li&gt;
+&lt;li&gt;-s 表示跳过若干个字符&lt;/li&gt;
+&lt;li&gt;-c 打印重复行的数目&lt;/li&gt;
+&lt;li&gt;-i 忽略大小写&lt;/li&gt;
+&lt;li&gt;-d 只输出重复行&lt;/li&gt;
+&lt;li&gt;-u 只输出不同的行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;需要注意的是uniq输入需要是sort过的，否则结果不正确。&lt;/p&gt;
+&lt;h2 id="_5"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;cat test.txt|sort -t $'\t' -k1,1|uniq -c
+1 title
+2 tag
+2 slug
+1 category
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="join"&gt;join&lt;/h1&gt;
+&lt;p&gt;这个命令可以join两个文件中的若干列，类似与mysql的join命令, 输入的文件需要是排序过的。&lt;/p&gt;
+&lt;h2 id="_6"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-1 第一个文件的join字段&lt;/li&gt;
+&lt;li&gt;-2 第二个文件的join字段&lt;/li&gt;
+&lt;li&gt;-o 指定输出格式，每个字段的格式是M.N，M是文件编号1或者2,N是字段编号，从1开始。&lt;/li&gt;
+&lt;li&gt;-t 指定分隔符，类似与sort命令中的-t&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_7"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;sort test.txt &amp;gt; 1.txt
+&amp;gt;head -1 1.txt &amp;gt; 2.txt
+&amp;gt;join -1 1 -2 1 -o 1.1 2.1 -t $'\t' 1.txt  2.txt
+category    category
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="awk"&gt;awk&lt;/h1&gt;
+&lt;p&gt;awk是一种编程语言，用于在linux/unix下对文本和数据进行处理。数据可以来自标准输入、一个或多个文件，或其它命令的输出。它支持用户自定义函数和动态正则表达式等先进功能，是linux/unix下的一个强大编程工具。它在命令行中使用，但更多是作为脚本来使用。awk的处理文本和数据的方式是这样的，它逐行扫描文件，从第一行到最后一行，寻找匹配的特定模式的行，并在这些行上进行你想要的操作。如果没有指定处理动作，则把匹配的行显示到标准输出(屏幕)，如果没有指定模式，则所有被操作所指定的行都被处理。awk分别代表其作者姓氏的第一个字母。因为它的作者是三个人，分别是Alfred Aho、Brian Kernighan、Peter Weinberger。gawk是awk的GNU版本，它提供了Bell实验室和GNU的一些扩展。下面介绍的awk是以GUN的gawk为例的，在linux系统中已把awk链接到gawk，所以下面全部以awk进行介绍。以上文字摘自&lt;a href="http://man.lupaworld.com/content/manage/ringkee/awk.htm"&gt;Awk学习笔记&lt;/a&gt;。awk语法比上述命令复杂的多，所以学习的话可以参考上面的学习笔记，这里只举例说明下awk在文本分析上的用途。&lt;/p&gt;
+&lt;h2 id="_8"&gt;常用参数说明&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-F 指定字段分隔符，awk的字段从1开始，0表示整行。&lt;/li&gt;
+&lt;li&gt;-f 指定从文件读入awk代码，不是直接写在命令后面。&lt;/li&gt;
+&lt;li&gt;-v VAR=VAL 从外部向awk脚本传递参数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="http-server"&gt;分析http server的处理速度&lt;/h2&gt;
+&lt;p&gt;假设我们的access.log每一行的字段使用-t分隔，第13个字段是每个请求的耗时,第七个字段是请求类型GET/POST。下面的脚本就可以统计GET请求的最大耗时，最小耗时,平均耗时，请求总数。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;awk -F'\t' 'BEGIN{max=0;min=1000000000;}$7 ~/GET/{if($13&amp;gt;max)max=$13;if($13&amp;lt;min)min=$13;sum+=$13;}END{print max,min,sum/NR,NR}' access.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="http"&gt;切割http请求参数的样例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    {
+     split($9,params,"&amp;amp;");
+     for(idx in params)
+     {
+       p=params[idx];
+       i=index(p,"=")
+       if(i&amp;gt;0)
+       {
+         k=substr(p,1,i-1);
+         v=substr(p,i+1);
+         query[k]=v;
+         print k"\t"v;
+       };
+     }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="sed"&gt;sed&lt;/h1&gt;
+&lt;p&gt;sed是一种在线编辑器，它一次处理一行内容。处理时，把当前处理的行存储在临时缓冲区中，称为“模式空间”（pattern space），接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。接着处理下一行，这样不断重复，直到文件末尾。文件内容并没有改变，除非你使用重定向存储输出。Sed主要用来自动编辑一个或多个文件；简化对文件的反复操作；编写转换程序等。以下介绍的是Gnu版本的Sed 3.02。以上文字摘自&lt;a href="http://www.tsnc.edu.cn/tsnc_wgrj/doc/sed.htm"&gt;sed学习笔记&lt;/a&gt;。sed语法也比较复杂，学习的话可以参考上面的sed学习笔记。&lt;/p&gt;
+&lt;h2 id="_9"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;sed 's/ubuntu/linux/g'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在整行范围内把ubuntu替换为linux。如果没有g标记，则只有每行第一个匹配的字符串会被替换。&lt;/p&gt;
+&lt;h1 id="_10"&gt;需要注意的地方&lt;/h1&gt;
+&lt;p&gt;由于sort命令是基于当前字符集的，而不同字符集的字符大小排序和比较方式，所以经常会出现，sort后的join结果不正确的问题。举例:&lt;/p&gt;
+&lt;h2 id="1txt"&gt;1.txt&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;1002547 14
+10025472 14
+1002549 15
+10025492 15
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="2txt"&gt;2.txt&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;10025471 01
+1002547 14
+10025473 01
+10025476 01
+1002549 135
+10025492 115
+10025498 135
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="join-with-default-lang"&gt;join with default LANG&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;env|grep LANG
+LANG=en_US.UTF-8
+&amp;gt;sort 1.txt &amp;gt; 1.sort.txt
+&amp;gt;sort 2.txt &amp;gt; 2.sort.txt
+&amp;gt;join 1.sort.txt 2.sort.txt
+join: file 2 is not in sorted order
+1002549 15 135
+10025492 15 115
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="join-with-lc_allc"&gt;join with LC_ALL=C&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;export LC_ALL=C
+&amp;gt;sort 1.txt &amp;gt; 1.sort.txt
+&amp;gt;sort 2.txt &amp;gt; 2.sort.txt
+&amp;gt;join 1.sort.txt 2.sort.txt
+1002547 14 14
+1002549 15 135
+10025492 15 115
+&lt;/code&gt;&lt;/pre&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sun, 19 Aug 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-08-19:common-shell-command.html</guid><category>bash</category><category>shell</category><category>log</category></item></channel></rss>

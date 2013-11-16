@@ -1,148 +1,638 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Cloud or not - nosql</title>
+        <title>Careless Whisper - nosql</title>
         <meta charset="utf-8" />
-        <link rel="stylesheet" href=".././theme/css/main.css" type="text/css" />
-        <link href=".././feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Cloud or not ATOM Feed" />
+                <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
         
 
         <!--[if IE]>
                 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
         <!--[if lte IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href=".././css/ie.css"/>
-                <script src=".././js/IE8.js" type="text/javascript"></script><![endif]-->
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
 
         <!--[if lt IE 7]>
-                <link rel="stylesheet" type="text/css" media="all" href=".././css/ie6.css"/><![endif]-->
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
 
 </head>
 
 <body id="index" class="home">
-
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
         <header id="banner" class="body">
-                <h1><a href="../.">Cloud or not </a></h1>
+                <h1><a href="..">Careless Whisper </a></h1>
                 <nav><ul>
-                
-                
-                
-                
-                
-                    <li ><a href=".././category/sql/nosql.html">sql/nosql</a></li>
-                
-                </ul></nav>
+                                                                                        <li ><a href="../category/android.html">android</a></li>
+                                    <li ><a href="../category/linux.html">linux</a></li>
+                                    <li ><a href="../category/misc.html">misc</a></li>
+                                    <li ><a href="../category/programming.html">programming</a></li>
+                                    <li ><a href="../category/search.html">search</a></li>
+                                    <li ><a href="../category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="../tags.html">Tags</a></li>
+                                </ul></nav>
         </header><!-- /#banner -->
                 
-
-            
-
         
-        
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href=".././get-familar-with-redis.html">get familar with redis:a great data structure server</a></h1> 
-                    <footer class="post-info">
-        <abbr class="published" title="2012-06-12T10:02:05.991322">
-                Tue 12 June 2012
+            <aside id="featured" class="body"><article>
+                <h1 class="entry-title"><a href="../get-familar-with-redis.html">get familar with redis:a great data structure server</a></h1> 
+                <footer class="post-info">
+        <abbr class="published" title="2012-07-28T00:00:00">
+                2012/七月/28 星期六
         </abbr>
 
-        
-        <address class="vcard author">
-                By <a class="url fn" href=".././author/wangweiwei.html">wangweiwei</a>
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
         </address>
-        
-<p>In <a href=".././category/sql/nosql.html">sql/nosql</a>. </p>
-<p>tags: <a href=".././tag/redis.html">redis</a><a href=".././tag/nosql.html">nosql</a><a href=".././tag/memcache.html">memcache</a></p>
-
-
-</footer><!-- /.post-info --><h1>intro</h1>
-<p>redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:<a href="http://antirez.com/post/redis-memcached-benchmark.html">redis-memcached-benchmark</a>,有同学质疑这个给出了个相反的<a href="http://dormando.livejournal.com/525147.html">benchmark</a>，当然redis作者antirez又给出了一个<a href="http://antirez.com/post/update-on-memcached-redis-benchmark.html">新的评测</a>,不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。我很懒，没有对这个做过测试。</p>
-<p>使用redis你可以做很多事情:</p>
+        <p>In <a href="../category/sql_nosql.html">sql_nosql</a>. </p>
+<p>tags: <a href="../tag/redis.html">redis</a><a href="../tag/nosql.html">nosql</a><a href="../tag/memcache.html">memcache</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#intro">intro</a><ul>
+<li><a href="#_1">关于作者</a></li>
+<li><a href="#redis">使用redis你可以做哪些事情</a></li>
+</ul>
+</li>
+<li><a href="#install">install</a></li>
+<li><a href="#test">test</a></li>
+<li><a href="#benchmark">benchmark</a><ul>
+<li><a href="#_2">系统配置</a></li>
+<li><a href="#_3">使用的命令</a></li>
+<li><a href="#_4">测试结果</a><ul>
+<li><a href="#value-size-32">value size 32</a></li>
+<li><a href="#value-size-128">value size 128</a></li>
+<li><a href="#value-size-512">value size 512</a></li>
+<li><a href="#value-size-2048">value size 2048</a></li>
+<li><a href="#value-size-2048-with-pipeline-4-and-20-clientsdefault-50-clients">value size 2048 with pipeline 4 and 20 clients(default 50 clients)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#use-case">use case</a><ul>
+<li><a href="#cache">cache系统</a></li>
+<li><a href="#_5">任务队列</a></li>
+<li><a href="#_6">消息队列</a></li>
+<li><a href="#_7">实时计数</a></li>
+<li><a href="#map">map使用</a></li>
+<li><a href="#set">set使用</a></li>
+<li><a href="#sorted-set">sorted set使用</a></li>
+<li><a href="#transaction">Transaction</a></li>
+<li><a href="#pipeline">Pipeline</a></li>
+<li><a href="#instagramredis">新浪和instagram的redis实践</a></li>
+</ul>
+</li>
+<li><a href="#lib">lib</a></li>
+<li><a href="#ebook">ebook</a></li>
+<li><a href="#reference">reference</a></li>
+</ul>
+</div>
+<h1 id="intro">intro</h1>
+<p>redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:<a href="http://antirez.com/post/redis-memcached-benchmark.html">redis-memcached-benchmark</a>,有同学质疑这个给出了个相反的<a href="http://dormando.livejournal.com/525147.html">benchmark</a>，当然redis作者antirez又给出了一个<a href="http://antirez.com/post/update-on-memcached-redis-benchmark.html">新的评测</a>,不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。</p>
+<h2 id="_1">关于作者</h2>
+<p><img alt="antirez avatar" src="images/antirez.png" /></p>
+<p>Salvatore Sanfilippo,also known <a href="http://antirez.com/">antirez</a>, programmer@VMWare，同时还是一家移动设备开发公司Kiurma的股东，意大利人。此兄的about页面上提到他主要都是在做open source code，并且几乎所有代码都放在<a href="http://github.com/antirez">这里</a>，目前主要精力都在redis上，<a href="http://antirez.com/post/redis-manifesto.html">这里</a>有antirez写的redis宣言。</p>
+<h2 id="redis">使用redis你可以做哪些事情</h2>
 <ol>
 <li>做一个k-v系统用，不过这个k-v系统没有mongodb强大，不支持value查询，只能简单的get/set。</li>
 <li>做一个任务优先队列使用，list结构支持这样的各种api</li>
 <li>做一个消息队列使用，redis提供pub/sub这样的api来提供消息队列服务。</li>
 <li>数据统计，实时计数服务。微博上的各种数字都可以用这个服务来实时计数。</li>
 <li>做类似与memcached的内存cache，还可以持久化，性能也超级赞～</li>
+<li>more...</li>
 </ol>
-<h1>install</h1>
+<h1 id="install">install</h1>
 <ul>
 <li>下载最新的redis版本<a href="http://redis.io/download" title="redis-download">redis download page</a></li>
 <li>
-<p>加上你下载到/tmp目录下了，解压编译安装</p>
-<div class="codehilite"><pre><span class="n">tar</span> <span class="n">xvf</span> <span class="n">redis</span><span class="o">-</span>2<span class="p">.</span>4<span class="p">.</span>14<span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
-<span class="n">cd</span> <span class="n">redis</span><span class="o">-</span>2<span class="p">.</span>4<span class="p">.</span>14
-<span class="n">make</span>
-<span class="n">sudo</span> <span class="n">make</span> <span class="n">PREFIX</span><span class="p">=</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">redis</span> <span class="n">install</span>
-<span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">etc</span>
-<span class="n">sudo</span> <span class="n">cp</span> <span class="n">redis</span><span class="p">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">etc</span>
-<span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="p">{</span><span class="n">db</span><span class="p">,</span><span class="n">run</span><span class="p">,</span><span class="nb">log</span><span class="p">}</span>
-<span class="n">sudo</span> <span class="n">vim</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">redis</span><span class="p">.</span><span class="n">conf</span> 根据目录结构做相应修改，主要修改的就是包含<span class="o">/</span><span class="n">var</span>路径的几行
-</pre></div>
+<p>假设你下载到/tmp目录下了，解压编译安装</p>
+<pre><code>tar xvf redis-2.4.14.tar.gz
+cd redis-2.4.14
+make
+make test
+sudo make PREFIX=/opt/redis install
+sudo mkdir /opt/redis/etc
+sudo cp redis.conf /opt/redis/etc
+sudo mkdir -p /opt/redis/var/{db,run,log}
+sudo vim /opt/redis/etc/redis.conf 根据目录结构做相应修改，主要修改的就是包含/var路径的几行
+</code></pre>
+<p>如果跑测试提示tclsh不存在，请下载tcl8.5: sudo apt-get install tcl8.5
+* 启动服务</p>
+<pre><code>sudo bin/redis-server etc/redis.conf
+</code></pre>
+</li>
+</ul>
+<h1 id="test">test</h1>
+<pre><code>cd /opt/redis/
+bin/redis-cli
+redis 127.0.0.1:6379&gt; set test 1
+OK
+redis 127.0.0.1:6379&gt; get test
+"1"
+</code></pre>
+<h1 id="benchmark">benchmark</h1>
+<h2 id="_2">系统配置</h2>
+<ul>
+<li>Linux pc 2.6.38-15-generic #60-Ubuntu SMP Tue May 22 11:30:47 UTC 2012 i686 i686 i386 GNU/Linux</li>
+<li>Intel(R) Core(TM) i7-2620M CPU @ 2.70GHz</li>
+<li>4G memeory</li>
+</ul>
+<h2 id="_3">使用的命令</h2>
+<pre><code>Usage: redis-benchmark [-h &lt;host&gt;] [-p &lt;port&gt;] [-c &lt;clients&gt;] [-n &lt;requests]&gt; [-k &lt;boolean&gt;]
+ -h &lt;hostname&gt;      Server hostname (default 127.0.0.1)
+ -p &lt;port&gt;          Server port (default 6379)
+ -s &lt;socket&gt;        Server socket (overrides host and port)
+ -c &lt;clients&gt;       Number of parallel connections (default 50)
+ -n &lt;requests&gt;      Total number of requests (default 10000)
+ -d &lt;size&gt;          Data size of SET/GET value in bytes (default 2)
+ -k &lt;boolean&gt;       1=keep alive 0=reconnect (default 1)
+ -r &lt;keyspacelen&gt;   Use random keys for SET/GET/INCR, random values for SADD
+  Using this option the benchmark will get/set keys
+  in the form mykey_rand:000000012456 instead of constant
+  keys, the &lt;keyspacelen&gt; argument determines the max
+  number of values for the random number. For instance
+  if set to 10 only rand:000000000000 - rand:000000000009
+  range will be allowed.
+ -P &lt;numreq&gt;        Pipeline &lt;numreq&gt; requests. Default 1 (no pipeline).
+ -q                 Quiet. Just show query/sec values
+ --csv              Output in CSV format
+ -l                 Loop. Run the tests forever
+ -t &lt;tests&gt;         Only run the comma separated list of tests. The test
+                names are the same as the ones produced as output.
+ -I                 Idle mode. Just open N idle connections and wait.
 
+Examples:
 
+ Run the benchmark with the default configuration against 127.0.0.1:6379:
+   $ redis-benchmark
+
+ Use 20 parallel clients, for a total of 100k requests, against 192.168.1.1:
+   $ redis-benchmark -h 192.168.1.1 -p 6379 -n 100000 -c 20
+
+ Fill 127.0.0.1:6379 with about 1 million keys only using the SET test:
+   $ redis-benchmark -t set -n 1000000 -r 100000000
+
+ Benchmark 127.0.0.1:6379 for a few commands producing CSV output:
+   $ redis-benchmark -t ping,set,get -n 100000 --csv
+
+ Fill a list with 10000 random elements:
+   $ redis-benchmark -r 10000 -n 10000 lpush mylist ele:rand:000000000000
+</code></pre>
+<h2 id="_4">测试结果</h2>
+<h3 id="value-size-32">value size 32</h3>
+<pre><code>wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 32
+PING_INLINE: 133333.33 requests per second
+PING_BULK: 135135.14 requests per second
+SET: 123001.23 requests per second
+GET: 105374.08 requests per second
+INCR: 115874.85 requests per second
+LPUSH: 121802.68 requests per second
+LPOP: 119474.31 requests per second
+SADD: 125313.28 requests per second
+SPOP: 129533.68 requests per second
+LPUSH (needed to benchmark LRANGE): 114942.53 requests per second
+LRANGE_100 (first 100 elements): 43936.73 requests per second
+LRANGE_300 (first 300 elements): 11580.78 requests per second
+LRANGE_500 (first 450 elements): 4827.42 requests per second
+LRANGE_600 (first 600 elements): 4644.03 requests per second
+MSET (10 keys): 48146.36 requests per second
+</code></pre>
+<h3 id="value-size-128">value size 128</h3>
+<pre><code>wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 128
+PING_INLINE: 125000.00 requests per second
+PING_BULK: 124843.95 requests per second
+SET: 116822.43 requests per second
+GET: 117785.63 requests per second
+INCR: 122249.39 requests per second
+LPUSH: 132978.72 requests per second
+LPOP: 128534.70 requests per second
+SADD: 117647.06 requests per second
+SPOP: 125000.00 requests per second
+LPUSH (needed to benchmark LRANGE): 123915.73 requests per second
+LRANGE_100 (first 100 elements): 24770.87 requests per second
+LRANGE_300 (first 300 elements): 7216.05 requests per second
+LRANGE_500 (first 450 elements): 4908.70 requests per second
+LRANGE_600 (first 600 elements): 3758.97 requests per second
+MSET (10 keys): 45207.96 requests per second
+</code></pre>
+<h3 id="value-size-512">value size 512</h3>
+<pre><code>Pngweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 512
+ING_INLINE: 134589.50 requests per second
+PING_BULK: 135685.20 requests per second
+SET: 110987.79 requests per second
+GET: 109051.26 requests per second
+INCR: 120336.95 requests per second
+LPUSH: 126582.28 requests per second
+LPOP: 125628.14 requests per second
+SADD: 100704.94 requests per second
+SPOP: 134228.19 requests per second
+LPUSH (needed to benchmark LRANGE): 131233.59 requests per second
+LRANGE_100 (first 100 elements): 10895.62 requests per second
+LRANGE_300 (first 300 elements): 3354.02 requests per second
+LRANGE_500 (first 450 elements): 2206.68 requests per second
+LRANGE_600 (first 600 elements): 1614.31 requests per second
+MSET (10 keys): 37750.09 requests per second
+</code></pre>
+<h3 id="value-size-2048">value size 2048</h3>
+<pre><code>wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 2048
+PING_INLINE: 130548.30 requests per second
+PING_BULK: 133511.34 requests per second
+SET: 115340.25 requests per second
+GET: 112994.35 requests per second
+INCR: 122699.38 requests per second
+LPUSH: 118343.20 requests per second
+LPOP: 93720.71 requests per second
+SADD: 123456.79 requests per second
+SPOP: 116009.28 requests per second
+LPUSH (needed to benchmark LRANGE): 103519.67 requests per second
+LRANGE_100 (first 100 elements): 3332.22 requests per second
+LRANGE_300 (first 300 elements): 1011.06 requests per second
+LRANGE_500 (first 450 elements): 635.90 requests per second
+LRANGE_600 (first 600 elements): 432.38 requests per second
+MSET (10 keys): 24021.14 requests per second
+</code></pre>
+<h3 id="value-size-2048-with-pipeline-4-and-20-clientsdefault-50-clients">value size 2048 with pipeline 4 and 20 clients(default 50 clients)</h3>
+<pre><code>wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 2048 -c 20 -P 4
+PING_INLINE: 343642.62 requests per second
+PING_BULK: 395256.91 requests per second
+SET: 156006.23 requests per second
+GET: 152671.75 requests per second
+INCR: 216919.73 requests per second
+LPUSH: 163132.14 requests per second
+LPOP: 183150.19 requests per second
+SADD: 238663.48 requests per second
+SPOP: 302114.81 requests per second
+LPUSH (needed to benchmark LRANGE): 168634.06 requests per second
+LRANGE_100 (first 100 elements): 3061.66 requests per second
+LRANGE_300 (first 300 elements): 947.69 requests per second
+LRANGE_500 (first 450 elements): 613.75 requests per second
+LRANGE_600 (first 600 elements): 436.58 requests per second
+redis-benchmark: redis-benchmark.c:278: createClient: Assertion `c-&gt;randlen &lt; (signed)(sizeof(c-&gt;randptr)/sizeof(char*))' failed.
+Aborted
+</code></pre>
+<h1 id="use-case">use case</h1>
+<h2 id="cache">cache系统</h2>
+<pre><code>wangweiwei@pc:/opt/redis$ bin/redis-cli 
+redis 127.0.0.1:6379&gt; set test 1
+OK
+redis 127.0.0.1:6379&gt; get test
+"1"
+redis 127.0.0.1:6379&gt; EXPIRE test 1
+(integer) 1
+redis 127.0.0.1:6379&gt; get test
+(nil)
+</code></pre>
+<h2 id="_5">任务队列</h2>
 <ul>
 <li>
-<p>启动服务</p>
-<p>sudo bin/redis-server etc/redis.conf</p>
+<p>terminal 1</p>
+<pre><code>redis 127.0.0.1:6379&gt; blpop test 0
+1) "test"
+2) "1"
+(7.54s)
+</code></pre>
+</li>
+<li>
+<p>terminal 2</p>
+<pre><code>redis 127.0.0.1:6379&gt; lpush test 1
+(integer) 1
+</code></pre>
 </li>
 </ul>
+<h2 id="_6">消息队列</h2>
+<ul>
+<li>
+<p>terminal 1</p>
+<pre><code>redis 127.0.0.1:6379&gt; SUBSCRIBE test_channel
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "test_channel"
+3) (integer) 1
+1) "message"
+2) "test_channel"
+3) "hello"
+1) "message"
+2) "test_channel"
+3) "let's hang out today?"
+</code></pre>
+</li>
+<li>
+<p>terminal 2</p>
+<pre><code>redis 127.0.0.1:6379&gt; PUBLISH test_channel 'hello'
+(integer) 1
+redis 127.0.0.1:6379&gt; PUBLISH test_channel 'let's hang out today?'
+Invalid argument(s)
+redis 127.0.0.1:6379&gt; PUBLISH test_channel 'let\'s hang out today?'
+(integer) 1
+</code></pre>
 </li>
 </ul>
-<h1>test</h1>
-<div class="codehilite"><pre><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">redis</span><span class="o">/</span>
-<span class="n">bin</span><span class="o">/</span><span class="n">redis</span><span class="o">-</span><span class="n">cli</span>
-<span class="n">redis</span> 127<span class="p">.</span>0<span class="p">.</span>0<span class="p">.</span>1<span class="p">:</span>6379<span class="o">&gt;</span><span class="n">set</span> <span class="n">test</span> 1
-<span class="n">redis</span> 127<span class="p">.</span>0<span class="p">.</span>0<span class="p">.</span>1<span class="p">:</span>6379<span class="o">&gt;</span><span class="n">get</span> <span class="n">test</span>
-</pre></div>
-
-
-<h1>lib</h1>
+<h2 id="_7">实时计数</h2>
+<pre><code>redis 127.0.0.1:6379&gt; set test 1
+OK
+redis 127.0.0.1:6379&gt; INCR test
+(integer) 2
+redis 127.0.0.1:6379&gt; get test
+"2"
+</code></pre>
+<h2 id="map">map使用</h2>
+<pre><code>redis 127.0.0.1:6379&gt; hset test f1 '1'
+(integer) 1
+redis 127.0.0.1:6379&gt; HGETALL test
+1) "f1"
+2) "1"
+redis 127.0.0.1:6379&gt; HMSET test f2 '2' f3 '3'
+OK
+redis 127.0.0.1:6379&gt; HGETALL test
+1) "f1"
+2) "1"
+3) "f2"
+4) "2"
+5) "f3"
+6) "3"
+redis 127.0.0.1:6379&gt; HMGET test f1,f2
+1) (nil)
+redis 127.0.0.1:6379&gt; HMGET test f1 f2
+1) "1"
+2) "2"
+redis 127.0.0.1:6379&gt; HMGET test f1 f2 f4
+1) "1"
+2) "2"
+3) (nil)
+</code></pre>
+<h2 id="set">set使用</h2>
+<pre><code>redis 127.0.0.1:6379&gt; SADD test 1 2
+(integer) 2
+redis 127.0.0.1:6379&gt; SMEMBERS test
+1) "1"
+2) "2"
+redis 127.0.0.1:6379&gt; sadd test1 2 3
+(integer) 2
+redis 127.0.0.1:6379&gt; SMEMBERS test1
+1) "2"
+2) "3"
+redis 127.0.0.1:6379&gt; SDIFF test test1
+1) "1"
+redis 127.0.0.1:6379&gt; SINTER test test1
+1) "2"
+redis 127.0.0.1:6379&gt; SUNION test test1
+1) "1"
+2) "2"
+3) "3"
+redis 127.0.0.1:6379&gt; SISMEMBER test 1
+(integer) 1
+redis 127.0.0.1:6379&gt; SREM test 1
+(integer) 1
+redis 127.0.0.1:6379&gt; SMEMBERS test
+1) "2"
+</code></pre>
+<h2 id="sorted-set">sorted set使用</h2>
+<pre><code>redis 127.0.0.1:6379&gt; ZADD test 3 1 2 2 1 3
+(integer) 3
+redis 127.0.0.1:6379&gt; ZRANGE test 0 -1
+1) "3"
+2) "2"
+3) "1"
+redis 127.0.0.1:6379&gt; ZREVRANGE test 0 -1
+1) "1"
+2) "2"
+3) "3"
+redis 127.0.0.1:6379&gt; ZADD test1 1 1 2 2
+(integer) 2
+redis 127.0.0.1:6379&gt; ZINTERSTORE out 2 test test1 
+(integer) 2
+redis 127.0.0.1:6379&gt; ZRANGE out 0 -1 WITHSCORES
+1) "1"
+2) "4"
+3) "2"
+4) "4"
+</code></pre>
+<h2 id="transaction">Transaction</h2>
+<pre><code>redis 127.0.0.1:6379&gt; multi
+OK
+redis 127.0.0.1:6379&gt; incr foo
+QUEUED
+redis 127.0.0.1:6379&gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&gt; exec
+1) (integer) 1
+2) (integer) 1
+3) (integer) 2
+redis 127.0.0.1:6379&gt;
+</code></pre>
+<p>EXEC调用的过程中多个命令作为一个原子命令执行，在执行中间redis不会同时执行其他客户端的命令。在调用EXEC之前调用DISCARD会清除命令队列并退出事务。</p>
+<p>事务中的命令即使执行失败也不会rollback，要么全执行，要么全不执行，命令的结果不影响事务。</p>
+<p>事务中的命令在事务执行前都是没有结果返回的，所以无法在事务中进行check-and-set这样的操作。</p>
+<p>如果exec执行的过程中server down机（crash or kill)，同时配置启用了aof，那么aof中记录的可能不是完整的日志，这时候如果重启会出现错误无法启动，需要先用redis-check-aof修复问题后重启。</p>
+<pre><code>redis 127.0.0.1:6379&gt; multi
+OK
+redis 127.0.0.1:6379&gt; lpop bar
+QUEUED
+redis 127.0.0.1:6379&gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&gt; exec
+1) (error) ERR Operation against a key holding the wrong kind of value
+2) (integer) 3
+</code></pre>
+<p>还有就是语法错误的命令不会被放入执行队列:</p>
+<pre><code>redis 127.0.0.1:6379&gt; multi
+OK
+redis 127.0.0.1:6379&gt; incr a b c
+(error) ERR wrong number of arguments for 'incr' command
+redis 127.0.0.1:6379&gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&gt; exec
+1) (integer) 4
+</code></pre>
+<p>Watch CAS(check-and-set)
+terminal 1:</p>
+<pre><code>redis 127.0.0.1:6379&gt; watch a
+OK
+redis 127.0.0.1:6379&gt; multi
+OK
+redis 127.0.0.1:6379&gt; incr a
+QUEUED
+redis 127.0.0.1:6379&gt; exec
+(nil)
+</code></pre>
+<p>terminal 2:</p>
+<pre><code>redis 127.0.0.1:6379&gt; set a 5
+OK
+</code></pre>
+<p>如果watch的key是有失效期的，并且在watch之后被redis失效删除了，那么EXEC会正常执行。</p>
+<h2 id="pipeline">Pipeline</h2>
+<p>批量发送一堆命令，然后一次性获取命令的执行结果。</p>
+<pre><code>Pipeline pipeline = jedis.pipelined();
+long start = System.currentTimeMillis();
+for (int i = 0; i &lt; 100000; i++) {
+    pipeline.set("" + i, "" + i);
+}
+List&lt;Object&gt; results = pipeline.execute();
+long end = System.currentTimeMillis();
+System.out.println("Pipelined SET: " + ((end - start)/1000.0) + " seconds");
+</code></pre>
+<h2 id="instagramredis">新浪和instagram的redis实践</h2>
+<ul>
+<li><a href="http://blog.nosqlfan.com/html/3295.html">新浪</a></li>
+<li><a href="http://blog.nosqlfan.com/html/3379.html">instagram</a></li>
+</ul>
+<h1 id="lib">lib</h1>
 <p>请参考官方网站的<a href="http://redis.io/clients">redis client</a></p>
 <p>我用的是java版的client:jedis,这个client支持多机hash，连接池等，但是封装的不够好，使用的适合需要自己封装一层负责连接的申请和释放。</p>
-<h1>ebook</h1>
-<p><a href="http://vdisk.weibo.com/s/xhrM/1313680831">redis cookbook</a></p>
-<h1>reference</h1>
+<h1 id="ebook">ebook</h1>
+<p><a href="upload/redis.pdf">redis cookbook</a></p>
+<h1 id="reference">reference</h1>
 <ol>
 <li><a href="http://antirez.com/">redis author's blog</a></li>
 <li><a href="http://blog.nosqlfan.com">nosqlfan.com</a></li>
-</ol><p>There are <a href=".././get-familar-with-redis.html#disqus_thread">comments</a>.</p>
-                </article>
-                
+<li><a href="https://github.com/Instagram/redis-faina">redis-faina</a></li>
+<li><a href="https://github.com/sripathikrishnan/redis-rdb-tools">redis-rdb-tools</a></li>
+</ol>
+                <p>There are <a href="../get-familar-with-redis.html#disqus_thread">comments</a>.</p>                </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                <h1>Other articles</h1>
+                <hr />
+                    <ol id="posts-list" class="hfeed">
                     
-<p class="paginator">
-    
-    Page 1 / 1
-    
-</p>
-
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../mongodb-performance.html" rel="bookmark" title="Permalink to mongodb cluster configuration">mongodb cluster configuration</a></h1>
+                </header>
                 
-            </aside><!-- /#featured -->
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-06-18T00:00:00">
+                2012/六月/18 星期一
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/sql_nosql.html">sql_nosql</a>. </p>
+<p>tags: <a href="../tag/nosql.html">nosql</a><a href="../tag/mongodb.html">mongodb</a><a href="../tag/cluster.html">cluster</a><a href="../tag/replica-set.html">replica-set</a><a href="../tag/sharding.html">sharding</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#_1">优缺点</a></li>
+<li><a href="#_2">性能评估</a></li>
+<li><a href="#mongodb-vs-tokumx">mongodb vs tokumx</a></li>
+<li><a href="#_3">参考</a></li>
+</ul>
+</div>
+<h1 id="_1">优缺点</h1>
+<h1 id="_2">性能评估</h1>
+<h1 id="mongodb-vs-tokumx">mongodb vs tokumx</h1>
+<h1 id="_3">参考</h1>
+<p>http://blog.engineering.kiip.me/post/20988881092/a-year-with-mongodb</p>
+<p>https://www.openshift.com/blogs/design-and-performance-tips-for-mongodb-indexes</p>
+<p>https://github.com/jwilder/mongodb-tools</p>
+<p>http://www.datastax.com/dev/blog/2012-in-review-performance</p>
+                <a class="readmore" href="../mongodb-performance.html">read more</a>
+                <p>There are <a href="../mongodb-performance.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
             
-        
-        
-        
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../mongodb-cluster-configuration.html" rel="bookmark" title="Permalink to mongodb cluster configuration">mongodb cluster configuration</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-06-18T00:00:00">
+                2012/六月/18 星期一
+        </abbr>
 
-    
-
-
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/sql_nosql.html">sql_nosql</a>. </p>
+<p>tags: <a href="../tag/nosql.html">nosql</a><a href="../tag/mongodb.html">mongodb</a><a href="../tag/cluster.html">cluster</a><a href="../tag/replica-set.html">replica-set</a><a href="../tag/sharding.html">sharding</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#caution">caution</a></li>
+<li><a href="#shard-a-27018">shard a: 27018</a><ul>
+<li><a href="#_1">节点</a></li>
+<li><a href="#_2">部署</a></li>
+</ul>
+</li>
+<li><a href="#shard-b-27018">shard b: 27018</a><ul>
+<li><a href="#_3">节点</a></li>
+<li><a href="#_4">部署</a></li>
+</ul>
+</li>
+<li><a href="#config-server-27019">config server 27019</a><ul>
+<li><a href="#_5">节点</a></li>
+<li><a href="#_6">部署</a></li>
+</ul>
+</li>
+<li><a href="#mongos-27017">mongos 27017</a><ul>
+<li><a href="#_7">节点</a></li>
+<li><a href="#_8">部署</a></li>
+</ul>
+</li>
+<li><a href="#shard">shard管理</a></li>
+<li><a href="#shard-db-and-collections">shard db and collections</a><ul>
+<li><a href="#_9">举例</a></li>
+</ul>
+</li>
+<li><a href="#_10">参考</a></li>
+</ul>
+</div>
+<h1 id="caution">caution</h1>
+<p>在实际部署的时候请注意替换下面例子中的ip地址,下面所有操作假设实在mongodb安装根目录中，比如/opt/mongodb</p>
+<h1 id="shard-a-27018">shard a: 27018</h1>
+<h2 id="_1">节点</h2>
+<ul>
+<li>192.168.0.77</li>
+<li>192.168.0.78</li>
+<li>192.168.0.58 仲裁节点 ...</li></ul>
+                <a class="readmore" href="../mongodb-cluster-configuration.html">read more</a>
+                <p>There are <a href="../mongodb-cluster-configuration.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
+    </ol><!-- /#posts-list -->
+</section><!-- /#content -->
         <section id="extras" class="body">
-        
-        
-        </section><!-- /#extras -->
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
 
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
                 Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
                 </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
-
-
-
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
 <script type="text/javascript">
     var disqus_shortname = 'cloudornot';
     (function () {
@@ -152,6 +642,5 @@
         (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
 </script>
-
 </body>
 </html>

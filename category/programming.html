@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Careless Whisper - programming</title>
+        <meta charset="utf-8" />
+                <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="..">Careless Whisper </a></h1>
+                <nav><ul>
+                                                                                        <li ><a href="../category/android.html">android</a></li>
+                                    <li ><a href="../category/linux.html">linux</a></li>
+                                    <li ><a href="../category/misc.html">misc</a></li>
+                                    <li class="active"><a href="../category/programming.html">programming</a></li>
+                                    <li ><a href="../category/search.html">search</a></li>
+                                    <li ><a href="../category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="../tags.html">Tags</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+                
+        
+            <aside id="featured" class="body"><article>
+                <h1 class="entry-title"><a href="../in-project-maven-dependency,in-project-repository.html">In project repository for maven:Maven本地依赖配置</a></h1> 
+                <footer class="post-info">
+        <abbr class="published" title="2013-11-16T00:00:00">
+                2013/十一月/16 星期六
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/maven.html">maven</a><a href="../tag/dependency.html">dependency</a><a href="../tag/in-project.html">in-project</a></p></p>
+</footer><!-- /.post-info -->                <h1 id="in-project-repository">In Project Repository</h1>
+<pre><code>&lt;repository&gt;
+    &lt;id&gt;lib&lt;/id&gt;
+    &lt;name&gt;lib&lt;/name&gt;
+    &lt;releases&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;checksumPolicy&gt;ignore&lt;/checksumPolicy&gt;
+    &lt;/releases&gt;
+    &lt;snapshots&gt;
+        &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/snapshots&gt;
+    &lt;url&gt;file://${project.basedir}/lib&lt;/url&gt;
+&lt;/repository&gt;
+</code></pre>
+<h1 id="lib-structure">Lib structure</h1>
+<p>对于groupId=x.y.z的目录结构如下</p>
+<pre><code>lib
+  |-- x
+      |-- y
+          |-- z
+              |-- ${artifactId}
+                  |-- ${version}
+                      |-- ${artifactId}-${version}.pom
+                      |-- ${artifactId}-${version}.pom.sha1
+                      |-- ${artifactId}-${version}.jar
+                      |-- ${artifactId}-${version}.jar.sha1
+</code></pre>
+<p>由于上面的repository设置了ingore checksum,所以sha1的文件不是必须的</p>
+<h1 id="artifactid-versionpom">如何生成${artifactId}-${version}.pom</h1>
+<pre><code>mvn install:install-file -Dfile=xxx.jar -DgroupId=x.y.z -DartifactId=${artifactId} -Dversion=${version} -Dpackaging=jar -DgeneratePom=true
+</code></pre>
+<p>生成完之后拷贝到lib目录下的对应位置即可。</p>
+                <p>There are <a href="../in-project-maven-dependency,in-project-repository.html#disqus_thread">comments</a>.</p>                </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                <h1>Other articles</h1>
+                <hr />
+                    <ol id="posts-list" class="hfeed">
+                    
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../optimize-web-speed.html" rel="bookmark" title="Permalink to 优化网站访问速度">优化网站访问速度</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-11-11T00:00:00">
+                2012/十一月/11 星期日
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/cdn.html">cdn</a><a href="../tag/optimize.html">optimize</a><a href="../tag/speed.html">speed</a><a href="../tag/webpage.html">webpage</a><a href="../tag/gzip.html">gzip</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#http">减少HTTP请求数</a></li>
+<li><a href="#cdn">使用内容分发网络(CDN)</a></li>
+<li><a href="#expires-and-cache-control">Expires and Cache-Control</a></li>
+<li><a href="#gzip">使用Gzip压缩</a></li>
+<li><a href="#cssjscssjs">css在前，js在后,不要在CSS中使用js</a></li>
+<li><a href="#cssjshtml">css，js用外部文件，不要写在html中</a></li>
+<li><a href="#jscss">压缩js，css</a></li>
+<li><a href="#redirect">减少Redirect</a></li>
+<li><a href="#etaglast-modified-header">Etag和Last-Modified Header</a></li>
+<li><a href="#ajaxget">Ajax请求尽量多是GET请求</a></li>
+<li><a href="#_1">预加载和延迟加载</a></li>
+<li><a href="#_2">减少页面复杂度</a></li>
+<li><a href="#_3">使用多个域来提供性能</a></li>
+<li><a href="#cookie">减少Cookie体积</a></li>
+<li><a href="#dom-access">DOM access</a></li>
+<li><a href="#_4">图片尺寸优化</a></li>
+<li><a href="#_5">参考</a></li>
+</ul>
+</div>
+<h1 id="http">减少HTTP请求数</h1>
+<p>减少页面上css,js,图片的文件个数。</p>
+<h1 id="cdn">使用内容分发网络(CDN)</h1>
+<p>解决夸地域访问使用CDN是最好的方式了，省钱又省力。</p>
+<h1 id="expires-and-cache-control">Expires and Cache-Control</h1>
+<p>设置页面的Expires和Cache-Control:max-age来缓存页面，注意这时候服务端的访问统计就会受影响了，建议使用百度统计或者google统计来解决页面访问统计的问题。</p>
+<h1 id="gzip">使用Gzip压缩</h1>
+<p>这个不用多说了，压缩为50%是很正常的，通常压缩比可以达到1/8或者更高(1/10 ...</p>
+                <a class="readmore" href="../optimize-web-speed.html">read more</a>
+                <p>There are <a href="../optimize-web-speed.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
+            
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../reservoir-sampling.html" rel="bookmark" title="Permalink to 随机抽样问题">随机抽样问题</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-10-19T00:00:00">
+                2012/十月/19 星期五
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/random-sampling.html">random sampling</a><a href="../tag/reservoir-sampling.html">reservoir sampling</a></p></p>
+</footer><!-- /.post-info -->                <h1 id="_1">问题</h1>
+<pre><code>    要求从N个元素中随机的抽取k个元素，其中N无法确定。
+</code></pre>
+<h1 id="_2">伪代码</h1>
+<pre><code>    Init : a reservoir with the size： k
+         for i= k+1 to N
+              M=random(1, i);
+              if( M &lt; k)
+                 SWAP the Mth value and ith value
+         end for
+</code></pre>
+<h1 id="_3">证明</h1>
+<p>初始情况: i&lt;=k,i个元素全部放入水库，每个元素出现在水池的概率为1。</p>
+<p>假设k&lt;=j&lt;=i时结论成立。</p>
+<p>当j=i+1,第i+1个元素会以k/(i+1)的概率被选中 ...</p>
+                <a class="readmore" href="../reservoir-sampling.html">read more</a>
+                <p>There are <a href="../reservoir-sampling.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
+            
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../java-cpu-usage-analysis.html" rel="bookmark" title="Permalink to Java程序CPU使用分析">Java程序CPU使用分析</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-09-18T00:00:00">
+                2012/九月/18 星期二
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/java.html">java</a><a href="../tag/cpu.html">cpu</a><a href="../tag/usage.html">usage</a><a href="../tag/top.html">top</a><a href="../tag/jstack.html">jstack</a><a href="../tag/kill.html">kill</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#topcpujava">用top找出cpu消耗过高的java进程</a></li>
+<li><a href="#cpu">查看cpu消耗过高的线程。</a></li>
+<li><a href="#jstack">用jstack分析线程栈</a></li>
+<li><a href="#_1">跟踪代码定位问题</a></li>
+</ul>
+</div>
+<h1 id="topcpujava">用top找出cpu消耗过高的java进程</h1>
+<pre><code>top - 11:49:39 up 1 day,  1:53,  8 users,  load average: 0.24, 0.13, 0.22
+Tasks: 210 total,   2 running, 203 sleeping,   0 stopped,   5 zombie
+Cpu(s):  7.8%us,  3.7%sy,  0.1%ni, 87.2%id,  1 ...</code></pre>
+                <a class="readmore" href="../java-cpu-usage-analysis.html">read more</a>
+                <p>There are <a href="../java-cpu-usage-analysis.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
+            
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../jvm-gc-tuning.html" rel="bookmark" title="Permalink to Java虚拟机GC调整">Java虚拟机GC调整</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-08-25T00:00:00">
+                2012/八月/25 星期六
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/java.html">java</a><a href="../tag/jvm.html">jvm</a><a href="../tag/garbage-collection.html">garbage collection</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#java">Java垃圾回收介绍</a><ul>
+<li><a href="#_1">垃圾回收算法</a><ul>
+<li><a href="#reference-counting">引用计数（Reference Counting）</a></li>
+<li><a href="#-mark-sweep">标记-清除（Mark-Sweep）</a></li>
+<li><a href="#copying">复制（Copying）</a></li>
+<li><a href="#-mark-compact">标记-整理（Mark-Compact）</a></li>
+<li><a href="#incremental-collecting">增量收集（Incremental Collecting）</a></li>
+<li><a href="#generational-collecting">分代（Generational Collecting）</a></li>
+</ul>
+</li>
+<li><a href="#gcscavenge-gcfull-gc">GC的两种类型：Scavenge GC和Full GC。</a><ul>
+<li><a href="#scavenge-gc">Scavenge GC</a></li>
+<li><a href="#full-gc">Full GC</a></li>
+</ul>
+</li>
+<li><a href="#java-garbage-collector">Java Garbage Collector</a><ul>
+<li><a href="#_2">串行收集器</a></li>
+<li><a href="#_3">并行收集器</a></li>
+<li><a href="#_4">并发收集器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#jvm-gc">针对并发收集器的JVM GC参数调整</a><ul>
+<li><a href="#jstat">jstat的使用</a><ul>
+<li><a href="#gcutil">gcutil</a></li>
+<li><a href="#gcnew">gcnew</a></li>
+<li><a href="#gcold">gcold</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#ps-top">ps, top的使用</a><ul>
+<li><a href="#_5">常用配置</a></li>
+<li><a href="#64">使用64位服务器的线上服务的推荐配置</a></li>
+</ul>
+</li>
+<li><a href="#_6">参考</a></li>
+</ul>
+</div>
+<h1 id="java">Java垃圾回收介绍</h1>
+<p>我们先来看一张对象生存期的图。横轴是对象分配后的生存期，纵轴是相应生存期的字节总数。从这张图我们可以看出绝大多数对象的生存期是很短暂的。
+比如程序中随处可见的局部变量。对于那些长期生存的变量，比如程序内部的计数器 ...</p>
+                <a class="readmore" href="../jvm-gc-tuning.html">read more</a>
+                <p>There are <a href="../jvm-gc-tuning.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
+            
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../compress-js-css-with-yui-compressor-maven-pojo.html" rel="bookmark" title="Permalink to Compress js and css with YUI Compressor Maven Mojo">Compress js and css with YUI Compressor Maven Mojo</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-08-19T00:00:00">
+                2012/八月/19 星期日
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/js.html">js</a><a href="../tag/css.html">css</a><a href="../tag/yui.html">yui</a><a href="../tag/compressor.html">compressor</a><a href="../tag/maven.html">maven</a></p></p>
+</footer><!-- /.post-info -->                <h1 id="_1">配置</h1>
+<pre><code>&lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+        &lt;name&gt;oss.sonatype.org&lt;/name&gt;
+        &lt;id&gt;oss.sonatype.org&lt;/id&gt;
+        &lt;url&gt;http://oss.sonatype.org/content/groups/public&lt;/url&gt;
+    &lt;/pluginRepository&gt;
+&lt;/pluginRepositories&gt;
+&lt;plugin&gt;
+            &lt;groupId&gt;net.alchim31.maven&lt;/groupId&gt;
+            &lt;artifactId&gt;yuicompressor-maven-plugin&lt;/artifactId&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;compress&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+            &lt;configuration&gt;
+                &lt;nosuffix&gt;true&lt;/nosuffix&gt;
+                &lt;sourceDirectory&gt;${project.basedir}/web ...</code></pre>
+                <a class="readmore" href="../compress-js-css-with-yui-compressor-maven-pojo.html">read more</a>
+                <p>There are <a href="../compress-js-css-with-yui-compressor-maven-pojo.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
+    </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        <section id="extras" class="body">
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'cloudornot';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

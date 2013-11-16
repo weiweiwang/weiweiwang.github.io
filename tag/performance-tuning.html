@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Careless Whisper - performance tuning</title>
+        <meta charset="utf-8" />
+                <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="..">Careless Whisper </a></h1>
+                <nav><ul>
+                                                                                        <li ><a href="../category/android.html">android</a></li>
+                                    <li ><a href="../category/linux.html">linux</a></li>
+                                    <li ><a href="../category/misc.html">misc</a></li>
+                                    <li ><a href="../category/programming.html">programming</a></li>
+                                    <li ><a href="../category/search.html">search</a></li>
+                                    <li ><a href="../category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="../tags.html">Tags</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+                
+        
+            <aside id="featured" class="body"><article>
+                <h1 class="entry-title"><a href="../elasticsearch-configuration-and-performance-tuning.html">ElasticSearch Configuration and Performance Tuning</a></h1> 
+                <footer class="post-info">
+        <abbr class="published" title="2012-12-12T00:00:00">
+                2012/十二月/12 星期三
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/search.html">search</a>. </p>
+<p>tags: <a href="../tag/elasticsearch-configuration.html">elasticsearch configuration</a><a href="../tag/performance-tuning.html">performance tuning</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#_1">下载与安装</a><ul>
+<li><a href="#_2">下载</a></li>
+<li><a href="#_3">安装</a></li>
+<li><a href="#_4">启动</a></li>
+</ul>
+</li>
+<li><a href="#_5">配置</a><ul>
+<li><a href="#_6">系统配置</a></li>
+<li><a href="#_7">内存配置</a></li>
+<li><a href="#elasticsearchyml">elasticsearch.yml配置</a><ul>
+<li><a href="#_8">集群名称</a></li>
+<li><a href="#shardreplica">shard和replica配置</a></li>
+<li><a href="#refresh_interval">refresh_interval</a></li>
+<li><a href="#cache">cache设置</a></li>
+<li><a href="#memory-lock">开启memory lock</a></li>
+<li><a href="#_9">索引和分词的配置</a></li>
+<li><a href="#mappings">mappings的配置</a></li>
+</ul>
+</li>
+<li><a href="#_10">测试</a><ul>
+<li><a href="#_11">增加一条数据：</a></li>
+<li><a href="#_12">查询中关村(汉字需要编码）</a></li>
+<li><a href="#_13">查询中关(汉字需要编码)</a></li>
+<li><a href="#query-string">使用query string查询</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mmseg">mmseg词典更新</a></li>
+<li><a href="#_14">性能优化</a><ul>
+<li><a href="#_15">准备工作</a></li>
+<li><a href="#_16">影响性能的因素</a><ul>
+<li><a href="#4g">内存要足够多，4G或以上</a></li>
+<li><a href="#memory-lock_1">如果可能开启memory lock</a></li>
+<li><a href="#65536">文件句柄数是否足够，建议设置为65536或以上</a></li>
+<li><a href="#64linuxsolarismmapfs">如果是64位linux/solaris系统，开启mmapfs</a></li>
+<li><a href="#optimze">optimze索引文件为一个文件</a></li>
+<li><a href="#cache_1">调整cache保证足够使用</a></li>
+<li><a href="#refresh_interval60s">refresh_interval调大一些，比如60s或者更大</a></li>
+<li><a href="#_17">放大招了</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_18">参考</a></li>
+</ul>
+</div>
+<h1 id="_1">下载与安装</h1>
+<h2 id="_2">下载</h2>
+<p><a href="http://www.elasticsearch.org/download/">http://www.elasticsearch.org/download/</a></p>
+<h2 id="_3">安装</h2>
+<pre><code>tar xvf elasticsearch-0.19.12.tar.gz
+</code></pre>
+<h2 id="_4">启动</h2>
+<pre><code>cd elasticsearch-0.19.12
+bin/elasticsearch -f
+</code></pre>
+<p>这里的-f参数是让程序在前台运行，这样可以看到程序运行的输出日志，正式环境不能这么运行，直接运行bin/elasticsearch就ok了。</p>
+<h1 id="_5">配置</h1>
+<p>上面启动的elasitcsearch没有做任何配置，正式使用的时候至少需要配置内存，一般情况下mapping配置也是不可缺少的。</p>
+<h2 id="_6">系统配置</h2>
+<p>查看ulimit -n确保可以打开的文件句柄数目够大，如果使用memory lock的话还需要确保ulimit -l的大小足够使用。Java的版本至少1.6或者以上（1.7现在也支持的很好了）。ulimit -l和ulimit -n这两个配置的如下方法修改：</p>
+<pre><code>vi /etc/security/limits.conf
+#max open files
+* hard nofile 65535
+* soft nofile 65535
+#max lock memory
+* soft  memlock 16000000
+* hard  memlock 16000000
+</code></pre>
+<h2 id="_7">内存配置</h2>
+<p>在bin/elasticsearch.in.sh最后增加如下一行：</p>
+<pre><code>JAVA_OPTS="$JAVA_OPTS -Xmx4g -Xms4g -Xmn1g -XX:PermSize=128M -XX:MaxPermSize=128M"
+</code></pre>
+<p>elasticsearch中的默认配置是：</p>
+<pre><code>-Xms2g -Xmx2g -Xss256k -Djava.awt.headless=true -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+HeapDumpOnOutOfMemoryError -Xmx4g -Xms4g -Xmn1g -XX:PermSize=128M -XX:MaxPermSize=128M
+</code></pre>
+<p>实际使用的内存大小需要根据实际场景做调节，我目前2000w条数据，8g索引文件，4g内存完全够用。</p>
+<h2 id="elasticsearchyml">elasticsearch.yml配置</h2>
+<h3 id="_8">集群名称</h3>
+<pre><code>cluster.name: your_cluster_name
+</code></pre>
+<h3 id="shardreplica">shard和replica配置</h3>
+<p>参考<a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html">http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html</a></p>
+<pre><code>index.number_of_shards: 4
+index.number_of_replicas: 1
+</code></pre>
+<h3 id="refresh_interval">refresh_interval</h3>
+<p>参考：<a href="http://www.elasticsearch.org/blog/2011/03/23/update-settings.html">http://www.elasticsearch.org/blog/2011/03/23/update-settings.html</a>
+refresh_interval这个值的默认值是1s，增加可以提高建立索引的速度，非实时搜索情况下建议设置的大一些，比如下面设置成120s</p>
+<pre><code>index.refresh_interval: 120s
+</code></pre>
+<h3 id="cache">cache设置</h3>
+<p>参考：<a href="http://www.elasticsearch.org/guide/reference/index-modules/cache.html">http://www.elasticsearch.org/guide/reference/index-modules/cache.html</a>
+节点的filter cache大小，默认是heap大小的20%，也可以制定绝对大小，比如下面指定为1g，注意如果设置为20%的时候需要加引号</p>
+<pre><code>indices.cache.filter.size: 1g
+</code></pre>
+<h3 id="memory-lock">开启memory lock</h3>
+<pre><code>bootstrap.mlockall: true
+</code></pre>
+<p>使用这个参数请确保memlock的系统配置已经设置，比如在我现在用的centos上需要如下设置：</p>
+<pre><code>vi /etc/security/limits.conf
+* soft  memlock 10000000
+* hard  memlock 10000000
+</code></pre>
+<p>注意这里的单位是k，并且从我配置的经验看，这里的k是1000,而不是1024，所以如果你需要10g内存（也就是10737418240B），这里10000000会不够用的,需要至少设置为10737419才行</p>
+<h3 id="_9">索引和分词的配置</h3>
+<p>参考:<a href="http://www.elasticsearch.org/guide/reference/mapping/conf-mappings.html">http://www.elasticsearch.org/guide/reference/mapping/conf-mappings.html</a>
+注意这里开启了mmapfs，如果你是linux/solaris 64bit的系统建议开启</p>
+<pre><code>index:
+    store:
+    type: mmapfs
+    analysis:
+    analyzer:
+       edgeNGramAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball,edgeNGramFilter]
+       nGramAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball,nGramFilter]
+       standardAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball]
+       mmsegAnalyzer:
+           type: custome
+           tokenizer: mmseg_maxword
+           filter: [standard,lowercase,englishSnowball]
+       complexAnalyzer:
+           type: custome
+           tokenizer: mmseg_complex
+           filter: [standard,lowercase,englishSnowball]
+       simpleAnalyzer:
+           type: custome
+           tokenizer: mmseg_simple
+           filter: [standard,lowercase,englishSnowball]
+    tokenizer:
+       mmseg_maxword:
+           type: mmseg
+           seg_type: "max_word"
+       mmseg_complex:
+           type: mmseg
+           seg_type: "complex"
+       mmseg_simple:
+           type: mmseg
+           seg_type: "simple"
+    filter:
+       nGramFilter:
+           type: nGram
+           min_gram: 1
+           max_gram: 64
+       edgeNGramFilter:
+           type: edgeNGram
+           min_gram: 1
+           max_gram: 64
+           side: front
+       englishSnowball:
+           type: snowball
+           language: English
+</code></pre>
+<p>这里需要注意的是我这里使用了mmseg分词工具，如果你不需要的话可以去掉相应的配置，mmseg分词插件的安装说明参看：<a href="https://github.com/medcl/elasticsearch-analysis-mmseg">https://github.com/medcl/elasticsearch-analysis-mmseg</a>，如果你下载后的分词发现在并发情况下有bug（异常，分词结果错误），请用源码编译安装，源码里的这个bug已经修复。关于mmseg的说明可以参看<a href="http://weiweiwang.github.com/mmseg.html">http://weiweiwang.github.com/mmseg.html</a></p>
+<h3 id="mappings">mappings的配置</h3>
+<pre><code>{
+    "test":{
+    "_all":{
+        "enabled":false
+    },
+    "_source":{
+        "enabled":false
+    },
+    "properties":{
+        "id":{
+            "type":"string",
+            "index":"not_analyzed",
+            "store":"yes"
+        },
+        "name":{
+            "type":"string",
+            "index":"analyzed",
+            "index_analyzer":"mmsegAnalyzer",
+            "search_analyzer":"mmsegAnalyzer",
+            "store":"yes",
+            "term_vector":"with_positions_offsets"
+        },
+        "address":{
+            "type":"string",
+            "index":"analyzed",
+            "index_analyzer":"mmsegAnalyzer",
+            "search_analyzer":"mmsegAnalyzer",
+            "store":"yes",
+            "term_vector":"with_positions_offsets"
+        }
+    }
+    }
+}
+</code></pre>
+<p>这个mapping的配置可以放置到config/mappings/{index}/{type}.json文件中，也可以通过命令设置</p>
+<pre><code>    curl -XPUT 'localhost:9200/test/test/_mapping' -d @test.json
+</code></pre>
+<h2 id="_10">测试</h2>
+<h3 id="_11">增加一条数据：</h3>
+<pre><code>curl -XPUT http://localhost:9200/test/test/1 -d '{"name":"test","address":"中关村","id":"1"}'
+</code></pre>
+<h3 id="_12">查询中关村(汉字需要编码）</h3>
+<pre><code>curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3%E6%9D%91&amp;pretty=true'
+</code></pre>
+<h3 id="_13">查询中关(汉字需要编码)</h3>
+<pre><code>curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3&amp;pretty=true'
+</code></pre>
+<h3 id="query-string">使用query string查询</h3>
+<pre><code>curl 'localhost:9200/test/test/_search' -d '{
+    "from" : 0,
+    "size" : 20,
+    "timeout" : 5000,
+    "query" : {
+        "query_string" : {
+        "query" : "中关村",
+        "fields" : [ "address^1.0", "name^10.0"],
+        "default_operator" : "and",
+        "allow_leading_wildcard" : false
+        }
+    }
+}'
+</code></pre>
+<p>返回</p>
+<pre><code>{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 0.19178301,
+    "hits" : [ {
+      "_index" : "test",
+      "_type" : "test",
+      "_id" : "1",
+      "_score" : 0.19178301
+    } ]
+  }
+}
+</code></pre>
+<h1 id="mmseg">mmseg词典更新</h1>
+<p>从<a href="https://code.google.com/p/sunpinyin/">https://code.google.com/p/sunpinyin/</a>下载sunpinyin_importer.tar.bz2，解压后里面有个import_sogou_celldict.py的python脚本，可以根据这个脚本来转换搜狗词库生成mmseg词库。
+我拷贝修改了下可以批量转换:<a href="upload/convert_sogou_celldict_to_mmseg4j.py">点击下载</a></p>
+<p>使用方法为:</p>
+<pre><code> python convert_sogou_celldict_to_mmseg4j.py sogou_dict_dir mmseg_dict_dir
+</code></pre>
+<p>注意sogou词典scel文件请用英文名称命名，转换后会拼接成words-{原来的scel文件名称}.dic。转换完成后将这些文件拷贝到elasticsearch/config/mmseg目录下即可。词库文件<a href="http://pinyin.sogou.com/dict/">下载</a>。</p>
+<h1 id="_14">性能优化</h1>
+<h2 id="_15">准备工作</h2>
+<p>参考:<a href="http://www.elasticsearch.org/guide/reference/modules/plugins.html">http://www.elasticsearch.org/guide/reference/modules/plugins.html</a>
+安装elasticsearch-head和bigdesk来监控集群</p>
+<pre><code>bin/plugin -install Aconex/elasticsearch-head
+bin/plugin -install lukas-vlcek/bigdesk
+</code></pre>
+<p>然后在浏览器里输入localhost:9200/_plugin/head/就可以访问监控页面。</p>
+<h2 id="_16">影响性能的因素</h2>
+<h3 id="4g">内存要足够多，4G或以上</h3>
+<p>通过-Xmx -Xms -Xmn来调整heap内存的分配情况，同时建议参考jstat的使用说明来监控gc，可以参考<a href="http://weiweiwang.github.com/jvm-gc-tuning.html">http://weiweiwang.github.com/jvm-gc-tuning.html</a></p>
+<h3 id="memory-lock_1">如果可能开启memory lock</h3>
+<pre><code>vi /etc/security/limits.conf
+#max lock memory
+* soft  memlock 16000000
+* hard  memlock 16000000
+</code></pre>
+<h3 id="65536">文件句柄数是否足够，建议设置为65536或以上</h3>
+<pre><code>vi /etc/security/limits.conf
+#max open files
+* hard nofile 65535
+* soft nofile 65535
+</code></pre>
+<h3 id="64linuxsolarismmapfs">如果是64位linux/solaris系统，开启mmapfs</h3>
+<p>上面的例子已经给出了如何开启，参考<a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html">http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html</a></p>
+<h3 id="optimze">optimze索引文件为一个文件</h3>
+<pre><code>curl -XPOST 'http://localhost:9200/test/_optimize?max_num_segments=1'
+</code></pre>
+<h3 id="cache_1">调整cache保证足够使用</h3>
+<p>先通过bigdesk监控系统性能，然后确定这个参数如何调整。</p>
+<h3 id="refresh_interval60s">refresh_interval调大一些，比如60s或者更大</h3>
+<p>如果不要求实时搜索，可以调大这个值，注意这个值调大之后，新加入的索引并不是立刻就能搜索到，要超过这个interval之后才能检索到。</p>
+<h3 id="_17">放大招了</h3>
+<p>上SSD硬盘，可以参考<a href="http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/">这里</a></p>
+<h1 id="_18">参考</h1>
+<p><a href="http://www.tuicool.com/articles/NbM7zi">http://www.tuicool.com/articles/NbM7zi</a></p>
+<p><a href="http://www.elasticsearch.org/">http://www.elasticsearch.org/</a></p>
+<p><a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html">http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html</a></p>
+<p><a href="http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/">http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/</a></p>
+                <p>There are <a href="../elasticsearch-configuration-and-performance-tuning.html#disqus_thread">comments</a>.</p>                </article>
+                </aside><!-- /#featured -->
+            </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        <section id="extras" class="body">
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'cloudornot';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

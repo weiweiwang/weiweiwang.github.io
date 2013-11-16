@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Careless Whisper - java</title>
+        <meta charset="utf-8" />
+                <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="..">Careless Whisper </a></h1>
+                <nav><ul>
+                                                                                        <li ><a href="../category/android.html">android</a></li>
+                                    <li ><a href="../category/linux.html">linux</a></li>
+                                    <li ><a href="../category/misc.html">misc</a></li>
+                                    <li ><a href="../category/programming.html">programming</a></li>
+                                    <li ><a href="../category/search.html">search</a></li>
+                                    <li ><a href="../category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="../tags.html">Tags</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+                
+        
+            <aside id="featured" class="body"><article>
+                <h1 class="entry-title"><a href="../java-cpu-usage-analysis.html">Java程序CPU使用分析</a></h1> 
+                <footer class="post-info">
+        <abbr class="published" title="2012-09-18T00:00:00">
+                2012/九月/18 星期二
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/java.html">java</a><a href="../tag/cpu.html">cpu</a><a href="../tag/usage.html">usage</a><a href="../tag/top.html">top</a><a href="../tag/jstack.html">jstack</a><a href="../tag/kill.html">kill</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#topcpujava">用top找出cpu消耗过高的java进程</a></li>
+<li><a href="#cpu">查看cpu消耗过高的线程。</a></li>
+<li><a href="#jstack">用jstack分析线程栈</a></li>
+<li><a href="#_1">跟踪代码定位问题</a></li>
+</ul>
+</div>
+<h1 id="topcpujava">用top找出cpu消耗过高的java进程</h1>
+<pre><code>top - 11:49:39 up 1 day,  1:53,  8 users,  load average: 0.24, 0.13, 0.22
+Tasks: 210 total,   2 running, 203 sleeping,   0 stopped,   5 zombie
+Cpu(s):  7.8%us,  3.7%sy,  0.1%ni, 87.2%id,  1.0%wa,  0.0%hi,  0.2%si,  0.0%st
+Mem:   3343444k total,  2968552k used,   374892k free,    84140k buffers
+Swap:  1951860k total,   631640k used,  1320220k free,   420808k cached
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+16423 wangweiw  20   0  677m 205m 8900 S  101  6.3   0:14.16 java
+ 6783 wangweiw  20   0 1750m 1.1g  33m S    6 35.8 149:45.22 java
+ 1246 root      20   0  234m  57m  12m S    2  1.8  46:16.49 Xorg
+</code></pre>
+<p>比如我们分16423析这个java进程。</p>
+<h1 id="cpu">查看cpu消耗过高的线程。</h1>
+<pre><code>top -H -p 16423
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+16457 wangweiw  20   0  677m 209m 8900 R  100  6.4   2:30.00 java
+16423 wangweiw  20   0  677m 209m 8900 S    0  6.4   0:00.00 java
+16424 wangweiw  20   0  677m 209m 8900 S    0  6.4   0:01.24 java
+</code></pre>
+<p>然后我们再分析16457这个线程</p>
+<h1 id="jstack">用jstack分析线程栈</h1>
+<pre><code>jstack $pid|grep -A N $nid
+</code></pre>
+<p>此处的pid就是16423, nid就是16457，由于jstack输出中的thread id是16进制的，所以要把16457转换成16进制:4049。grep命令中的-A表示显示后面若干行，比如这里显示了grep到的行的后面10行，这个可以根据输出来调整。</p>
+<pre><code>jstack 16423|grep -A 10 4049
+"qtp16147692-26" prio=10 tid=0x8e7e5c00 nid=0x4049 runnable [0x8e133000]
+   java.lang.Thread.State: RUNNABLE
+    at org.restlet.engine.http.header.HeaderReader.addValues(HeaderReader.java:254)
+    at org.restlet.engine.http.ServerCall.getRequestEntity(ServerCall.java:215)
+    at org.restlet.engine.http.HttpRequest.getEntity(HttpRequest.java:488)
+    at org.restlet.engine.application.Decoder.beforeHandle(Decoder.java:123)
+    at org.restlet.routing.Filter.handle(Filter.java:204)
+    at org.restlet.routing.Filter.doHandle(Filter.java:159)
+    at org.restlet.engine.application.StatusFilter.doHandle(StatusFilter.java:155)
+    at org.restlet.routing.Filter.handle(Filter.java:206)
+    at org.restlet.routing.Filter.doHandle(Filter.java:159)
+</code></pre>
+<h1 id="_1">跟踪代码定位问题</h1>
+<p>此处这个程序是使用了Restlet框架做的一个web服务，addValues这个方法体如下：</p>
+<pre><code>  public void addValues(Collection&lt;V&gt; values) {
+        try {
+            // Skip leading spaces
+            skipSpaces();
+
+            do {
+                // Read the first value
+                V nextValue = readValue();
+                if (canAdd(nextValue, values)) {
+                    // Add the value to the list
+                    values.add(nextValue);
+                }
+
+                // Attempt to skip the value separator
+                skipValueSeparator();
+            } while (peek() != -1);
+        } catch (IOException ioe) {
+            Context.getCurrentLogger().log(Level.INFO,
+                    "Unable to read a header", ioe);
+        }
+    }
+</code></pre>
+<p>看到这里有个while循环，再分析下skipSpaces,readValue,peek几个函数后就很容易构造一个死循环的例子：</p>
+<pre><code>EncodingReader encodingReader = new EncodingReader("修改gzip");
+encodingReader.addValues(new ArrayList());
+</code></pre>
+<p>这个bug虽然命中概率很低，但是一旦命中，程序瞬间就崩溃了，这个问题在我们一个服务里遇到，只要用户的某次请求的header出现非法字符，一个线程就被占用并且是100% cpu占用，虽然这样的请求可能一天只有一个，但几天之后服务器cpu load就高的不行，只能重启程序解决。当然这样肯定不是长远的解决方案，更好的方案是在前端nginx上override出问题的header，来避免这样的请求进入到restlet代码层，目前看来进入restlet代码层，我们的程序就无能为力了。比如出问题的header是Content-Encoding,那么nginx的location可以配置如下:</p>
+<pre><code>location / {
+          proxy_pass http://xxx_upstream;
+          proxy_set_header Host $host;
+          proxy_set_header Content-Encoding gzip;
+          proxy_set_header        X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_connect_timeout 6;
+          proxy_read_timeout 60;
+          proxy_send_timeout 60;
+        }
+</code></pre>
+<p>当然也可以修改restlet源代码解决，不过这样后续升级restlet的时候会麻烦一些。</p>
+                <p>There are <a href="../java-cpu-usage-analysis.html#disqus_thread">comments</a>.</p>                </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                <h1>Other articles</h1>
+                <hr />
+                    <ol id="posts-list" class="hfeed">
+                    
+     
+        <li><article class="hentry">    
+                <header>
+                        <h1><a href="../jvm-gc-tuning.html" rel="bookmark" title="Permalink to Java虚拟机GC调整">Java虚拟机GC调整</a></h1>
+                </header>
+                
+                <div class="entry-content">
+                <footer class="post-info">
+        <abbr class="published" title="2012-08-25T00:00:00">
+                2012/八月/25 星期六
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/java.html">java</a><a href="../tag/jvm.html">jvm</a><a href="../tag/garbage-collection.html">garbage collection</a></p></p>
+</footer><!-- /.post-info -->                <div class="toc">
+<ul>
+<li><a href="#java">Java垃圾回收介绍</a><ul>
+<li><a href="#_1">垃圾回收算法</a><ul>
+<li><a href="#reference-counting">引用计数（Reference Counting）</a></li>
+<li><a href="#-mark-sweep">标记-清除（Mark-Sweep）</a></li>
+<li><a href="#copying">复制（Copying）</a></li>
+<li><a href="#-mark-compact">标记-整理（Mark-Compact）</a></li>
+<li><a href="#incremental-collecting">增量收集（Incremental Collecting）</a></li>
+<li><a href="#generational-collecting">分代（Generational Collecting）</a></li>
+</ul>
+</li>
+<li><a href="#gcscavenge-gcfull-gc">GC的两种类型：Scavenge GC和Full GC。</a><ul>
+<li><a href="#scavenge-gc">Scavenge GC</a></li>
+<li><a href="#full-gc">Full GC</a></li>
+</ul>
+</li>
+<li><a href="#java-garbage-collector">Java Garbage Collector</a><ul>
+<li><a href="#_2">串行收集器</a></li>
+<li><a href="#_3">并行收集器</a></li>
+<li><a href="#_4">并发收集器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#jvm-gc">针对并发收集器的JVM GC参数调整</a><ul>
+<li><a href="#jstat">jstat的使用</a><ul>
+<li><a href="#gcutil">gcutil</a></li>
+<li><a href="#gcnew">gcnew</a></li>
+<li><a href="#gcold">gcold</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#ps-top">ps, top的使用</a><ul>
+<li><a href="#_5">常用配置</a></li>
+<li><a href="#64">使用64位服务器的线上服务的推荐配置</a></li>
+</ul>
+</li>
+<li><a href="#_6">参考</a></li>
+</ul>
+</div>
+<h1 id="java">Java垃圾回收介绍</h1>
+<p>我们先来看一张对象生存期的图。横轴是对象分配后的生存期，纵轴是相应生存期的字节总数。从这张图我们可以看出绝大多数对象的生存期是很短暂的。
+比如程序中随处可见的局部变量。对于那些长期生存的变量，比如程序内部的计数器 ...</p>
+                <a class="readmore" href="../jvm-gc-tuning.html">read more</a>
+                <p>There are <a href="../jvm-gc-tuning.html#disqus_thread">comments</a>.</p>                </div><!-- /.entry-content -->
+        </article></li>
+    </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        <section id="extras" class="body">
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'cloudornot';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

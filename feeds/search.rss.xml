@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Careless Whisper</title><link>%22http://example.com%22/</link><description></description><atom:link href="%22http://example.com%22/feeds/search.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 17 Dec 2012 00:00:00 +0800</lastBuildDate><item><title>mmseg分词方法学习</title><link>%22http://example.com%22/mmseg.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;基本原理&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#simple-maximum-matching"&gt;Simple maximum matching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#complex-maximum-matching"&gt;Complex maximum matching&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;歧义消除规则&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;其他分词工具&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;参考&lt;/h1&gt;
+&lt;p&gt;论文页面&lt;a href="http://technology.chtsai.org/mmseg/"&gt;http://technology.chtsai.org/mmseg/&lt;/a&gt;
+java版实现&lt;a href="https://code.google.com/p/mmseg4j/"&gt;mmseg4j&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="_2"&gt;基本原理&lt;/h1&gt;
+&lt;h2 id="simple-maximum-matching"&gt;Simple maximum matching&lt;/h2&gt;
+&lt;p&gt;只找最长的匹配，比如C1C2C3C4C5这样的句子，词典里的数据是C1C2,C1C2C3，那么字符串开始位置开始搜索最长的匹配即为分词结果。&lt;/p&gt;
+&lt;h2 id="complex-maximum-matching"&gt;Complex maximum matching&lt;/h2&gt;
+&lt;p&gt;这个是在Simple maximum matching基础上的改进。这个方法同时考虑歧义的多个匹配，并加入连续的后面两个词，构成一个3-word chunk。选择最长的chunk中的第一个词。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1. _C1_ _C2_ _C3C4_
+2. _C1C2_ _C3C4_ _C5_
+3. _C1C2_ _C3C4_ _C5C6_
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_3"&gt;歧义消除规则&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Maximum matching
+对于Simple方法，取最长的匹配，对于Complex方法，取最长的chunk的第一个词。如果有多个切分方法的长度一样，使用下面的规则。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Largest average word length&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;em&gt;C1&lt;/em&gt; &lt;em&gt;C2&lt;/em&gt; &lt;em&gt;C3&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;C1C2C3&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Smallest variance of word lengths&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;em&gt;C1C2&lt;/em&gt; &lt;em&gt;C3C4&lt;/em&gt; &lt;em&gt;C5C6&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;C1C2C3&lt;/em&gt; &lt;em&gt;C4&lt;/em&gt; &lt;em&gt;C5C6&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Largest sum of degree of morphemic freedom of one-character words
+morphemic freedom理解为语素的自由度，简单点可以认为是词的统计词频。&lt;/p&gt;
+&lt;p&gt;max ( degree=sum(freedom(single-word)) ) &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="_4"&gt;其他分词工具&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/fxsjy/jieba"&gt;jieba&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/ansjsun/ansj_seg"&gt;ansj&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Mon, 17 Dec 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-12-17:mmseg.html</guid><category>mmseg</category><category>lucene</category><category>analyzer</category><category>mmseg4j</category></item><item><title>ElasticSearch Configuration and Performance Tuning</title><link>%22http://example.com%22/elasticsearch-configuration-and-performance-tuning.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;下载与安装&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;下载&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;安装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;启动&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;配置&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;系统配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;内存配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#elasticsearchyml"&gt;elasticsearch.yml配置&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_8"&gt;集群名称&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shardreplica"&gt;shard和replica配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#refresh_interval"&gt;refresh_interval&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cache"&gt;cache设置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#memory-lock"&gt;开启memory lock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_9"&gt;索引和分词的配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mappings"&gt;mappings的配置&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_10"&gt;测试&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_11"&gt;增加一条数据：&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_12"&gt;查询中关村(汉字需要编码）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_13"&gt;查询中关(汉字需要编码)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#query-string"&gt;使用query string查询&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mmseg"&gt;mmseg词典更新&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_14"&gt;性能优化&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_15"&gt;准备工作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_16"&gt;影响性能的因素&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#4g"&gt;内存要足够多，4G或以上&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#memory-lock_1"&gt;如果可能开启memory lock&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#65536"&gt;文件句柄数是否足够，建议设置为65536或以上&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#64linuxsolarismmapfs"&gt;如果是64位linux/solaris系统，开启mmapfs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#optimze"&gt;optimze索引文件为一个文件&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cache_1"&gt;调整cache保证足够使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#refresh_interval60s"&gt;refresh_interval调大一些，比如60s或者更大&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_17"&gt;放大招了&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_18"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;下载与安装&lt;/h1&gt;
+&lt;h2 id="_2"&gt;下载&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://www.elasticsearch.org/download/"&gt;http://www.elasticsearch.org/download/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="_3"&gt;安装&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;tar xvf elasticsearch-0.19.12.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_4"&gt;启动&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;cd elasticsearch-0.19.12
+bin/elasticsearch -f
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里的-f参数是让程序在前台运行，这样可以看到程序运行的输出日志，正式环境不能这么运行，直接运行bin/elasticsearch就ok了。&lt;/p&gt;
+&lt;h1 id="_5"&gt;配置&lt;/h1&gt;
+&lt;p&gt;上面启动的elasitcsearch没有做任何配置，正式使用的时候至少需要配置内存，一般情况下mapping配置也是不可缺少的。&lt;/p&gt;
+&lt;h2 id="_6"&gt;系统配置&lt;/h2&gt;
+&lt;p&gt;查看ulimit -n确保可以打开的文件句柄数目够大，如果使用memory lock的话还需要确保ulimit -l的大小足够使用。Java的版本至少1.6或者以上（1.7现在也支持的很好了）。ulimit -l和ulimit -n这两个配置的如下方法修改：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+#max open files
+* hard nofile 65535
+* soft nofile 65535
+#max lock memory
+* soft  memlock 16000000
+* hard  memlock 16000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_7"&gt;内存配置&lt;/h2&gt;
+&lt;p&gt;在bin/elasticsearch.in.sh最后增加如下一行：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;JAVA_OPTS="$JAVA_OPTS -Xmx4g -Xms4g -Xmn1g -XX:PermSize=128M -XX:MaxPermSize=128M"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;elasticsearch中的默认配置是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;-Xms2g -Xmx2g -Xss256k -Djava.awt.headless=true -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+HeapDumpOnOutOfMemoryError -Xmx4g -Xms4g -Xmn1g -XX:PermSize=128M -XX:MaxPermSize=128M
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;实际使用的内存大小需要根据实际场景做调节，我目前2000w条数据，8g索引文件，4g内存完全够用。&lt;/p&gt;
+&lt;h2 id="elasticsearchyml"&gt;elasticsearch.yml配置&lt;/h2&gt;
+&lt;h3 id="_8"&gt;集群名称&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;cluster.name: your_cluster_name
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="shardreplica"&gt;shard和replica配置&lt;/h3&gt;
+&lt;p&gt;参考&lt;a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html"&gt;http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index.html&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;index.number_of_shards: 4
+index.number_of_replicas: 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="refresh_interval"&gt;refresh_interval&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://www.elasticsearch.org/blog/2011/03/23/update-settings.html"&gt;http://www.elasticsearch.org/blog/2011/03/23/update-settings.html&lt;/a&gt;
+refresh_interval这个值的默认值是1s，增加可以提高建立索引的速度，非实时搜索情况下建议设置的大一些，比如下面设置成120s&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;index.refresh_interval: 120s
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="cache"&gt;cache设置&lt;/h3&gt;
+&lt;p&gt;参考：&lt;a href="http://www.elasticsearch.org/guide/reference/index-modules/cache.html"&gt;http://www.elasticsearch.org/guide/reference/index-modules/cache.html&lt;/a&gt;
+节点的filter cache大小，默认是heap大小的20%，也可以制定绝对大小，比如下面指定为1g，注意如果设置为20%的时候需要加引号&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;indices.cache.filter.size: 1g
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="memory-lock"&gt;开启memory lock&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;bootstrap.mlockall: true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;使用这个参数请确保memlock的系统配置已经设置，比如在我现在用的centos上需要如下设置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+* soft  memlock 10000000
+* hard  memlock 10000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意这里的单位是k，并且从我配置的经验看，这里的k是1000,而不是1024，所以如果你需要10g内存（也就是10737418240B），这里10000000会不够用的,需要至少设置为10737419才行&lt;/p&gt;
+&lt;h3 id="_9"&gt;索引和分词的配置&lt;/h3&gt;
+&lt;p&gt;参考:&lt;a href="http://www.elasticsearch.org/guide/reference/mapping/conf-mappings.html"&gt;http://www.elasticsearch.org/guide/reference/mapping/conf-mappings.html&lt;/a&gt;
+注意这里开启了mmapfs，如果你是linux/solaris 64bit的系统建议开启&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;index:
+    store:
+    type: mmapfs
+    analysis:
+    analyzer:
+       edgeNGramAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball,edgeNGramFilter]
+       nGramAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball,nGramFilter]
+       standardAnalyzer:
+           type: custome
+           tokenizer: standard
+           filter: [standard,lowercase,englishSnowball]
+       mmsegAnalyzer:
+           type: custome
+           tokenizer: mmseg_maxword
+           filter: [standard,lowercase,englishSnowball]
+       complexAnalyzer:
+           type: custome
+           tokenizer: mmseg_complex
+           filter: [standard,lowercase,englishSnowball]
+       simpleAnalyzer:
+           type: custome
+           tokenizer: mmseg_simple
+           filter: [standard,lowercase,englishSnowball]
+    tokenizer:
+       mmseg_maxword:
+           type: mmseg
+           seg_type: "max_word"
+       mmseg_complex:
+           type: mmseg
+           seg_type: "complex"
+       mmseg_simple:
+           type: mmseg
+           seg_type: "simple"
+    filter:
+       nGramFilter:
+           type: nGram
+           min_gram: 1
+           max_gram: 64
+       edgeNGramFilter:
+           type: edgeNGram
+           min_gram: 1
+           max_gram: 64
+           side: front
+       englishSnowball:
+           type: snowball
+           language: English
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里需要注意的是我这里使用了mmseg分词工具，如果你不需要的话可以去掉相应的配置，mmseg分词插件的安装说明参看：&lt;a href="https://github.com/medcl/elasticsearch-analysis-mmseg"&gt;https://github.com/medcl/elasticsearch-analysis-mmseg&lt;/a&gt;，如果你下载后的分词发现在并发情况下有bug（异常，分词结果错误），请用源码编译安装，源码里的这个bug已经修复。关于mmseg的说明可以参看&lt;a href="http://weiweiwang.github.com/mmseg.html"&gt;http://weiweiwang.github.com/mmseg.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="mappings"&gt;mappings的配置&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;{
+    "test":{
+    "_all":{
+        "enabled":false
+    },
+    "_source":{
+        "enabled":false
+    },
+    "properties":{
+        "id":{
+            "type":"string",
+            "index":"not_analyzed",
+            "store":"yes"
+        },
+        "name":{
+            "type":"string",
+            "index":"analyzed",
+            "index_analyzer":"mmsegAnalyzer",
+            "search_analyzer":"mmsegAnalyzer",
+            "store":"yes",
+            "term_vector":"with_positions_offsets"
+        },
+        "address":{
+            "type":"string",
+            "index":"analyzed",
+            "index_analyzer":"mmsegAnalyzer",
+            "search_analyzer":"mmsegAnalyzer",
+            "store":"yes",
+            "term_vector":"with_positions_offsets"
+        }
+    }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个mapping的配置可以放置到config/mappings/{index}/{type}.json文件中，也可以通过命令设置&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    curl -XPUT 'localhost:9200/test/test/_mapping' -d @test.json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_10"&gt;测试&lt;/h2&gt;
+&lt;h3 id="_11"&gt;增加一条数据：&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl -XPUT http://localhost:9200/test/test/1 -d '{"name":"test","address":"中关村","id":"1"}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_12"&gt;查询中关村(汉字需要编码）&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3%E6%9D%91&amp;amp;pretty=true'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_13"&gt;查询中关(汉字需要编码)&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl 'localhost:9200/test/test/_search?q=address:%E4%B8%AD%E5%85%B3&amp;amp;pretty=true'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="query-string"&gt;使用query string查询&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl 'localhost:9200/test/test/_search' -d '{
+    "from" : 0,
+    "size" : 20,
+    "timeout" : 5000,
+    "query" : {
+        "query_string" : {
+        "query" : "中关村",
+        "fields" : [ "address^1.0", "name^10.0"],
+        "default_operator" : "and",
+        "allow_leading_wildcard" : false
+        }
+    }
+}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;返回&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 0.19178301,
+    "hits" : [ {
+      "_index" : "test",
+      "_type" : "test",
+      "_id" : "1",
+      "_score" : 0.19178301
+    } ]
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mmseg"&gt;mmseg词典更新&lt;/h1&gt;
+&lt;p&gt;从&lt;a href="https://code.google.com/p/sunpinyin/"&gt;https://code.google.com/p/sunpinyin/&lt;/a&gt;下载sunpinyin_importer.tar.bz2，解压后里面有个import_sogou_celldict.py的python脚本，可以根据这个脚本来转换搜狗词库生成mmseg词库。
+我拷贝修改了下可以批量转换:&lt;a href="upload/convert_sogou_celldict_to_mmseg4j.py"&gt;点击下载&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用方法为:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; python convert_sogou_celldict_to_mmseg4j.py sogou_dict_dir mmseg_dict_dir
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意sogou词典scel文件请用英文名称命名，转换后会拼接成words-{原来的scel文件名称}.dic。转换完成后将这些文件拷贝到elasticsearch/config/mmseg目录下即可。词库文件&lt;a href="http://pinyin.sogou.com/dict/"&gt;下载&lt;/a&gt;。&lt;/p&gt;
+&lt;h1 id="_14"&gt;性能优化&lt;/h1&gt;
+&lt;h2 id="_15"&gt;准备工作&lt;/h2&gt;
+&lt;p&gt;参考:&lt;a href="http://www.elasticsearch.org/guide/reference/modules/plugins.html"&gt;http://www.elasticsearch.org/guide/reference/modules/plugins.html&lt;/a&gt;
+安装elasticsearch-head和bigdesk来监控集群&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;bin/plugin -install Aconex/elasticsearch-head
+bin/plugin -install lukas-vlcek/bigdesk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后在浏览器里输入localhost:9200/_plugin/head/就可以访问监控页面。&lt;/p&gt;
+&lt;h2 id="_16"&gt;影响性能的因素&lt;/h2&gt;
+&lt;h3 id="4g"&gt;内存要足够多，4G或以上&lt;/h3&gt;
+&lt;p&gt;通过-Xmx -Xms -Xmn来调整heap内存的分配情况，同时建议参考jstat的使用说明来监控gc，可以参考&lt;a href="http://weiweiwang.github.com/jvm-gc-tuning.html"&gt;http://weiweiwang.github.com/jvm-gc-tuning.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="memory-lock_1"&gt;如果可能开启memory lock&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+#max lock memory
+* soft  memlock 16000000
+* hard  memlock 16000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="65536"&gt;文件句柄数是否足够，建议设置为65536或以上&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;vi /etc/security/limits.conf
+#max open files
+* hard nofile 65535
+* soft nofile 65535
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="64linuxsolarismmapfs"&gt;如果是64位linux/solaris系统，开启mmapfs&lt;/h3&gt;
+&lt;p&gt;上面的例子已经给出了如何开启，参考&lt;a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html"&gt;http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="optimze"&gt;optimze索引文件为一个文件&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl -XPOST 'http://localhost:9200/test/_optimize?max_num_segments=1'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="cache_1"&gt;调整cache保证足够使用&lt;/h3&gt;
+&lt;p&gt;先通过bigdesk监控系统性能，然后确定这个参数如何调整。&lt;/p&gt;
+&lt;h3 id="refresh_interval60s"&gt;refresh_interval调大一些，比如60s或者更大&lt;/h3&gt;
+&lt;p&gt;如果不要求实时搜索，可以调大这个值，注意这个值调大之后，新加入的索引并不是立刻就能搜索到，要超过这个interval之后才能检索到。&lt;/p&gt;
+&lt;h3 id="_17"&gt;放大招了&lt;/h3&gt;
+&lt;p&gt;上SSD硬盘，可以参考&lt;a href="http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/"&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="_18"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://www.tuicool.com/articles/NbM7zi"&gt;http://www.tuicool.com/articles/NbM7zi&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.elasticsearch.org/"&gt;http://www.elasticsearch.org/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html"&gt;http://blog.thetaphi.de/2012/07/use-lucenes-mmapdirectory-on-64bit.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/"&gt;http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Wed, 12 Dec 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-12-12:elasticsearch-configuration-and-performance-tuning.html</guid><category>elasticsearch configuration</category><category>performance tuning</category></item></channel></rss>

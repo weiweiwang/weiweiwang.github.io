@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Careless Whisper</title><link href="%22http://example.com%22/" rel="alternate"></link><link href="%22http://example.com%22/feeds/android.atom.xml" rel="self"></link><id>"http://example.com"/</id><updated>2013-02-25T00:00:00+08:00</updated><entry><title>Android上的单元测试</title><link href="%22http://example.com%22/android-unit-tests.html" rel="alternate"></link><updated>2013-02-25T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2013-02-25:android-unit-tests.html</id><summary type="html">&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;工作流程&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#android-application-tests"&gt;Android Application Tests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#android-library-project"&gt;Android Library Project&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;命令行&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#application-project"&gt;创建Application Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#library-project"&gt;创建Library Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#test-project"&gt;创建Test Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;编译运行测试&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;混淆相关&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;工作流程&lt;/h1&gt;
+&lt;h2 id="android-application-tests"&gt;Android Application Tests&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Application&lt;/li&gt;
+&lt;li&gt;Test Project&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="android-library-project"&gt;Android Library Project&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Application for the lib-project&lt;/li&gt;
+&lt;li&gt;Test project for the application&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="_2"&gt;命令行&lt;/h1&gt;
+&lt;h2 id="application-project"&gt;创建Application Project&lt;/h2&gt;
+&lt;h2 id="library-project"&gt;创建Library Project&lt;/h2&gt;
+&lt;h2 id="test-project"&gt;创建Test Project&lt;/h2&gt;
+&lt;h2 id="_3"&gt;编译运行测试&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    adb shell pm list instrumentation
+    adb shell am instrument -w &amp;lt;test_package_name&amp;gt;/&amp;lt;runner_class&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_4"&gt;混淆相关&lt;/h1&gt;
+&lt;p&gt;(参看)[http://www.deepbluelambda.org/programming/clojure/creating-android-applications-with-clojure--slimming-things-down-with-proguard]&lt;/p&gt;</summary><category term="unit-test"></category><category term="android"></category></entry><entry><title>Android上用Tcpdump抓包</title><link href="%22http://example.com%22/android-tcpdump.html" rel="alternate"></link><updated>2012-08-25T00:00:00+08:00</updated><author><name>wangweiwei</name></author><id>tag:"example.com",2012-08-25:android-tcpdump.html</id><summary type="html">&lt;h1 id="_1"&gt;下载&lt;/h1&gt;
+&lt;p&gt;下载tcpdump， 还有个地址是http://www.eecs.umich.edu/~timuralp/tcpdump-arm，下载重命名为tcpdump&lt;/p&gt;
+&lt;h1 id="_2"&gt;使用&lt;/h1&gt;
+&lt;p&gt;详细使用请参考http://www.tcpdump.org/里面的文档&lt;/p&gt;
+&lt;p&gt;机器是需要root过才能使用tcpdump的。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb push c:/wherever_you_put/tcpdump /data/local/tcpdump
+adb shell chmod 6755 /data/local/tcpdump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;抓包很简单(需要root权限）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb shell
+su（这个是换成root用户）
+/data/local/tcpdump -p -vv -s 0 -w /sdcard/capture.pcap
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;接着就会看到：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tcpdump: listening on wlan0, link-type EN10MB (Ethernet), capture size 65535 bytes
+Got 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;CTRL—C停止抓包，然后两次exit，再然后：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb pull /sdcard/capture.pcap
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后用wireshark在pc机上就可以分析了。&lt;/p&gt;
+&lt;p&gt;下载wireshark查看数据包，地址是http://www.wireshark.org/download.html，打开这个数据包，就可以查看了。&lt;/p&gt;</summary><category term="tcpdump"></category><category term="android"></category></entry></feed>

@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Careless Whisper</title><link>%22http://example.com%22/</link><description></description><atom:link href="%22http://example.com%22/feeds/programming.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 16 Nov 2013 00:00:00 +0800</lastBuildDate><item><title>In project repository for maven:Maven本地依赖配置</title><link>%22http://example.com%22/in-project-maven-dependency,in-project-repository.html</link><description>&lt;h1 id="in-project-repository"&gt;In Project Repository&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;repository&amp;gt;
+    &amp;lt;id&amp;gt;lib&amp;lt;/id&amp;gt;
+    &amp;lt;name&amp;gt;lib&amp;lt;/name&amp;gt;
+    &amp;lt;releases&amp;gt;
+        &amp;lt;enabled&amp;gt;true&amp;lt;/enabled&amp;gt;
+        &amp;lt;checksumPolicy&amp;gt;ignore&amp;lt;/checksumPolicy&amp;gt;
+    &amp;lt;/releases&amp;gt;
+    &amp;lt;snapshots&amp;gt;
+        &amp;lt;enabled&amp;gt;false&amp;lt;/enabled&amp;gt;
+    &amp;lt;/snapshots&amp;gt;
+    &amp;lt;url&amp;gt;file://${project.basedir}/lib&amp;lt;/url&amp;gt;
+&amp;lt;/repository&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="lib-structure"&gt;Lib structure&lt;/h1&gt;
+&lt;p&gt;对于groupId=x.y.z的目录结构如下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;lib
+  |-- x
+      |-- y
+          |-- z
+              |-- ${artifactId}
+                  |-- ${version}
+                      |-- ${artifactId}-${version}.pom
+                      |-- ${artifactId}-${version}.pom.sha1
+                      |-- ${artifactId}-${version}.jar
+                      |-- ${artifactId}-${version}.jar.sha1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;由于上面的repository设置了ingore checksum,所以sha1的文件不是必须的&lt;/p&gt;
+&lt;h1 id="artifactid-versionpom"&gt;如何生成${artifactId}-${version}.pom&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;mvn install:install-file -Dfile=xxx.jar -DgroupId=x.y.z -DartifactId=${artifactId} -Dversion=${version} -Dpackaging=jar -DgeneratePom=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;生成完之后拷贝到lib目录下的对应位置即可。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sat, 16 Nov 2013 00:00:00 +0800</pubDate><guid>tag:"example.com",2013-11-16:in-project-maven-dependency,in-project-repository.html</guid><category>maven</category><category>dependency</category><category>in-project</category></item><item><title>优化网站访问速度</title><link>%22http://example.com%22/optimize-web-speed.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#http"&gt;减少HTTP请求数&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cdn"&gt;使用内容分发网络(CDN)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#expires-and-cache-control"&gt;Expires and Cache-Control&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gzip"&gt;使用Gzip压缩&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cssjscssjs"&gt;css在前，js在后,不要在CSS中使用js&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cssjshtml"&gt;css，js用外部文件，不要写在html中&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#jscss"&gt;压缩js，css&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#redirect"&gt;减少Redirect&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#etaglast-modified-header"&gt;Etag和Last-Modified Header&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ajaxget"&gt;Ajax请求尽量多是GET请求&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;预加载和延迟加载&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;减少页面复杂度&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;使用多个域来提供性能&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cookie"&gt;减少Cookie体积&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#dom-access"&gt;DOM access&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;图片尺寸优化&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="http"&gt;减少HTTP请求数&lt;/h1&gt;
+&lt;p&gt;减少页面上css,js,图片的文件个数。&lt;/p&gt;
+&lt;h1 id="cdn"&gt;使用内容分发网络(CDN)&lt;/h1&gt;
+&lt;p&gt;解决夸地域访问使用CDN是最好的方式了，省钱又省力。&lt;/p&gt;
+&lt;h1 id="expires-and-cache-control"&gt;Expires and Cache-Control&lt;/h1&gt;
+&lt;p&gt;设置页面的Expires和Cache-Control:max-age来缓存页面，注意这时候服务端的访问统计就会受影响了，建议使用百度统计或者google统计来解决页面访问统计的问题。&lt;/p&gt;
+&lt;h1 id="gzip"&gt;使用Gzip压缩&lt;/h1&gt;
+&lt;p&gt;这个不用多说了，压缩为50%是很正常的，通常压缩比可以达到1/8或者更高(1/10)。这对于传输来说时间减少非常明显。&lt;/p&gt;
+&lt;h1 id="cssjscssjs"&gt;css在前，js在后,不要在CSS中使用js&lt;/h1&gt;
+&lt;p&gt;css放到Head里，js放到页面最后，避免在css中使用js表达式。&lt;/p&gt;
+&lt;h1 id="cssjshtml"&gt;css，js用外部文件，不要写在html中&lt;/h1&gt;
+&lt;p&gt;css和js写在页面里面确实可以减少请求次数，但也存在的问题是这写不经常改变的资源也随着这个页面无法cache了，或者cache时间无法很长（页面需要更新）。所以这个必须折中考虑，并且应该尽量将css和js放在单独的文件中，然后include，这部分资源的cache时间可以设置很长，通过文件名戴上版本号来更新资源。&lt;/p&gt;
+&lt;h1 id="jscss"&gt;压缩js，css&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://developer.yahoo.com/yui/compressor/"&gt;YUI Compressor&lt;/a&gt;你可以试试。&lt;/p&gt;
+&lt;h1 id="redirect"&gt;减少Redirect&lt;/h1&gt;
+&lt;p&gt;301,302这个是不cached&lt;/p&gt;
+&lt;h1 id="etaglast-modified-header"&gt;Etag和Last-Modified Header&lt;/h1&gt;
+&lt;p&gt;这些Header可以有助于产生304,避免相同内容重复传输。&lt;/p&gt;
+&lt;h1 id="ajaxget"&gt;Ajax请求尽量多是GET请求&lt;/h1&gt;
+&lt;p&gt;XMLHttpRequest的POST请求是个两阶段的，先发送header再发送data，如果不是提交数据而是请求数据的情况下，尽量使用GET请求来减少网络耗时。&lt;/p&gt;
+&lt;h1 id="_1"&gt;预加载和延迟加载&lt;/h1&gt;
+&lt;p&gt;有些资源比如在下一个页面是需要的，可以在前一个页面用js来预加载。同时有些资源是在页面渲染完用户采取动作后才需要的，在当前页面就可以采用延迟加载来提高用户体验。&lt;/p&gt;
+&lt;h1 id="_2"&gt;减少页面复杂度&lt;/h1&gt;
+&lt;p&gt;减少DOM元素的个数对提升页面速度是很有帮助的。&lt;a href="http://developer.yahoo.com/yui/"&gt;YUI CSS utilities&lt;/a&gt;可以用来帮助你布局页面。&lt;/p&gt;
+&lt;h1 id="_3"&gt;使用多个域来提供性能&lt;/h1&gt;
+&lt;p&gt;多个域有助于提高下载并发度，但同时dns lookup也是一个考虑因素，一般不建议超过4个域。&lt;/p&gt;
+&lt;h1 id="cookie"&gt;减少Cookie体积&lt;/h1&gt;
+&lt;p&gt;cookie在请求的时候都会携带在header中的，所以不要携带过长或没有意义的cookie。&lt;/p&gt;
+&lt;h1 id="dom-access"&gt;DOM access&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://yuiblog.com/blog/2007/12/20/video-lecomte/"&gt;High Performance Ajax Applications&lt;/a&gt;这个对提高Ajax的效率应该有帮助。&lt;/p&gt;
+&lt;h1 id="_4"&gt;图片尺寸优化&lt;/h1&gt;
+&lt;p&gt;现在网站都用很多图片，效果是好看了，但速度上一定得做好优化。压缩图片体积，合并多张图片用css裁剪都是有效的提高加载速度的方法。&lt;/p&gt;
+&lt;h1 id="_5"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://developer.yahoo.com/performance/rules.html"&gt;Best Practices for Speeding Up Your Web Site&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sun, 11 Nov 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-11-11:optimize-web-speed.html</guid><category>cdn</category><category>optimize</category><category>speed</category><category>webpage</category><category>gzip</category></item><item><title>随机抽样问题</title><link>%22http://example.com%22/reservoir-sampling.html</link><description>&lt;h1 id="_1"&gt;问题&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    要求从N个元素中随机的抽取k个元素，其中N无法确定。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_2"&gt;伪代码&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    Init : a reservoir with the size： k
+         for i= k+1 to N
+              M=random(1, i);
+              if( M &amp;lt; k)
+                 SWAP the Mth value and ith value
+         end for
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_3"&gt;证明&lt;/h1&gt;
+&lt;p&gt;初始情况: i&amp;lt;=k,i个元素全部放入水库，每个元素出现在水池的概率为1。&lt;/p&gt;
+&lt;p&gt;假设k&amp;lt;=j&amp;lt;=i时结论成立。&lt;/p&gt;
+&lt;p&gt;当j=i+1,第i+1个元素会以k/(i+1)的概率被选中, 前i个元素在本次替换操作完成时出现在水池的概率分解为：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    1) 在i+1选择前出现在水池中,这个概率是k/i
+    2) 并且在i+1次没有被替换掉,这个概率=1-这个元素被替换掉的概率=1-k/(i+1)*(1/k)=i/(i+1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;所以前i个元素出现在水池的概率为(k/i)*(i/(i+1))=k/(i+1)&lt;/p&gt;
+&lt;p&gt;由归纳法可知结论成立。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Fri, 19 Oct 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-10-19:reservoir-sampling.html</guid><category>random sampling</category><category>reservoir sampling</category></item><item><title>Java程序CPU使用分析</title><link>%22http://example.com%22/java-cpu-usage-analysis.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#topcpujava"&gt;用top找出cpu消耗过高的java进程&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#cpu"&gt;查看cpu消耗过高的线程。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#jstack"&gt;用jstack分析线程栈&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;跟踪代码定位问题&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="topcpujava"&gt;用top找出cpu消耗过高的java进程&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;top - 11:49:39 up 1 day,  1:53,  8 users,  load average: 0.24, 0.13, 0.22
+Tasks: 210 total,   2 running, 203 sleeping,   0 stopped,   5 zombie
+Cpu(s):  7.8%us,  3.7%sy,  0.1%ni, 87.2%id,  1.0%wa,  0.0%hi,  0.2%si,  0.0%st
+Mem:   3343444k total,  2968552k used,   374892k free,    84140k buffers
+Swap:  1951860k total,   631640k used,  1320220k free,   420808k cached
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+16423 wangweiw  20   0  677m 205m 8900 S  101  6.3   0:14.16 java
+ 6783 wangweiw  20   0 1750m 1.1g  33m S    6 35.8 149:45.22 java
+ 1246 root      20   0  234m  57m  12m S    2  1.8  46:16.49 Xorg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比如我们分16423析这个java进程。&lt;/p&gt;
+&lt;h1 id="cpu"&gt;查看cpu消耗过高的线程。&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;top -H -p 16423
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+16457 wangweiw  20   0  677m 209m 8900 R  100  6.4   2:30.00 java
+16423 wangweiw  20   0  677m 209m 8900 S    0  6.4   0:00.00 java
+16424 wangweiw  20   0  677m 209m 8900 S    0  6.4   0:01.24 java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后我们再分析16457这个线程&lt;/p&gt;
+&lt;h1 id="jstack"&gt;用jstack分析线程栈&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;jstack $pid|grep -A N $nid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此处的pid就是16423, nid就是16457，由于jstack输出中的thread id是16进制的，所以要把16457转换成16进制:4049。grep命令中的-A表示显示后面若干行，比如这里显示了grep到的行的后面10行，这个可以根据输出来调整。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstack 16423|grep -A 10 4049
+"qtp16147692-26" prio=10 tid=0x8e7e5c00 nid=0x4049 runnable [0x8e133000]
+   java.lang.Thread.State: RUNNABLE
+    at org.restlet.engine.http.header.HeaderReader.addValues(HeaderReader.java:254)
+    at org.restlet.engine.http.ServerCall.getRequestEntity(ServerCall.java:215)
+    at org.restlet.engine.http.HttpRequest.getEntity(HttpRequest.java:488)
+    at org.restlet.engine.application.Decoder.beforeHandle(Decoder.java:123)
+    at org.restlet.routing.Filter.handle(Filter.java:204)
+    at org.restlet.routing.Filter.doHandle(Filter.java:159)
+    at org.restlet.engine.application.StatusFilter.doHandle(StatusFilter.java:155)
+    at org.restlet.routing.Filter.handle(Filter.java:206)
+    at org.restlet.routing.Filter.doHandle(Filter.java:159)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_1"&gt;跟踪代码定位问题&lt;/h1&gt;
+&lt;p&gt;此处这个程序是使用了Restlet框架做的一个web服务，addValues这个方法体如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  public void addValues(Collection&amp;lt;V&amp;gt; values) {
+        try {
+            // Skip leading spaces
+            skipSpaces();
+
+            do {
+                // Read the first value
+                V nextValue = readValue();
+                if (canAdd(nextValue, values)) {
+                    // Add the value to the list
+                    values.add(nextValue);
+                }
+
+                // Attempt to skip the value separator
+                skipValueSeparator();
+            } while (peek() != -1);
+        } catch (IOException ioe) {
+            Context.getCurrentLogger().log(Level.INFO,
+                    "Unable to read a header", ioe);
+        }
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看到这里有个while循环，再分析下skipSpaces,readValue,peek几个函数后就很容易构造一个死循环的例子：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;EncodingReader encodingReader = new EncodingReader("修改gzip");
+encodingReader.addValues(new ArrayList());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个bug虽然命中概率很低，但是一旦命中，程序瞬间就崩溃了，这个问题在我们一个服务里遇到，只要用户的某次请求的header出现非法字符，一个线程就被占用并且是100% cpu占用，虽然这样的请求可能一天只有一个，但几天之后服务器cpu load就高的不行，只能重启程序解决。当然这样肯定不是长远的解决方案，更好的方案是在前端nginx上override出问题的header，来避免这样的请求进入到restlet代码层，目前看来进入restlet代码层，我们的程序就无能为力了。比如出问题的header是Content-Encoding,那么nginx的location可以配置如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;location / {
+          proxy_pass http://xxx_upstream;
+          proxy_set_header Host $host;
+          proxy_set_header Content-Encoding gzip;
+          proxy_set_header        X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_connect_timeout 6;
+          proxy_read_timeout 60;
+          proxy_send_timeout 60;
+        }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当然也可以修改restlet源代码解决，不过这样后续升级restlet的时候会麻烦一些。&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Tue, 18 Sep 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-09-18:java-cpu-usage-analysis.html</guid><category>java</category><category>cpu</category><category>usage</category><category>top</category><category>jstack</category><category>kill</category></item><item><title>Java虚拟机GC调整</title><link>%22http://example.com%22/jvm-gc-tuning.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#java"&gt;Java垃圾回收介绍&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;垃圾回收算法&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#reference-counting"&gt;引用计数（Reference Counting）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#-mark-sweep"&gt;标记-清除（Mark-Sweep）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#copying"&gt;复制（Copying）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#-mark-compact"&gt;标记-整理（Mark-Compact）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#incremental-collecting"&gt;增量收集（Incremental Collecting）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#generational-collecting"&gt;分代（Generational Collecting）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gcscavenge-gcfull-gc"&gt;GC的两种类型：Scavenge GC和Full GC。&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#scavenge-gc"&gt;Scavenge GC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#full-gc"&gt;Full GC&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#java-garbage-collector"&gt;Java Garbage Collector&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;串行收集器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;并行收集器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;并发收集器&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#jvm-gc"&gt;针对并发收集器的JVM GC参数调整&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#jstat"&gt;jstat的使用&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#gcutil"&gt;gcutil&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gcnew"&gt;gcnew&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#gcold"&gt;gcold&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ps-top"&gt;ps, top的使用&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;常用配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#64"&gt;使用64位服务器的线上服务的推荐配置&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="java"&gt;Java垃圾回收介绍&lt;/h1&gt;
+&lt;p&gt;我们先来看一张对象生存期的图。横轴是对象分配后的生存期，纵轴是相应生存期的字节总数。从这张图我们可以看出绝大多数对象的生存期是很短暂的。
+比如程序中随处可见的局部变量。对于那些长期生存的变量，比如程序内部的计数器，cache等都需要长期占用内存，这些也就是图中右边的部分。当然这个图是对大多数程序的统计，不是所有的程序都符合这个图的，比如一个用java写的内存cache服务就可能完全不是这样的分布。
+&lt;img alt="memory generation" src="images/jvm_mem_generation.gif" /&gt;&lt;/p&gt;
+&lt;p&gt;由于大多数程序具有上面所说的特征，所以jvm中的内存按照generation的方式进行管理。当一个generation被填满后，就会对这个generation进行回收。minor回收后仍然存活的对象会被迁移到major generation中。major generaiton满了之后也会进行一次回收。minor,major回收的代价是不同的，minor回收过程中大多数对象都是可以被释放的，而major回收的时候大多数对象都是不可释放的，所以major回收要比minor回收慢的多。由于分代管理的特点，我们在程序内存分配上也就会遇到分代分配内存来减少gc从而提供程序更好的性能。Java中的缺省的代分布大致如下（并行垃圾收集器除外）：
+&lt;img alt="generation_structure" src="images/generation_structure.gif" /&gt;&lt;/p&gt;
+&lt;p&gt;初始化的时候，最大的地址空间虚拟地保留住而没有分配出去，直到真的需要的时候为止。整个保留的对象地址空间被分给了年轻的和年老的代。&lt;/p&gt;
+&lt;p&gt;年轻代包括Eden Space和两个Survivor Space。大部分对象最初在Eden Space被分配出来。一个Survivor Space在任意时刻都是空的，作为Eden的活对象的目的地，另一个是用于下一次收集。对象在幸存者空间之间停留到足够老之后，就会被复制到Tenured Space去了。&lt;/p&gt;
+&lt;p&gt;另一个和Tenured Space有密切关系的代是永久代（permanent），这里保存着虚拟机需要的类和方法等元数据对象。&lt;/p&gt;
+&lt;p&gt;以上内容参考自&lt;a href="http://developer.51cto.com/art/201208/351690.htm"&gt;http://developer.51cto.com/art/201208/351690.htm&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;通过在启动java程序的时候增加命令行参数-XX:+PrintGCDetails可以输出垃圾回收的信息。比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[GC [DefNew: 64575K-&amp;gt;959K(64576K), 0.0457646 secs] 196016K-&amp;gt;133633K(261184K), 0.0459067 secs]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个信息显示，这次小回收收回了 98% 的 DefNew 年轻代的数据，64575K-&amp;gt;959K(64576K) 并在其上消耗了 0.0457646 secs（大约45毫秒）。整个堆的占用率下降了大约51％ 196016K-&amp;gt;133633K(261184K)，而且通过最终的时间 0.0459067 secs 显示在垃圾收集中有轻微的开销（在年轻代之外的时间）。&lt;/p&gt;
+&lt;h2 id="_1"&gt;垃圾回收算法&lt;/h2&gt;
+&lt;h3 id="reference-counting"&gt;引用计数（Reference Counting）&lt;/h3&gt;
+&lt;p&gt;比较古老的回收算法。原理是此对象有一个引用，即增加一个计数，删除一个引用则减少一个计数。垃圾回收时，只用收集计数为0的对象。此算法最致命的是无法处理循环引用的问题。&lt;/p&gt;
+&lt;h3 id="-mark-sweep"&gt;标记-清除（Mark-Sweep）&lt;/h3&gt;
+&lt;p&gt;此算法执行分两阶段。第一阶段从引用根节点开始标记所有被引用的对象，第二阶段遍历整个堆，把未标记的对象清除。此算法需要暂停整个应用，同时，会产生内存碎片。&lt;/p&gt;
+&lt;h3 id="copying"&gt;复制（Copying）&lt;/h3&gt;
+&lt;p&gt;此 算法把内存空间划为两个相等的区域，每次只使用其中一个区域。垃圾回收时，遍历当前使用区域，把正在使用中的对象复制到另外一个区域中。次算法每次只处理 正在使用中的对象，因此复制成本比较小，同时复制过去以后还能进行相应的内存整理，不过出现“碎片”问题。当然，此算法的缺点也是很明显的，就是需要两倍 内存空间。&lt;/p&gt;
+&lt;h3 id="-mark-compact"&gt;标记-整理（Mark-Compact）&lt;/h3&gt;
+&lt;p&gt;此算法结合了 “标记-清除”和“复制”两个算法的优点。也是分两阶段，第一阶段从根节点开始标记所有被引用对象，第二阶段遍历整个堆，把清除未标记对象并且把存活对象 “压缩”到堆的其中一块，按顺序排放。此算法避免了“标记-清除”的碎片问题，同时也避免了“复制”算法的空间问题。&lt;/p&gt;
+&lt;h3 id="incremental-collecting"&gt;增量收集（Incremental Collecting）&lt;/h3&gt;
+&lt;p&gt;实施垃圾回收算法，即：在应用进行的同时进行垃圾回收。不知道什么原因JDK5.0中的收集器没有使用这种算法的。&lt;/p&gt;
+&lt;h3 id="generational-collecting"&gt;分代（Generational Collecting）&lt;/h3&gt;
+&lt;p&gt;基于对对象生命周期分析后得出的垃圾回收算法。把对象分为年青代、年老代、持久代，对不同生命周期的对象使用不同的算法（上述方式中的一个）进行回收。现在的垃圾回收器（从J2SE1.2开始）都是使用此算法的&lt;/p&gt;
+&lt;h2 id="gcscavenge-gcfull-gc"&gt;GC的两种类型：Scavenge GC和Full GC。&lt;/h2&gt;
+&lt;h3 id="scavenge-gc"&gt;Scavenge GC&lt;/h3&gt;
+&lt;p&gt;一般情况下，当新对象生成，并且在Eden申请空间失败时，就好触发Scavenge GC，堆Eden区域进行GC，清除非存活对象，并且把尚且存活的对象移动到Survivor区。然后整理Survivor的两个区。&lt;/p&gt;
+&lt;h3 id="full-gc"&gt;Full GC&lt;/h3&gt;
+&lt;p&gt;对整个堆进行整理，包括Young、Tenured和Perm。Full GC比Scavenge GC要慢，因此应该尽可能减少Full GC。有如下原因可能导致Full GC：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tenured被写满&lt;/li&gt;
+&lt;li&gt;Perm域被写满&lt;/li&gt;
+&lt;li&gt;System.gc()被显示调用，这个一般我们会通过jvm参数禁止程序主动触发Full GC，因为可能的误用会导致很多不可知的问题无法追踪。&lt;/li&gt;
+&lt;li&gt;上一次GC之后Heap的各域分配策略动态变化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="java-garbage-collector"&gt;Java Garbage Collector&lt;/h2&gt;
+&lt;h3 id="_2"&gt;串行收集器&lt;/h3&gt;
+&lt;p&gt;单线程垃圾回收，适用于单处理器机器。开关:-XX: +UseSerialGC。这个在线上的服务中一般不会使用，效率太差。&lt;/p&gt;
+&lt;h3 id="_3"&gt;并行收集器&lt;/h3&gt;
+&lt;p&gt;对年轻代进行并行垃圾回收，因此可以减少垃圾回收时间。一般在多线程多处理器机器上使用。开关: -XX:+UseParallelGC。并行收集器在J2SE5.0更新6上引入，在Java SE6.0中进行了增强：可以堆年老代进行并行收集。如果年老代不使用并发收集的话，是使用单线程进行垃圾回收，因此会较慢，开关：-XX:+UseParallelOldGC。参数-XX:ParallelGCThreads=&lt;N&gt;可以控制并发回收的线程数目，一般设置成处理器个数。&lt;/p&gt;
+&lt;h3 id="_4"&gt;并发收集器&lt;/h3&gt;
+&lt;p&gt;这个处理器用cpu时间换取程序较少的延时，适合对响应时间要求比较高的应用中。开关：-XX:+UseConcMarkSweepGC。对于大型的线上WEB Server(tomcat,jetty)推荐使用这个并发收集器。&lt;/p&gt;
+&lt;h1 id="jvm-gc"&gt;针对并发收集器的JVM GC参数调整&lt;/h1&gt;
+&lt;h2 id="jstat"&gt;jstat的使用&lt;/h2&gt;
+&lt;p&gt;这是一个jvm统计信息监控工具，可以获取程序运行时的内存使用，gc相关的信息。详细请看&lt;a href="http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html"&gt;http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="gcutil"&gt;gcutil&lt;/h3&gt;
+&lt;p&gt;格式jstat -gcutil pid sampling-interval&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstat -gcutil 20181 10000
+S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT   
+0.00  59.83  21.57  52.84  60.82  18949   60.227    64    3.875   64.102
+71.31   0.00  48.04  53.15  60.82  18950   60.231    64    3.875   64.107
+0.00  35.37  88.95  53.53  60.82  18951   60.235    64    3.875   64.110
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从输出的第二行可以看出，发生了一次YGC，S1和E的内存gc收集到S0。S1变成0了，E反而变大了，这跟我们采样的时间有关系，两次采样中，发生了一次GC，在这次GC的时候E肯定是变小了，但是后续又会慢慢变大。从gcutil的输出我们可以看出P,O,E区的变化情况，根据这个变化情况可以做JVM参数-Xms,-Xmx,-Xmn的调整。比如我一开始没有设置Perm区大小，导致Perm区占用90+%，会有不必要的Full GC因此产生，所以通过使用-XX:PermSize=64M调整了之后Perm区的使用就比较正常了60%左右。&lt;/p&gt;
+&lt;p&gt;-Xms,-Xmx最好设置成一样的值，这样可以避免每次垃圾回收后JVM重新分配内存。
+-Xmn设置年轻代的大小，这个值对GC影响很大，Sun官方推荐配置为整个堆的3/8。&lt;/p&gt;
+&lt;h3 id="gcnew"&gt;gcnew&lt;/h3&gt;
+&lt;p&gt;这个选项可以统计新生代的使用情况。输出格式说明见&lt;a href="http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcnew_option"&gt;http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcnew_option&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstat -gcnew 20181 10000
+ S0C    S1C    S0U    S1U   TT MTT  DSS      EC       EU     YGC     YGCT  
+2072.0 2172.0 1996.6    0.0  4   4 2172.0 1740080.0 1207943.9  26368   83.442
+2144.0 2144.0    0.0 1664.2  4   4 2144.0 1740008.0 104411.5  26369   83.446
+2144.0 2144.0    0.0 1664.2  4   4 2144.0 1740008.0 714089.3  26369   83.446
+2144.0 2144.0    0.0 1664.2  4   4 2144.0 1740008.0 1296241.8  26369   83.446
+2144.0 2088.0 1734.0    0.0  4   4 2088.0 1740008.0 250903.7  26370   83.449
+2144.0 2088.0 1734.0    0.0  4   4 2088.0 1740008.0 858157.7  26370   83.449
+2144.0 2088.0 1734.0    0.0  4   4 2088.0 1740008.0 1436100.2  26370   83.449
+2084.0 2084.0    0.0 1582.4  4   4 2084.0 1740008.0 264672.0  26371   83.452
+2084.0 2084.0    0.0 1582.4  4   4 2084.0 1740008.0 901329.4  26371   83.452
+2084.0 2084.0    0.0 1582.4  4   4 2084.0 1740008.0 1489804.7  26371   83.452
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从这个输出我们可以看出E,S0,S1的使用情况，如果出现不合理的地方我们可以用参数-XX:SurvivorRatio来控制，也可以选择使用-XX:+UseAdaptiveSizePolicy来让JVM自动调整这个比例，建议在使用UseConcMarkSweepGC的时候开启这个选项。这个选项的输出有助于我们调整-Xmn这个参数。&lt;/p&gt;
+&lt;h3 id="gcold"&gt;gcold&lt;/h3&gt;
+&lt;p&gt;这个选项用来统计老生代的使用情况。输出格式见&lt;a href="http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcold_option"&gt;http://docs.oracle.com/javase/1.5.0/docs/tooldocs/share/jstat.html#gcold_option&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jstat -gcold 20181 10000
+   PC       PU        OC          OU       YGC    FGC    FGCT     GCT   
+ 65536.0  39881.8    262144.0    223912.1  26397    77    4.644   88.178
+ 65536.0  39881.8    262144.0    223988.4  26398    77    4.644   88.180
+ 65536.0  39881.8    262144.0    223988.4  26398    77    4.644   88.180
+ 65536.0  39881.8    262144.0    223988.4  26398    77    4.644   88.180
+ 65536.0  39881.8    262144.0    224037.7  26399    77    4.644   88.184
+ 65536.0  39881.8    262144.0    224037.7  26399    77    4.644   88.184
+ 65536.0  39881.8    262144.0    224037.7  26399    77    4.644   88.184
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个输出可以观察到P，O两个代的使用情况。比如这个输出我们可以看到Perm区分配了65M，使用了39M，老生代分配了262M，使用了224M左右，老生代使用的还是比较多的，所以可以考虑多给老生代分配一些内存来减少Full GC的次数。&lt;/p&gt;
+&lt;h1 id="ps-top"&gt;ps, top的使用&lt;/h1&gt;
+&lt;p&gt;使用这两个参数可以观察程序的启动时间，cpu和内存的使用情况，在出现不合理的使用之后就可以借助jstat这个工具来分析问题的原因并解决。两个命令的说明参看：&lt;a href="http://os.51cto.com/art/201108/285581.htm"&gt;top&lt;/a&gt;, &lt;a href="http://os.51cto.com/art/200910/158897.htm"&gt;ps&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;下面是top命令的输出片段&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+20181 work      19   0 2790m 2.2g  11m S 35.2  7.0   1981:50 java
+14285 work      15   0 2846m 1.1g  772 S 12.6  3.6  10836:16 redis-server
+29378 work      19   0 2782m 973m  10m S  3.7  3.0   8:17.47 java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从输出我们可以得到如下数据:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;PID：进程的ID&lt;/li&gt;
+&lt;li&gt;USER：进程所有者&lt;/li&gt;
+&lt;li&gt;PR：进程的优先级别，越小越优先被执行&lt;/li&gt;
+&lt;li&gt;NInice：值&lt;/li&gt;
+&lt;li&gt;VIRT：进程占用的虚拟内存&lt;/li&gt;
+&lt;li&gt;RES：进程占用的物理内存&lt;/li&gt;
+&lt;li&gt;SHR：进程使用的共享内存&lt;/li&gt;
+&lt;li&gt;S：进程的状态。S表示休眠，R表示正在运行，Z表示僵死状态，N表示该进程优先值为负数&lt;/li&gt;
+&lt;li&gt;%CPU：进程占用CPU的使用率&lt;/li&gt;
+&lt;li&gt;%MEM：进程使用的物理内存和总内存的百分比&lt;/li&gt;
+&lt;li&gt;TIME+：该进程启动后占用的总的CPU时间，即占用CPU使用时间的累加值，单位1/100秒。&lt;/li&gt;
+&lt;li&gt;COMMAND：进程启动命令名称&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;通过%MEM和%CPU和TIME+可以判断程序是否存在不正确的配置或者程序本身的代码存在问题。&lt;/p&gt;
+&lt;p&gt;ps命令可以查看程序的启动命令，启动时间，用户，pid，cpu,mem等信息。举例:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps uxf|grep java
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+work     15880  0.0  0.0  61164   788 pts/1    S+   14:57   0:00      \_ grep java
+work     29378  5.3  3.0 2849656 1008196 pts/1 Sl   11:59   9:35 java -Xms2g -Xmx2g -Xmn768m -server -XX:PermSize=64M -XX:MaxPermSize=64M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseAdaptiveSizePolicy -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+UseCMSCompactAtFullCollection -XX:+DisableExplicitGC -XX:CMSFullGCsBeforeCompaction=10 -XX:CMSMaxAbortablePrecleanTime=5 -XX:+HeapDumpOnOutOfMemoryError -jar xxx1.jar
+work     20181 27.9  7.0 2825996 2314764 ?     Sl   Aug12 1991:36 java -Xms2g -Xmx2g -Xmn1792m -server -XX:PermSize=64M -XX:MaxPermSize=64M -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseAdaptiveSizePolicy -XX:+CMSClassUnloadingEnabled -XX:+CMSPermGenSweepingEnabled -XX:+UseCMSCompactAtFullCollection -XX:+DisableExplicitGC -XX:CMSFullGCsBeforeCompaction=10 -XX:CMSMaxAbortablePrecleanTime=5 -XX:+HeapDumpOnOutOfMemoryError -jar xxx2.jar
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_5"&gt;常用配置&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;-Xms 初始堆大小&lt;/li&gt;
+&lt;li&gt;-Xmx 最大堆大小&lt;/li&gt;
+&lt;li&gt;-Xmn 新生代大小&lt;/li&gt;
+&lt;li&gt;-Xss 线程堆栈大小,32位Solaris JVM上默认值是512kB,32位Linux和Windows是320kB，64位JVM是1024kB。通常我们不需要这么大的stack size，可以调整为256k以减少内存消耗&lt;/li&gt;
+&lt;li&gt;-XX:MaxPermSize 持久代最大值&lt;/li&gt;
+&lt;li&gt;-XX:PermSize   持久代初始值&lt;/li&gt;
+&lt;li&gt;-XX:+UseSerialGC:设置串行收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseParallelGC:设置并行收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseParalledlOldGC:设置并行年老代收集器&lt;/li&gt;
+&lt;li&gt;-XX:+UseConcMarkSweepGC:设置并发收集器&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGC 输出GC信息&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGCDetails 输出GC详细信息，比上一个命令的输出更详细&lt;/li&gt;
+&lt;li&gt;-XX:+PrintGCTimeStamps 打印GC时间戳&lt;/li&gt;
+&lt;li&gt;-Xloggc:filename&lt;/li&gt;
+&lt;li&gt;-XX:+UseCMSCompactAtFullCollection：使用并发收集器时，开启对年老代的压缩&lt;/li&gt;
+&lt;li&gt;-XX:CMSFullGCsBeforeCompaction：上面配置开启的情况下，这里设置多少次Full GC后，对年老代进行压缩&lt;/li&gt;
+&lt;li&gt;-XX:+DisableExplicitGC 关闭System.gc()的调用。&lt;/li&gt;
+&lt;li&gt;-XX:+CMSClassUnloadingEnabled 开启GC清理不在使用的Perm区的类对象，这个在代码中存在动态生成类的应用中很重要，比如Groovy。一般的Java应用不太需要。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="64"&gt;使用64位服务器的线上服务的推荐配置&lt;/h2&gt;
+&lt;p&gt;年轻代设置为堆大小的3/8，内存可以设置为2G以上，Perm区设置64M，开启-XX:+UseConcMarkSweepGC，比如下面的配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; nohup java -Xms4g -Xmx4g -Xmn1536m -Xss256k\
+ -server \
+ -XX:PermSize=64M \
+ -XX:MaxPermSize=64M \
+ -XX:+UseConcMarkSweepGC \
+ -XX:+UseAdaptiveSizePolicy \
+ -XX:+CMSClassUnloadingEnabled \
+ -XX:+UseCMSCompactAtFullCollection \
+ -XX:+DisableExplicitGC \
+ -XX:CMSFullGCsBeforeCompaction=10 \
+ -XX:CMSMaxAbortablePrecleanTime=5 \
+ -XX:+HeapDumpOnOutOfMemoryError \
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后观察程序的运行状况(top,ps,jstat)再做细微的调整。&lt;/p&gt;
+&lt;h1 id="_6"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://blog.sina.com.cn/s/blog_628961a10100gho5.html"&gt;jvm垃圾回收参数配置&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://developer.51cto.com/art/201208/351690.htm"&gt;http://developer.51cto.com/art/201208/351690.htm&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://os.51cto.com/art/201005/200741.htm"&gt;Linux监控工具大全&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sat, 25 Aug 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-08-25:jvm-gc-tuning.html</guid><category>java</category><category>jvm</category><category>garbage collection</category></item><item><title>Compress js and css with YUI Compressor Maven Mojo</title><link>%22http://example.com%22/compress-js-css-with-yui-compressor-maven-pojo.html</link><description>&lt;h1 id="_1"&gt;配置&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;pluginRepositories&amp;gt;
+    &amp;lt;pluginRepository&amp;gt;
+        &amp;lt;name&amp;gt;oss.sonatype.org&amp;lt;/name&amp;gt;
+        &amp;lt;id&amp;gt;oss.sonatype.org&amp;lt;/id&amp;gt;
+        &amp;lt;url&amp;gt;http://oss.sonatype.org/content/groups/public&amp;lt;/url&amp;gt;
+    &amp;lt;/pluginRepository&amp;gt;
+&amp;lt;/pluginRepositories&amp;gt;
+&amp;lt;plugin&amp;gt;
+            &amp;lt;groupId&amp;gt;net.alchim31.maven&amp;lt;/groupId&amp;gt;
+            &amp;lt;artifactId&amp;gt;yuicompressor-maven-plugin&amp;lt;/artifactId&amp;gt;
+            &amp;lt;executions&amp;gt;
+                &amp;lt;execution&amp;gt;
+                    &amp;lt;goals&amp;gt;
+                        &amp;lt;goal&amp;gt;compress&amp;lt;/goal&amp;gt;
+                    &amp;lt;/goals&amp;gt;
+                &amp;lt;/execution&amp;gt;
+            &amp;lt;/executions&amp;gt;
+            &amp;lt;configuration&amp;gt;
+                &amp;lt;nosuffix&amp;gt;true&amp;lt;/nosuffix&amp;gt;
+                &amp;lt;sourceDirectory&amp;gt;${project.basedir}/web&amp;lt;/sourceDirectory&amp;gt;
+                &amp;lt;outputDirectory&amp;gt;${project.build.directory}/web&amp;lt;/outputDirectory&amp;gt;
+            &amp;lt;/configuration&amp;gt;
+        &amp;lt;/plugin&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_2"&gt;注意事项&lt;/h1&gt;
+&lt;p&gt;这个plugin拷贝js/css文件到制定的目录中，并且会保留原有的目录结构，比如web目录下有js,css这两个文件夹，那么输出的目录target/web中也会有同样的目录结构。但是如果你的web目录下还有其他文件，比如html等，这个plugin不会帮你拷贝到target/web目录下的，这时候需要结合使用maven-resources插件，举例:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    &amp;lt;resources&amp;gt;
+        &amp;lt;resource&amp;gt;
+            &amp;lt;directory&amp;gt;${project.basedir}/web/public/images&amp;lt;/directory&amp;gt;
+            &amp;lt;targetPath&amp;gt;${project.build.directory}/web/public/images&amp;lt;/targetPath&amp;gt;
+        &amp;lt;/resource&amp;gt;
+        &amp;lt;resource&amp;gt;
+            &amp;lt;directory&amp;gt;${project.basedir}/web/public/static&amp;lt;/directory&amp;gt;
+            &amp;lt;targetPath&amp;gt;${project.build.directory}/web/public/static&amp;lt;/targetPath&amp;gt;
+        &amp;lt;/resource&amp;gt;
+    &amp;lt;/resources&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_3"&gt;参考&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://alchim.sourceforge.net/yuicompressor-maven-plugin/compress-mojo.html"&gt;YUI Compressor Maven Mojo&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sun, 19 Aug 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-08-19:compress-js-css-with-yui-compressor-maven-pojo.html</guid><category>js</category><category>css</category><category>yui</category><category>compressor</category><category>maven</category></item></channel></rss>

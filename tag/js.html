@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Careless Whisper - js</title>
+        <meta charset="utf-8" />
+                <link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+        <link href="../" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie.css"/>
+                <script src="../js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="../css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="..">Careless Whisper </a></h1>
+                <nav><ul>
+                                                                                        <li ><a href="../category/android.html">android</a></li>
+                                    <li ><a href="../category/linux.html">linux</a></li>
+                                    <li ><a href="../category/misc.html">misc</a></li>
+                                    <li ><a href="../category/programming.html">programming</a></li>
+                                    <li ><a href="../category/search.html">search</a></li>
+                                    <li ><a href="../category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="../tags.html">Tags</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+                
+        
+            <aside id="featured" class="body"><article>
+                <h1 class="entry-title"><a href="../compress-js-css-with-yui-compressor-maven-pojo.html">Compress js and css with YUI Compressor Maven Mojo</a></h1> 
+                <footer class="post-info">
+        <abbr class="published" title="2012-08-19T00:00:00">
+                2012/八月/19 星期日
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="../author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="../category/programming.html">programming</a>. </p>
+<p>tags: <a href="../tag/js.html">js</a><a href="../tag/css.html">css</a><a href="../tag/yui.html">yui</a><a href="../tag/compressor.html">compressor</a><a href="../tag/maven.html">maven</a></p></p>
+</footer><!-- /.post-info -->                <h1 id="_1">配置</h1>
+<pre><code>&lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+        &lt;name&gt;oss.sonatype.org&lt;/name&gt;
+        &lt;id&gt;oss.sonatype.org&lt;/id&gt;
+        &lt;url&gt;http://oss.sonatype.org/content/groups/public&lt;/url&gt;
+    &lt;/pluginRepository&gt;
+&lt;/pluginRepositories&gt;
+&lt;plugin&gt;
+            &lt;groupId&gt;net.alchim31.maven&lt;/groupId&gt;
+            &lt;artifactId&gt;yuicompressor-maven-plugin&lt;/artifactId&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;compress&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+            &lt;configuration&gt;
+                &lt;nosuffix&gt;true&lt;/nosuffix&gt;
+                &lt;sourceDirectory&gt;${project.basedir}/web&lt;/sourceDirectory&gt;
+                &lt;outputDirectory&gt;${project.build.directory}/web&lt;/outputDirectory&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+</code></pre>
+<h1 id="_2">注意事项</h1>
+<p>这个plugin拷贝js/css文件到制定的目录中，并且会保留原有的目录结构，比如web目录下有js,css这两个文件夹，那么输出的目录target/web中也会有同样的目录结构。但是如果你的web目录下还有其他文件，比如html等，这个plugin不会帮你拷贝到target/web目录下的，这时候需要结合使用maven-resources插件，举例:</p>
+<pre><code>    &lt;resources&gt;
+        &lt;resource&gt;
+            &lt;directory&gt;${project.basedir}/web/public/images&lt;/directory&gt;
+            &lt;targetPath&gt;${project.build.directory}/web/public/images&lt;/targetPath&gt;
+        &lt;/resource&gt;
+        &lt;resource&gt;
+            &lt;directory&gt;${project.basedir}/web/public/static&lt;/directory&gt;
+            &lt;targetPath&gt;${project.build.directory}/web/public/static&lt;/targetPath&gt;
+        &lt;/resource&gt;
+    &lt;/resources&gt;
+</code></pre>
+<h1 id="_3">参考</h1>
+<ol>
+<li><a href="http://alchim.sourceforge.net/yuicompressor-maven-plugin/compress-mojo.html">YUI Compressor Maven Mojo</a></li>
+</ol>
+                <p>There are <a href="../compress-js-css-with-yui-compressor-maven-pojo.html#disqus_thread">comments</a>.</p>                </article>
+                </aside><!-- /#featured -->
+            </ol><!-- /#posts-list -->
+</section><!-- /#content -->
+        <section id="extras" class="body">
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="../" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'cloudornot';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

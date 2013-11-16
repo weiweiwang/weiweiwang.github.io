@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Careless Whisper</title><link>%22http://example.com%22/</link><description></description><atom:link href="%22http://example.com%22/feeds/sql_nosql.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 16 Jun 2013 00:00:00 +0800</lastBuildDate><item><title>django环境安装</title><link>%22http://example.com%22/django-environment-setup.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#django"&gt;django&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysqldb"&gt;mysqldb&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#ubuntu"&gt;ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#centos"&gt;centos&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#tutorial"&gt;tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#centos-python27"&gt;centos python升级到2.7&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="django"&gt;django&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    pip install django
+    pip install flup(for fastcgi deploy)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysqldb"&gt;mysqldb&lt;/h1&gt;
+&lt;p&gt;依赖参考：https://raw.github.com/farcepest/MySQLdb1/master/INSTALL&lt;/p&gt;
+&lt;h2 id="ubuntu"&gt;ubuntu&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    sudo apt-get install python-mysqldb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="centos"&gt;centos&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;    yum install MySQL-python.x86_64
+            或者
+    yum install mysql-devel.x86_64
+    pip install MySQL-python
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="tutorial"&gt;tutorial&lt;/h1&gt;
+&lt;p&gt;https://docs.djangoproject.com/en/1.5/intro/tutorial01/&lt;/p&gt;
+&lt;h1 id="centos-python27"&gt;centos python升级到2.7&lt;/h1&gt;
+&lt;p&gt;http://www.qwolf.com/?p=1166&lt;/p&gt;
+&lt;p&gt;http://toomuchdata.com/2012/06/25/how-to-install-python-2-7-3-on-centos-6-2/&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sun, 16 Jun 2013 00:00:00 +0800</pubDate><guid>tag:"example.com",2013-06-16:django-environment-setup.html</guid><category>mysql</category><category>character set</category><category>utf8</category></item><item><title>mysql utf8编码配置</title><link>%22http://example.com%22/mysql-character-set-utf8.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;查看当前的编码&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#etcmycnfetcmysqlmycnf"&gt;修改配置文件/etc/my.cnf(或者/etc/mysql/my.cnf)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql"&gt;重启mysql&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;查看当前的编码&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    mysql&amp;gt; show variables like '%char%';
+    +--------------------------+----------------------------+
+    | Variable_name            | Value                      |
+    +--------------------------+----------------------------+
+    | character_set_client     | latin1                     |
+    | character_set_connection | latin1                     |
+    | character_set_database   | latin1                     |
+    | character_set_filesystem | binary                     |
+    | character_set_results    | latin1                     |
+    | character_set_server     | latin1                     |
+    | character_set_system     | utf8                       |
+    | character_sets_dir       | /usr/share/mysql/charsets/ |
+    +--------------------------+----------------------------+
+    8 rows in set (0.00 sec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;用status命令查看也可以看到几种配置对应的编码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    mysql&amp;gt; status;
+    --------------
+    mysql  Ver 14.14 Distrib 5.1.67, for redhat-linux-gnu (x86_64) using readline 5.1
+
+    Connection id:      2807
+    Current database:   
+    Current user:       root@localhost
+    SSL:            Not in use
+    Current pager:      stdout
+    Using outfile:      ''
+    Using delimiter:    ;
+    Server version:     5.1.67 Source distribution
+    Protocol version:   10
+    Connection:     Localhost via UNIX socket
+    Server characterset:    latin1
+    Db     characterset:    latin1
+    Client characterset:    latin1
+    Conn.  characterset:    latin1
+    UNIX socket:        /var/lib/mysql/mysql.sock
+    Uptime:         63 days 28 min 58 sec
+
+    Threads: 1  Questions: 19  Slow queries: 0  Opens: 15  Flush tables: 1  Open tables: 8  Queries per second avg: 0.0
+    --------------
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="etcmycnfetcmysqlmycnf"&gt;修改配置文件/etc/my.cnf(或者/etc/mysql/my.cnf)&lt;/h1&gt;
+&lt;p&gt;从status命令我们可以看到有四个编码需要修改:Server,DB,Client,Connection&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    [client]
+    default-character-set = utf8
+
+    [mysqld]
+    default-character-set=utf8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql"&gt;重启mysql&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    service mysqld restart 或者 /etc/init.d/mysqld restart
+&lt;/code&gt;&lt;/pre&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sun, 16 Jun 2013 00:00:00 +0800</pubDate><guid>tag:"example.com",2013-06-16:mysql-character-set-utf8.html</guid><category>mysql</category><category>character set</category><category>utf8</category></item><item><title>重置mysql的root密码</title><link>%22http://example.com%22/recovery-mysql-root-password.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;查看当前的启动命令&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql"&gt;关闭Mysql&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql_1"&gt;启动不需要认证的mysql&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;重设密码&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mysql_2"&gt;重启mysql&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;查看当前的启动命令&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    ps auxf|grep mysql
+    /bin/sh /usr/local/mysql/bin/mysqld_safe --datadir=/data/mysql --pid-file=/usr/local/mysql/tmp/mysql.pid
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql"&gt;关闭Mysql&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    killall -TERM mysqld
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql_1"&gt;启动不需要认证的mysql&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    nohup /bin/sh /usr/local/mysql/bin/mysqld_safe  --skip-grant-tables --datadir=/data/mysql --pid-file=/usr/local/mysql/tmp/mysql.pid &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_2"&gt;重设密码&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;    mysql -uroot
+    update mysql.user set password=PASSWORD('xxx') where user='root';
+    flush privileges;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mysql_2"&gt;重启mysql&lt;/h1&gt;
+&lt;p&gt;注意这次不需要--skip-grant-tables&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    bin/mysqladmin -uroot -p shutdown
+    nohup /bin/sh /usr/local/mysql/bin/mysqld_safe --datadir=/data/mysql --pid-file=/usr/local/mysql/tmp/mysql.pid &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Fri, 08 Mar 2013 00:00:00 +0800</pubDate><guid>tag:"example.com",2013-03-08:recovery-mysql-root-password.html</guid><category>mysql</category><category>root</category><category>recovery</category><category>password</category></item><item><title>get familar with redis:a great data structure server</title><link>%22http://example.com%22/get-familar-with-redis.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#intro"&gt;intro&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;关于作者&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#redis"&gt;使用redis你可以做哪些事情&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#install"&gt;install&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#test"&gt;test&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#benchmark"&gt;benchmark&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;系统配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;使用的命令&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;测试结果&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#value-size-32"&gt;value size 32&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-128"&gt;value size 128&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-512"&gt;value size 512&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-2048"&gt;value size 2048&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#value-size-2048-with-pipeline-4-and-20-clientsdefault-50-clients"&gt;value size 2048 with pipeline 4 and 20 clients(default 50 clients)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#use-case"&gt;use case&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#cache"&gt;cache系统&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;任务队列&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;消息队列&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;实时计数&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#map"&gt;map使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#set"&gt;set使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#sorted-set"&gt;sorted set使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#transaction"&gt;Transaction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#pipeline"&gt;Pipeline&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#instagramredis"&gt;新浪和instagram的redis实践&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#lib"&gt;lib&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#ebook"&gt;ebook&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#reference"&gt;reference&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="intro"&gt;intro&lt;/h1&gt;
+&lt;p&gt;redis是一个基于内存的数据结构database，相对于memcache，它提供了更为丰富的数据结构:string,hash,list,set,sorted set，同时它还提供了持久化能力，master-slave数据备份。同时在速度上与memcache也不相上下:&lt;a href="http://antirez.com/post/redis-memcached-benchmark.html"&gt;redis-memcached-benchmark&lt;/a&gt;,有同学质疑这个给出了个相反的&lt;a href="http://dormando.livejournal.com/525147.html"&gt;benchmark&lt;/a&gt;，当然redis作者antirez又给出了一个&lt;a href="http://antirez.com/post/update-on-memcached-redis-benchmark.html"&gt;新的评测&lt;/a&gt;,不想仔细看英文的同学我大概总结一下，redis和memcached在同样的硬件配置下并且都是单线程的情况下吞吐也是相当的，100k每秒是问题不大的，大家可以follow这几篇文章自测一下。&lt;/p&gt;
+&lt;h2 id="_1"&gt;关于作者&lt;/h2&gt;
+&lt;p&gt;&lt;img alt="antirez avatar" src="images/antirez.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Salvatore Sanfilippo,also known &lt;a href="http://antirez.com/"&gt;antirez&lt;/a&gt;, programmer@VMWare，同时还是一家移动设备开发公司Kiurma的股东，意大利人。此兄的about页面上提到他主要都是在做open source code，并且几乎所有代码都放在&lt;a href="http://github.com/antirez"&gt;这里&lt;/a&gt;，目前主要精力都在redis上，&lt;a href="http://antirez.com/post/redis-manifesto.html"&gt;这里&lt;/a&gt;有antirez写的redis宣言。&lt;/p&gt;
+&lt;h2 id="redis"&gt;使用redis你可以做哪些事情&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;做一个k-v系统用，不过这个k-v系统没有mongodb强大，不支持value查询，只能简单的get/set。&lt;/li&gt;
+&lt;li&gt;做一个任务优先队列使用，list结构支持这样的各种api&lt;/li&gt;
+&lt;li&gt;做一个消息队列使用，redis提供pub/sub这样的api来提供消息队列服务。&lt;/li&gt;
+&lt;li&gt;数据统计，实时计数服务。微博上的各种数字都可以用这个服务来实时计数。&lt;/li&gt;
+&lt;li&gt;做类似与memcached的内存cache，还可以持久化，性能也超级赞～&lt;/li&gt;
+&lt;li&gt;more...&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="install"&gt;install&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;下载最新的redis版本&lt;a href="http://redis.io/download" title="redis-download"&gt;redis download page&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;假设你下载到/tmp目录下了，解压编译安装&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar xvf redis-2.4.14.tar.gz
+cd redis-2.4.14
+make
+make test
+sudo make PREFIX=/opt/redis install
+sudo mkdir /opt/redis/etc
+sudo cp redis.conf /opt/redis/etc
+sudo mkdir -p /opt/redis/var/{db,run,log}
+sudo vim /opt/redis/etc/redis.conf 根据目录结构做相应修改，主要修改的就是包含/var路径的几行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果跑测试提示tclsh不存在，请下载tcl8.5: sudo apt-get install tcl8.5
+* 启动服务&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo bin/redis-server etc/redis.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="test"&gt;test&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;cd /opt/redis/
+bin/redis-cli
+redis 127.0.0.1:6379&amp;gt; set test 1
+OK
+redis 127.0.0.1:6379&amp;gt; get test
+"1"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="benchmark"&gt;benchmark&lt;/h1&gt;
+&lt;h2 id="_2"&gt;系统配置&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux pc 2.6.38-15-generic #60-Ubuntu SMP Tue May 22 11:30:47 UTC 2012 i686 i686 i386 GNU/Linux&lt;/li&gt;
+&lt;li&gt;Intel(R) Core(TM) i7-2620M CPU @ 2.70GHz&lt;/li&gt;
+&lt;li&gt;4G memeory&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_3"&gt;使用的命令&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;Usage: redis-benchmark [-h &amp;lt;host&amp;gt;] [-p &amp;lt;port&amp;gt;] [-c &amp;lt;clients&amp;gt;] [-n &amp;lt;requests]&amp;gt; [-k &amp;lt;boolean&amp;gt;]
+ -h &amp;lt;hostname&amp;gt;      Server hostname (default 127.0.0.1)
+ -p &amp;lt;port&amp;gt;          Server port (default 6379)
+ -s &amp;lt;socket&amp;gt;        Server socket (overrides host and port)
+ -c &amp;lt;clients&amp;gt;       Number of parallel connections (default 50)
+ -n &amp;lt;requests&amp;gt;      Total number of requests (default 10000)
+ -d &amp;lt;size&amp;gt;          Data size of SET/GET value in bytes (default 2)
+ -k &amp;lt;boolean&amp;gt;       1=keep alive 0=reconnect (default 1)
+ -r &amp;lt;keyspacelen&amp;gt;   Use random keys for SET/GET/INCR, random values for SADD
+  Using this option the benchmark will get/set keys
+  in the form mykey_rand:000000012456 instead of constant
+  keys, the &amp;lt;keyspacelen&amp;gt; argument determines the max
+  number of values for the random number. For instance
+  if set to 10 only rand:000000000000 - rand:000000000009
+  range will be allowed.
+ -P &amp;lt;numreq&amp;gt;        Pipeline &amp;lt;numreq&amp;gt; requests. Default 1 (no pipeline).
+ -q                 Quiet. Just show query/sec values
+ --csv              Output in CSV format
+ -l                 Loop. Run the tests forever
+ -t &amp;lt;tests&amp;gt;         Only run the comma separated list of tests. The test
+                names are the same as the ones produced as output.
+ -I                 Idle mode. Just open N idle connections and wait.
+
+Examples:
+
+ Run the benchmark with the default configuration against 127.0.0.1:6379:
+   $ redis-benchmark
+
+ Use 20 parallel clients, for a total of 100k requests, against 192.168.1.1:
+   $ redis-benchmark -h 192.168.1.1 -p 6379 -n 100000 -c 20
+
+ Fill 127.0.0.1:6379 with about 1 million keys only using the SET test:
+   $ redis-benchmark -t set -n 1000000 -r 100000000
+
+ Benchmark 127.0.0.1:6379 for a few commands producing CSV output:
+   $ redis-benchmark -t ping,set,get -n 100000 --csv
+
+ Fill a list with 10000 random elements:
+   $ redis-benchmark -r 10000 -n 10000 lpush mylist ele:rand:000000000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_4"&gt;测试结果&lt;/h2&gt;
+&lt;h3 id="value-size-32"&gt;value size 32&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 32
+PING_INLINE: 133333.33 requests per second
+PING_BULK: 135135.14 requests per second
+SET: 123001.23 requests per second
+GET: 105374.08 requests per second
+INCR: 115874.85 requests per second
+LPUSH: 121802.68 requests per second
+LPOP: 119474.31 requests per second
+SADD: 125313.28 requests per second
+SPOP: 129533.68 requests per second
+LPUSH (needed to benchmark LRANGE): 114942.53 requests per second
+LRANGE_100 (first 100 elements): 43936.73 requests per second
+LRANGE_300 (first 300 elements): 11580.78 requests per second
+LRANGE_500 (first 450 elements): 4827.42 requests per second
+LRANGE_600 (first 600 elements): 4644.03 requests per second
+MSET (10 keys): 48146.36 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-128"&gt;value size 128&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 128
+PING_INLINE: 125000.00 requests per second
+PING_BULK: 124843.95 requests per second
+SET: 116822.43 requests per second
+GET: 117785.63 requests per second
+INCR: 122249.39 requests per second
+LPUSH: 132978.72 requests per second
+LPOP: 128534.70 requests per second
+SADD: 117647.06 requests per second
+SPOP: 125000.00 requests per second
+LPUSH (needed to benchmark LRANGE): 123915.73 requests per second
+LRANGE_100 (first 100 elements): 24770.87 requests per second
+LRANGE_300 (first 300 elements): 7216.05 requests per second
+LRANGE_500 (first 450 elements): 4908.70 requests per second
+LRANGE_600 (first 600 elements): 3758.97 requests per second
+MSET (10 keys): 45207.96 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-512"&gt;value size 512&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Pngweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 512
+ING_INLINE: 134589.50 requests per second
+PING_BULK: 135685.20 requests per second
+SET: 110987.79 requests per second
+GET: 109051.26 requests per second
+INCR: 120336.95 requests per second
+LPUSH: 126582.28 requests per second
+LPOP: 125628.14 requests per second
+SADD: 100704.94 requests per second
+SPOP: 134228.19 requests per second
+LPUSH (needed to benchmark LRANGE): 131233.59 requests per second
+LRANGE_100 (first 100 elements): 10895.62 requests per second
+LRANGE_300 (first 300 elements): 3354.02 requests per second
+LRANGE_500 (first 450 elements): 2206.68 requests per second
+LRANGE_600 (first 600 elements): 1614.31 requests per second
+MSET (10 keys): 37750.09 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-2048"&gt;value size 2048&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 2048
+PING_INLINE: 130548.30 requests per second
+PING_BULK: 133511.34 requests per second
+SET: 115340.25 requests per second
+GET: 112994.35 requests per second
+INCR: 122699.38 requests per second
+LPUSH: 118343.20 requests per second
+LPOP: 93720.71 requests per second
+SADD: 123456.79 requests per second
+SPOP: 116009.28 requests per second
+LPUSH (needed to benchmark LRANGE): 103519.67 requests per second
+LRANGE_100 (first 100 elements): 3332.22 requests per second
+LRANGE_300 (first 300 elements): 1011.06 requests per second
+LRANGE_500 (first 450 elements): 635.90 requests per second
+LRANGE_600 (first 600 elements): 432.38 requests per second
+MSET (10 keys): 24021.14 requests per second
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="value-size-2048-with-pipeline-4-and-20-clientsdefault-50-clients"&gt;value size 2048 with pipeline 4 and 20 clients(default 50 clients)&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-benchmark -n 100000 -q -r 10000 -d 2048 -c 20 -P 4
+PING_INLINE: 343642.62 requests per second
+PING_BULK: 395256.91 requests per second
+SET: 156006.23 requests per second
+GET: 152671.75 requests per second
+INCR: 216919.73 requests per second
+LPUSH: 163132.14 requests per second
+LPOP: 183150.19 requests per second
+SADD: 238663.48 requests per second
+SPOP: 302114.81 requests per second
+LPUSH (needed to benchmark LRANGE): 168634.06 requests per second
+LRANGE_100 (first 100 elements): 3061.66 requests per second
+LRANGE_300 (first 300 elements): 947.69 requests per second
+LRANGE_500 (first 450 elements): 613.75 requests per second
+LRANGE_600 (first 600 elements): 436.58 requests per second
+redis-benchmark: redis-benchmark.c:278: createClient: Assertion `c-&amp;gt;randlen &amp;lt; (signed)(sizeof(c-&amp;gt;randptr)/sizeof(char*))' failed.
+Aborted
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="use-case"&gt;use case&lt;/h1&gt;
+&lt;h2 id="cache"&gt;cache系统&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;wangweiwei@pc:/opt/redis$ bin/redis-cli 
+redis 127.0.0.1:6379&amp;gt; set test 1
+OK
+redis 127.0.0.1:6379&amp;gt; get test
+"1"
+redis 127.0.0.1:6379&amp;gt; EXPIRE test 1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; get test
+(nil)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="_5"&gt;任务队列&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;terminal 1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; blpop test 0
+1) "test"
+2) "1"
+(7.54s)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;terminal 2&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; lpush test 1
+(integer) 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_6"&gt;消息队列&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;terminal 1&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SUBSCRIBE test_channel
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "test_channel"
+3) (integer) 1
+1) "message"
+2) "test_channel"
+3) "hello"
+1) "message"
+2) "test_channel"
+3) "let's hang out today?"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;terminal 2&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; PUBLISH test_channel 'hello'
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; PUBLISH test_channel 'let's hang out today?'
+Invalid argument(s)
+redis 127.0.0.1:6379&amp;gt; PUBLISH test_channel 'let\'s hang out today?'
+(integer) 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_7"&gt;实时计数&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; set test 1
+OK
+redis 127.0.0.1:6379&amp;gt; INCR test
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; get test
+"2"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="map"&gt;map使用&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; hset test f1 '1'
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; HGETALL test
+1) "f1"
+2) "1"
+redis 127.0.0.1:6379&amp;gt; HMSET test f2 '2' f3 '3'
+OK
+redis 127.0.0.1:6379&amp;gt; HGETALL test
+1) "f1"
+2) "1"
+3) "f2"
+4) "2"
+5) "f3"
+6) "3"
+redis 127.0.0.1:6379&amp;gt; HMGET test f1,f2
+1) (nil)
+redis 127.0.0.1:6379&amp;gt; HMGET test f1 f2
+1) "1"
+2) "2"
+redis 127.0.0.1:6379&amp;gt; HMGET test f1 f2 f4
+1) "1"
+2) "2"
+3) (nil)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="set"&gt;set使用&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; SADD test 1 2
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; SMEMBERS test
+1) "1"
+2) "2"
+redis 127.0.0.1:6379&amp;gt; sadd test1 2 3
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; SMEMBERS test1
+1) "2"
+2) "3"
+redis 127.0.0.1:6379&amp;gt; SDIFF test test1
+1) "1"
+redis 127.0.0.1:6379&amp;gt; SINTER test test1
+1) "2"
+redis 127.0.0.1:6379&amp;gt; SUNION test test1
+1) "1"
+2) "2"
+3) "3"
+redis 127.0.0.1:6379&amp;gt; SISMEMBER test 1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SREM test 1
+(integer) 1
+redis 127.0.0.1:6379&amp;gt; SMEMBERS test
+1) "2"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="sorted-set"&gt;sorted set使用&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; ZADD test 3 1 2 2 1 3
+(integer) 3
+redis 127.0.0.1:6379&amp;gt; ZRANGE test 0 -1
+1) "3"
+2) "2"
+3) "1"
+redis 127.0.0.1:6379&amp;gt; ZREVRANGE test 0 -1
+1) "1"
+2) "2"
+3) "3"
+redis 127.0.0.1:6379&amp;gt; ZADD test1 1 1 2 2
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; ZINTERSTORE out 2 test test1 
+(integer) 2
+redis 127.0.0.1:6379&amp;gt; ZRANGE out 0 -1 WITHSCORES
+1) "1"
+2) "4"
+3) "2"
+4) "4"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="transaction"&gt;Transaction&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; incr foo
+QUEUED
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+1) (integer) 1
+2) (integer) 1
+3) (integer) 2
+redis 127.0.0.1:6379&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;EXEC调用的过程中多个命令作为一个原子命令执行，在执行中间redis不会同时执行其他客户端的命令。在调用EXEC之前调用DISCARD会清除命令队列并退出事务。&lt;/p&gt;
+&lt;p&gt;事务中的命令即使执行失败也不会rollback，要么全执行，要么全不执行，命令的结果不影响事务。&lt;/p&gt;
+&lt;p&gt;事务中的命令在事务执行前都是没有结果返回的，所以无法在事务中进行check-and-set这样的操作。&lt;/p&gt;
+&lt;p&gt;如果exec执行的过程中server down机（crash or kill)，同时配置启用了aof，那么aof中记录的可能不是完整的日志，这时候如果重启会出现错误无法启动，需要先用redis-check-aof修复问题后重启。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; lpop bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+1) (error) ERR Operation against a key holding the wrong kind of value
+2) (integer) 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;还有就是语法错误的命令不会被放入执行队列:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; incr a b c
+(error) ERR wrong number of arguments for 'incr' command
+redis 127.0.0.1:6379&amp;gt; incr bar
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+1) (integer) 4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Watch CAS(check-and-set)
+terminal 1:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; watch a
+OK
+redis 127.0.0.1:6379&amp;gt; multi
+OK
+redis 127.0.0.1:6379&amp;gt; incr a
+QUEUED
+redis 127.0.0.1:6379&amp;gt; exec
+(nil)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;terminal 2:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;redis 127.0.0.1:6379&amp;gt; set a 5
+OK
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果watch的key是有失效期的，并且在watch之后被redis失效删除了，那么EXEC会正常执行。&lt;/p&gt;
+&lt;h2 id="pipeline"&gt;Pipeline&lt;/h2&gt;
+&lt;p&gt;批量发送一堆命令，然后一次性获取命令的执行结果。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Pipeline pipeline = jedis.pipelined();
+long start = System.currentTimeMillis();
+for (int i = 0; i &amp;lt; 100000; i++) {
+    pipeline.set("" + i, "" + i);
+}
+List&amp;lt;Object&amp;gt; results = pipeline.execute();
+long end = System.currentTimeMillis();
+System.out.println("Pipelined SET: " + ((end - start)/1000.0) + " seconds");
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="instagramredis"&gt;新浪和instagram的redis实践&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://blog.nosqlfan.com/html/3295.html"&gt;新浪&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.nosqlfan.com/html/3379.html"&gt;instagram&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="lib"&gt;lib&lt;/h1&gt;
+&lt;p&gt;请参考官方网站的&lt;a href="http://redis.io/clients"&gt;redis client&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我用的是java版的client:jedis,这个client支持多机hash，连接池等，但是封装的不够好，使用的适合需要自己封装一层负责连接的申请和释放。&lt;/p&gt;
+&lt;h1 id="ebook"&gt;ebook&lt;/h1&gt;
+&lt;p&gt;&lt;a href="upload/redis.pdf"&gt;redis cookbook&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id="reference"&gt;reference&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://antirez.com/"&gt;redis author's blog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.nosqlfan.com"&gt;nosqlfan.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/Instagram/redis-faina"&gt;redis-faina&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/sripathikrishnan/redis-rdb-tools"&gt;redis-rdb-tools&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Sat, 28 Jul 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-07-28:get-familar-with-redis.html</guid><category>redis</category><category>nosql</category><category>memcache</category></item><item><title>mongodb cluster configuration</title><link>%22http://example.com%22/mongodb-cluster-configuration.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#caution"&gt;caution&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard-a-27018"&gt;shard a: 27018&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard-b-27018"&gt;shard b: 27018&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_4"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#config-server-27019"&gt;config server 27019&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_5"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_6"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mongos-27017"&gt;mongos 27017&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_7"&gt;节点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_8"&gt;部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard"&gt;shard管理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#shard-db-and-collections"&gt;shard db and collections&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_9"&gt;举例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_10"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="caution"&gt;caution&lt;/h1&gt;
+&lt;p&gt;在实际部署的时候请注意替换下面例子中的ip地址,下面所有操作假设实在mongodb安装根目录中，比如/opt/mongodb&lt;/p&gt;
+&lt;h1 id="shard-a-27018"&gt;shard a: 27018&lt;/h1&gt;
+&lt;h2 id="_1"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.77&lt;/li&gt;
+&lt;li&gt;192.168.0.78&lt;/li&gt;
+&lt;li&gt;192.168.0.58 仲裁节点&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_2"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;mkdir data/shard_a
+mkdir data/key
+echo "demo shard key" &amp;gt; data/key/shard_key
+chmod go-rw data/key/shard_key
+numactl --interleave=all bin/mongod --shardsvr --replSet shard_a --fork --port 27018 --dbpath /home/work/local/mongodb/data/shard_a/ --logpath /home/work/local/mongodb/logs/shard_a.log --logappend --keyFile /home/work/local/mongodb/data/key/shard_key  
+cfg = {
+_id : "shard_a",
+members : [
+    {_id : 0, host : "192.168.0.77:27018"},
+    {_id : 1, host : "192.168.0.78:27018"},
+    {_id : 2, host : "192.168.0.58:27018",arbiterOnly:true}
+]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="shard-b-27018"&gt;shard b: 27018&lt;/h1&gt;
+&lt;h2 id="_3"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.79&lt;/li&gt;
+&lt;li&gt;192.168.0.80&lt;/li&gt;
+&lt;li&gt;192.168.0.59 仲裁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_4"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;mkdir data/shard_b
+mkdir data/key
+echo "demo shard key" &amp;gt; data/key/shard_key
+chmod go-rw data/key/shard_key
+numactl --interleave=all bin/mongod --shardsvr --replSet shard_b --fork --port 27018 --dbpath /home/work/local/mongodb/data/shard_b/ --logpath /home/work/local/mongodb/logs/shard_b.log --logappend --keyFile /home/work/local/mongodb/data/key/shard_key
+cfg = {
+_id : "shard_b",
+members : [
+    {_id : 0, host : "192.168.0.79:27018"},
+    {_id : 1, host : "192.168.0.80:27018"},
+    {_id : 2, host : "192.168.0.59:27018",arbiterOnly:true}
+]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="config-server-27019"&gt;config server 27019&lt;/h1&gt;
+&lt;h2 id="_5"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.77&lt;/li&gt;
+&lt;li&gt;192.168.0.79&lt;/li&gt;
+&lt;li&gt;192.168.0.59&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_6"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;mkdir data/config
+numactl --interleave=all bin/mongod --configsvr -dbpath=/home/work/local/mongodb/data/config/ --fork --logpath /home/work/local/mongodb/logs/config.log --logappend --port 27019  --keyFile /home/work/local/mongodb/data/key/shard_key
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="mongos-27017"&gt;mongos 27017&lt;/h1&gt;
+&lt;h2 id="_7"&gt;节点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;192.168.0.78&lt;/li&gt;
+&lt;li&gt;192.168.0.80&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="_8"&gt;部署&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;numactl --interleave=all bin/mongos --configdb 192.168.0.77:27019,192.168.0.79:27019,192.168.0.59:27019 --port 27017 --logpath /home/work/local/mongodb/logs/mongos.log --fork --logappend  --keyFile /home/work/local/mongodb/data/key/shard_key
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="shard"&gt;shard管理&lt;/h1&gt;
+&lt;pre&gt;&lt;code&gt;bin/mongo admin
+db.addUser('admin','admin');
+db.auth('admin','admin');
+db.runCommand( { addshard : "shard_a/192.168.0.77:27018,192.168.0.78:27018" } );
+db.runCommand( { addshard : "shard_b/192.168.0.79:27018,192.168.0.80:27018" } );
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="shard-db-and-collections"&gt;shard db and collections&lt;/h1&gt;
+&lt;h2 id="_9"&gt;举例&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;db.runCommand( { enablesharding : "demo" } );
+db.runCommand( { shardcollection : "demo.Table", key : {cloumn1: 1,column2:1} } )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="_10"&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://www.mongodb.org/display/DOCS/Sharding"&gt;mongodb sharding&lt;/a&gt;&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Mon, 18 Jun 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-06-18:mongodb-cluster-configuration.html</guid><category>nosql</category><category>mongodb</category><category>cluster</category><category>replica-set</category><category>sharding</category></item><item><title>mongodb cluster configuration</title><link>%22http://example.com%22/mongodb-performance.html</link><description>&lt;div class="toc"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="#_1"&gt;优缺点&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_2"&gt;性能评估&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#mongodb-vs-tokumx"&gt;mongodb vs tokumx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#_3"&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;h1 id="_1"&gt;优缺点&lt;/h1&gt;
+&lt;h1 id="_2"&gt;性能评估&lt;/h1&gt;
+&lt;h1 id="mongodb-vs-tokumx"&gt;mongodb vs tokumx&lt;/h1&gt;
+&lt;h1 id="_3"&gt;参考&lt;/h1&gt;
+&lt;p&gt;http://blog.engineering.kiip.me/post/20988881092/a-year-with-mongodb&lt;/p&gt;
+&lt;p&gt;https://www.openshift.com/blogs/design-and-performance-tips-for-mongodb-indexes&lt;/p&gt;
+&lt;p&gt;https://github.com/jwilder/mongodb-tools&lt;/p&gt;
+&lt;p&gt;http://www.datastax.com/dev/blog/2012-in-review-performance&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Mon, 18 Jun 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-06-18:mongodb-performance.html</guid><category>nosql</category><category>mongodb</category><category>cluster</category><category>replica-set</category><category>sharding</category></item><item><title>mysql master slave replication resync</title><link>%22http://example.com%22/mysql-master-slave-replication-resync.html</link><description>&lt;h1 id="masterslave"&gt;master（可以是一个slave）&lt;/h1&gt;
+&lt;p&gt;192.168.0.77&lt;/p&gt;
+&lt;h1 id="slave"&gt;slave&lt;/h1&gt;
+&lt;p&gt;192.168.0.78&lt;/p&gt;
+&lt;h1 id="_1"&gt;主从复制步骤和方法&lt;/h1&gt;
+&lt;h2 id="master"&gt;master&lt;/h2&gt;
+&lt;h3 id="_2"&gt;执行锁表操作&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;flush tables with read lock;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_3"&gt;查看当前状态&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;show master status
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="dump"&gt;dump&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;bin/mysqldump -uroot -p --default-character-set=utf8 {database} &amp;gt; {database}.dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_4"&gt;解锁&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;unlock tables;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="slave_1"&gt;slave&lt;/h2&gt;
+&lt;h3 id="slave_2"&gt;停止slave&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;mysql -uroot -p -e "stop slave;"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="_5"&gt;导入&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;mysql -uroot -p  {database} &amp;lt;  {database}.dump
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="master_1"&gt;重新设置master&lt;/h3&gt;
+&lt;p&gt;举例&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;change master to master_host='192.168.0.77',master_user='backup',master_password='backup',master_log_file='mysql-bin.000003',master_log_pos=1650;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="slave_3"&gt;启动slave&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;mysql -uroot -p -e "start slave;"
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;gh-pages&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">wangweiwei</dc:creator><pubDate>Mon, 18 Jun 2012 00:00:00 +0800</pubDate><guid>tag:"example.com",2012-06-18:mysql-master-slave-replication-resync.html</guid><category>mysql</category><category>replication</category></item></channel></rss>

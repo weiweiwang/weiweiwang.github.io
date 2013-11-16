@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>mongodb cluster configuration</title>
+        <meta charset="utf-8" />
+                <link rel="stylesheet" href="./theme/css/main.css" type="text/css" />
+        <link href="./" type="application/atom+xml" rel="alternate" title="Careless Whisper ATOM Feed" />
+        
+
+        <!--[if IE]>
+                <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+        <!--[if lte IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie.css"/>
+                <script src="./js/IE8.js" type="text/javascript"></script><![endif]-->
+
+        <!--[if lt IE 7]>
+                <link rel="stylesheet" type="text/css" media="all" href="./css/ie6.css"/><![endif]-->
+
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/weiweiwang/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href=".">Careless Whisper </a></h1>
+                <nav><ul>
+                                                                                        <li ><a href="./category/android.html">android</a></li>
+                                    <li ><a href="./category/linux.html">linux</a></li>
+                                    <li ><a href="./category/misc.html">misc</a></li>
+                                    <li ><a href="./category/programming.html">programming</a></li>
+                                    <li ><a href="./category/search.html">search</a></li>
+                                    <li ><a href="./category/sql_nosql.html">sql_nosql</a></li>
+                                                    <li><a href="./tags.html">Tags</a></li>
+                                </ul></nav>
+        </header><!-- /#banner -->
+                
+<section id="content" class="body">    
+<article>
+        <header> <h1 class="entry-title"><a href="mongodb-cluster-configuration.html"
+        rel="bookmark" title="Permalink to mongodb cluster configuration">mongodb cluster configuration</a></h1>   </header>
+        <div class="entry-content">
+        <footer class="post-info">
+        <abbr class="published" title="2012-06-18T00:00:00">
+                2012/六月/18 星期一
+        </abbr>
+
+                <address class="vcard author">
+                By <a class="url fn" href="./author/wangweiwei.html">wangweiwei</a>
+        </address>
+        <p>In <a href="./category/sql_nosql.html">sql_nosql</a>. </p>
+<p>tags: <a href="./tag/nosql.html">nosql</a><a href="./tag/mongodb.html">mongodb</a><a href="./tag/cluster.html">cluster</a><a href="./tag/replica-set.html">replica-set</a><a href="./tag/sharding.html">sharding</a></p></p>
+</footer><!-- /.post-info -->        <div class="toc">
+<ul>
+<li><a href="#caution">caution</a></li>
+<li><a href="#shard-a-27018">shard a: 27018</a><ul>
+<li><a href="#_1">节点</a></li>
+<li><a href="#_2">部署</a></li>
+</ul>
+</li>
+<li><a href="#shard-b-27018">shard b: 27018</a><ul>
+<li><a href="#_3">节点</a></li>
+<li><a href="#_4">部署</a></li>
+</ul>
+</li>
+<li><a href="#config-server-27019">config server 27019</a><ul>
+<li><a href="#_5">节点</a></li>
+<li><a href="#_6">部署</a></li>
+</ul>
+</li>
+<li><a href="#mongos-27017">mongos 27017</a><ul>
+<li><a href="#_7">节点</a></li>
+<li><a href="#_8">部署</a></li>
+</ul>
+</li>
+<li><a href="#shard">shard管理</a></li>
+<li><a href="#shard-db-and-collections">shard db and collections</a><ul>
+<li><a href="#_9">举例</a></li>
+</ul>
+</li>
+<li><a href="#_10">参考</a></li>
+</ul>
+</div>
+<h1 id="caution">caution</h1>
+<p>在实际部署的时候请注意替换下面例子中的ip地址,下面所有操作假设实在mongodb安装根目录中，比如/opt/mongodb</p>
+<h1 id="shard-a-27018">shard a: 27018</h1>
+<h2 id="_1">节点</h2>
+<ul>
+<li>192.168.0.77</li>
+<li>192.168.0.78</li>
+<li>192.168.0.58 仲裁节点</li>
+</ul>
+<h2 id="_2">部署</h2>
+<pre><code>mkdir data/shard_a
+mkdir data/key
+echo "demo shard key" &gt; data/key/shard_key
+chmod go-rw data/key/shard_key
+numactl --interleave=all bin/mongod --shardsvr --replSet shard_a --fork --port 27018 --dbpath /home/work/local/mongodb/data/shard_a/ --logpath /home/work/local/mongodb/logs/shard_a.log --logappend --keyFile /home/work/local/mongodb/data/key/shard_key  
+cfg = {
+_id : "shard_a",
+members : [
+    {_id : 0, host : "192.168.0.77:27018"},
+    {_id : 1, host : "192.168.0.78:27018"},
+    {_id : 2, host : "192.168.0.58:27018",arbiterOnly:true}
+]
+}
+</code></pre>
+<h1 id="shard-b-27018">shard b: 27018</h1>
+<h2 id="_3">节点</h2>
+<ul>
+<li>192.168.0.79</li>
+<li>192.168.0.80</li>
+<li>192.168.0.59 仲裁</li>
+</ul>
+<h2 id="_4">部署</h2>
+<pre><code>mkdir data/shard_b
+mkdir data/key
+echo "demo shard key" &gt; data/key/shard_key
+chmod go-rw data/key/shard_key
+numactl --interleave=all bin/mongod --shardsvr --replSet shard_b --fork --port 27018 --dbpath /home/work/local/mongodb/data/shard_b/ --logpath /home/work/local/mongodb/logs/shard_b.log --logappend --keyFile /home/work/local/mongodb/data/key/shard_key
+cfg = {
+_id : "shard_b",
+members : [
+    {_id : 0, host : "192.168.0.79:27018"},
+    {_id : 1, host : "192.168.0.80:27018"},
+    {_id : 2, host : "192.168.0.59:27018",arbiterOnly:true}
+]
+}
+</code></pre>
+<h1 id="config-server-27019">config server 27019</h1>
+<h2 id="_5">节点</h2>
+<ul>
+<li>192.168.0.77</li>
+<li>192.168.0.79</li>
+<li>192.168.0.59</li>
+</ul>
+<h2 id="_6">部署</h2>
+<pre><code>mkdir data/config
+numactl --interleave=all bin/mongod --configsvr -dbpath=/home/work/local/mongodb/data/config/ --fork --logpath /home/work/local/mongodb/logs/config.log --logappend --port 27019  --keyFile /home/work/local/mongodb/data/key/shard_key
+</code></pre>
+<h1 id="mongos-27017">mongos 27017</h1>
+<h2 id="_7">节点</h2>
+<ul>
+<li>192.168.0.78</li>
+<li>192.168.0.80</li>
+</ul>
+<h2 id="_8">部署</h2>
+<pre><code>numactl --interleave=all bin/mongos --configdb 192.168.0.77:27019,192.168.0.79:27019,192.168.0.59:27019 --port 27017 --logpath /home/work/local/mongodb/logs/mongos.log --fork --logappend  --keyFile /home/work/local/mongodb/data/key/shard_key
+</code></pre>
+<h1 id="shard">shard管理</h1>
+<pre><code>bin/mongo admin
+db.addUser('admin','admin');
+db.auth('admin','admin');
+db.runCommand( { addshard : "shard_a/192.168.0.77:27018,192.168.0.78:27018" } );
+db.runCommand( { addshard : "shard_b/192.168.0.79:27018,192.168.0.80:27018" } );
+</code></pre>
+<h1 id="shard-db-and-collections">shard db and collections</h1>
+<h2 id="_9">举例</h2>
+<pre><code>db.runCommand( { enablesharding : "demo" } );
+db.runCommand( { shardcollection : "demo.Table", key : {cloumn1: 1,column2:1} } )
+</code></pre>
+<h1 id="_10">参考</h1>
+<p><a href="http://www.mongodb.org/display/DOCS/Sharding">mongodb sharding</a></p>
+        </div><!-- /.entry-content -->
+                <div class="comments">
+        <h2>Comments !</h2>
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+               var disqus_identifier = "mongodb-cluster-configuration.html";
+               (function() {
+               var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+               dsq.src = 'http://cloudornot.disqus.com/embed.js';
+               (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+              })();
+            </script>
+        </div>
+        
+</article>
+</section>
+        <section id="extras" class="body">
+                        <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                                                    <li><a href="http://xieyu.github.com">Xieyu</a></li>
+                                                    <li><a href="http://mindhacks.cn">刘未鹏</a></li>
+                                                    <li><a href="http://blog.silentxyc.com/">薛亦晨</a></li>
+                                                </ul>
+                </div><!-- /.blogroll -->
+                                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="./" rel="alternate">atom feed</a></li>
+                            
+                                                    <li><a href="http://weibo.com/lolorosa">新浪微博</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+        var pageTracker = _gat._getTracker("UA-7072537-7");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
+<script type="text/javascript">
+    var disqus_shortname = 'cloudornot';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
