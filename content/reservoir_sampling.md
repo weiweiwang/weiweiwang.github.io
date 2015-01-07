@@ -14,7 +14,7 @@ date: 2012-10-19
         Init : a reservoir with the size： k
              for i= k+1 to N
                   M=random(1, i);
-                  if( M < k)
+                  if( M <= k)
                      SWAP the Mth value and ith value
              end for
 
