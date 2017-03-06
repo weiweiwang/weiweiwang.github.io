@@ -30,7 +30,6 @@ DISQUS_SITENAME='cloudornot'
 LINKS =  (
 		('Xieyu','http://xieyu.github.com'),
 		(u'刘未鹏','http://mindhacks.cn'),
-                (u'薛亦晨','http://blog.silentxyc.com/'),
          )
 
 # Social widget

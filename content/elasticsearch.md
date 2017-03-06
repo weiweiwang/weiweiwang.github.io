@@ -20,6 +20,173 @@ date: 2012-12-12
 	bin/elasticsearch -f
 
 这里的-f参数是让程序在前台运行，这样可以看到程序运行的输出日志，正式环境不能这么运行，直接运行bin/elasticsearch就ok了。
+
+## 插件
+	bin/plugin -install mobz/elasticsearch-head（https://github.com/mobz/elasticsearch-head）
+	bin/plugin -install lukas-vlcek/bigdesk/2.5.0 （http://bigdesk.org/）
+
+## 索引
+索引
+	curl -XPUT 'localhost:9200/website/blog/123?pretty=true' -d '{
+  		"title": "My first blog entry",
+  		"text":  "Just trying this out...",
+  		"date":  "2014/01/01"
+		}'
+		
+		{"_index":"website","_type":"blog","_id":"123","_version":1,"created":true}
+		
+		
+	curl -XPOST 'localhost:9200/website/blog/?pretty=true' -d '{
+  		"title": "My second blog entry",
+  		"text":  "Still trying this out...",
+  		"date":  "2014/01/01"
+		}'
+		
+	curl -XDELETE 'localhost:9200/website'
+	
+	curl -XPUT 'localhost:9200/website/' -d '
+	{
+    	"index" : {
+        	"number_of_shards": 1,
+        	"number_of_replicas" : 0
+    	}
+	}'
+		
+## Retrieval
+	curl 'localhost:9200/website/blog/123?pretty=true'
+	{"_index" : "website",
+  	"_type" : "blog",
+  	"_id" : "123",
+  	"_version" : 1,
+  	"found" : true,
+  	"_source":{
+  	"title": "My first blog entry",
+  	"text":  "Just trying this out...",
+  	"date":  "2014/01/01"
+	}
+	}
+	
+## 更新
+	curl -XPUT 'localhost:9200/website/blog/123?pretty=true' -d '{
+  	"title": "My first blog entry",
+  	"text":  "I am starting to get the hang of this...",
+  	"date":  "2014/01/02"
+	}'
+
+	{
+  	"_index" : "website",
+  	"_type" : "blog",
+  	"_id" : "123",
+  	"_version" : 2,
+  	"created" : false
+	}
+	
+	curl -XPOST 'localhost:9200/website/blog/123/_update' -d '{
+   	"doc" : {
+      "tags" : [ "testing" ],
+      "views": 0
+   	}
+	}'
+	
+	{  
+   	"_index":"website",
+   	"_type":"blog",
+   	"_id":"123",
+   	"_version":3
+	}
+	
+## 搜索	
+	curl 'localhost:9200/website/blog/_search?pretty=true'
+	{
+   	"took" : 1,
+   	"timed_out" : false,
+   	"_shards" : {
+    	"total" : 1,
+    	"successful" : 1,
+    	"failed" : 0
+  	},
+  	"hits" : {
+    	"total" : 2,
+    	"max_score" : 1.0,
+    	"hits" : [ {
+      	"_index" : "website",
+      	"_type" : "blog",
+      	"_id" : "AUzVmojOGE46dfdQnxR6",
+      	"_score" : 1.0,
+      	"_source":{
+  		"title": "My second blog entry",
+  		"text":  "Still trying this out...",
+  		"date":  "2014/01/01"
+		}
+    	}, {
+      	"_index" : "website",
+      	"_type" : "blog",
+      	"_id" : "123",
+      	"_score" : 1.0,
+      	"_source":{"title":"My first blog entry","text":"I am starting to get the hang of this...","date":"2014/01/02","views":0,"tags":["testing"]}
+    	} ]
+  	}
+	}
+	
+	
+	curl 'localhost:9200/website/blog/_search?q=text:trying&pretty=true'
+	{
+  	"took" : 3,
+  	"timed_out" : false,
+  	"_shards" : {
+    	"total" : 1,
+    	"successful" : 1,
+    	"failed" : 0
+  	},
+  	"hits" : {
+    	"total" : 1,
+    	"max_score" : 0.5,
+    	"hits" : [ {
+      	"_index" : "website",
+      	"_type" : "blog",
+      	"_id" : "AUzVmojOGE46dfdQnxR6",
+      	"_score" : 0.5,
+      	"_source":{
+  		"title": "My second blog entry",
+  		"text":  "Still trying this out...",
+  		"date":  "2014/01/01"
+		}
+    	} ]
+  	}
+	}
+
+## Mapping
+
+	curl -XPUT 'localhost:9200/gb/' -d '
+	{
+    	"settings":{
+        "index" : {
+            "number_of_shards": 1,
+            "number_of_replicas" : 0
+        }
+    },
+    "mappings": {
+        "tweet" : {
+          "properties" : {
+            "tweet" : {
+              "type" :    "string",
+              "analyzer": "english"
+            },
+            "date" : {
+              "type" :   "date"
+            },
+            "name" : {
+              "type" :   "string"
+            },
+            "user_id" : {
+              "type" :   "long"
+            }
+          }
+        }
+      }
+	}'
+
+	
 #配置
 上面启动的elasitcsearch没有做任何配置，正式使用的时候至少需要配置内存，一般情况下mapping配置也是不可缺少的。
 
@@ -87,58 +254,43 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 注意这里开启了mmapfs，如果你是linux/solaris 64bit的系统建议开启
 
 	index:
-	    store:
-		type: mmapfs
-	    analysis:
-		analyzer:
-		   edgeNGramAnalyzer:
-		       type: custome
-		       tokenizer: standard
-		       filter: [standard,lowercase,englishSnowball,edgeNGramFilter]
-		   nGramAnalyzer:
-		       type: custome
-		       tokenizer: standard
-		       filter: [standard,lowercase,englishSnowball,nGramFilter]
-		   standardAnalyzer:
-		       type: custome
-		       tokenizer: standard
-		       filter: [standard,lowercase,englishSnowball]
-		   mmsegAnalyzer:
-		       type: custome
-		       tokenizer: mmseg_maxword
-		       filter: [standard,lowercase,englishSnowball]
-		   complexAnalyzer:
-		       type: custome
-		       tokenizer: mmseg_complex
-		       filter: [standard,lowercase,englishSnowball]
-		   simpleAnalyzer:
-		       type: custome
-		       tokenizer: mmseg_simple
-		       filter: [standard,lowercase,englishSnowball]
-		tokenizer:
-		   mmseg_maxword:
-		       type: mmseg
-		       seg_type: "max_word"
-		   mmseg_complex:
-		       type: mmseg
-		       seg_type: "complex"
-		   mmseg_simple:
-		       type: mmseg
-		       seg_type: "simple"
-		filter:
-		   nGramFilter:
-		       type: nGram
-		       min_gram: 1
-		       max_gram: 64
-		   edgeNGramFilter:
-		       type: edgeNGram
-		       min_gram: 1
-		       max_gram: 64
-		       side: front
-		   englishSnowball:
-		       type: snowball
-		       language: English
-
+    store:
+        type: mmapfs
+    analysis:
+        analyzer:
+           edgeNGramAnalyzer:
+               type: custome
+               tokenizer: standard
+               filter: [standard,lowercase,englishSnowball,edgeNGramFilter]
+           nGramAnalyzer:
+               type: custome
+               tokenizer: standard
+               filter: [standard,lowercase,englishSnowball,nGramFilter]
+           standardAnalyzer:
+               type: custome
+               tokenizer: standard
+               filter: [standard,lowercase,englishSnowball]
+           smartAnalyzer:
+               type: custome
+               tokenizer: smartcn_sentence
+               filter: [smartcn_word,lowercase,englishSnowball,synonym]
+        filter:
+           nGramFilter:
+               type: nGram
+               min_gram: 1
+               max_gram: 64
+           edgeNGramFilter:
+               type: edgeNGram
+               min_gram: 1
+               max_gram: 64
+               side: front
+           englishSnowball:
+               type: snowball
+               language: English
+           synonym:         #should be used before filtering out stop words
+               type: synonym
+               "synonyms_path" : "analysis/synonym.txt"
+               
 这里需要注意的是我这里使用了mmseg分词工具，如果你不需要的话可以去掉相应的配置，mmseg分词插件的安装说明参看：[https://github.com/medcl/elasticsearch-analysis-mmseg](https://github.com/medcl/elasticsearch-analysis-mmseg)，如果你下载后的分词发现在并发情况下有bug（异常，分词结果错误），请用源码编译安装，源码里的这个bug已经修复。关于mmseg的说明可以参看<http://weiweiwang.github.com/mmseg.html>
 
 ### mappings的配置
@@ -242,6 +394,31 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 
 注意sogou词典scel文件请用英文名称命名，转换后会拼接成words-{原来的scel文件名称}.dic。转换完成后将这些文件拷贝到elasticsearch/config/mmseg目录下即可。词库文件[下载](http://pinyin.sogou.com/dict/)。
 
+# Data Flow
+
+## User Data Flow
+* sinle index + routing
+* large overallocation, i.e. 50
+* alias for eache user
+
+		curl -XPOST 'http://localhost:9200/_aliases' -d '
+		{
+		    "actions" : [
+		        { "add" : { "index" : "users", "alias" : "user_1","filter":{"term":{"user":"1"}},"routing":"1" } }
+		    ]
+		}' 
+## Time Data Flow
+* index per time rage
+* old index can be optimized, removed or closed
+
+
+		node.tag: strong_box #5 nodes of these
+		node.tag: not_so_strong_box #20 nodes of these
+		curl -XPUT localhost:9200/2012_01/_settings -d '{
+		      "index.routing.allocation.include.tag" : "strong_box"
+		      "index.routing.allocation.exclude.tag" : "not_so_strong_box"
+		}'
+
 
 # 性能优化
 
@@ -290,6 +467,7 @@ refresh_interval这个值的默认值是1s，增加可以提高建立索引的�
 上SSD硬盘，可以参考[这里](http://euphonious-intuition.com/2013/02/five-things-i-learned-from-elasticsearch-training/)
 
 # 参考
+[https://vimeo.com/44716955](https://vimeo.com/44716955)
 [http://www.tuicool.com/articles/NbM7zi](http://www.tuicool.com/articles/NbM7zi)
 
 [http://www.elasticsearch.org/](http://www.elasticsearch.org/)
