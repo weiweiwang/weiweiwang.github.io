@@ -1,8 +1,8 @@
+---
 title: 随机抽样问题
-slug: reservoir-sampling
 category: programming
-tags: random sampling,reservoir sampling
-date: 2012-10-19
+tags: [random sampling,reservoir sampling]
+---
 
 #问题
     

@@ -1,10 +1,9 @@
+---
 title: django环境安装
-slug: django-environment-setup
 category: sql_nosql
-tags: mysql,character set,utf8
+tags: [mysql,character set,utf8]
 date: 2013-06-16
-
-[TOC]
+---
 
 #django
 		pip install django

@@ -1,8 +1,9 @@
+---
 title: Android上用Tcpdump抓包
 slug: android-tcpdump
 category: android
-tags: tcpdump,android
-date: 2012-08-25
+tags: [tcpdump,android]
+---
 
 #下载
 下载tcpdump， 还有个地址是http://www.eecs.umich.edu/~timuralp/tcpdump-arm，下载重命名为tcpdump

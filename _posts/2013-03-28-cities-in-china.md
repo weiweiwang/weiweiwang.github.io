@@ -1,8 +1,8 @@
-title:全国城市区号信息
-slug:cities-in-china-with-area-code-and-pinyin
-category:misc
-tags:cities,pinyin,area code
-date: 2013-03-28
+---
+title: 全国城市区号信息
+category: misc
+tags: [cities,pinyin,area code]
+---
 
 # 372个城市
 

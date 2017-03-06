@@ -1,10 +1,8 @@
+---
 title: word2vec学习笔记
-slug: get-familar-with-word2vector
 category: NLP
-tags: nlp,word2vector,cbow,skipgram
-date: 2017-03-06
-
-[TOC]
+tags: [nlp,word2vector,cbow,skipgram]
+---
 
 #什么是词向量
 
@@ -27,10 +25,9 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 ## BOW
 下图是CBOW的网络结构
 
-![cbow](images/cbow.png)
+![cbow]({{ site.url }}/assets/images/cbow.png)
 
-这里使用某个词![equation](http://latex.codecogs.com/svg.latex?\matchbf{w_t})
-前后的若干个词作为输入![equation](http://latex.codecogs.com/svg.latex?\matchbf{x})，![equation](http://latex.codecogs.com/svg.latex?\matchbf{w_t})作为要预测的输出![equation](http://latex.codecogs.com/svg.latex?\matchbf{y})，这里假设窗口大小为4，也就是用连续的5个词中间的词![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_t})作为![equation](http://latex.codecogs.com/svg.latex?\mathbf{y}), 前后各两个词作为输入![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t-2}}), ![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t-1}}), ![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t+1}}), ![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t+2}})，这里的![equation](http://latex.codecogs.com/svg.latex?\mathbf{w})是一个one-hot vector，大小是词典的大小V。由于这里是4个one-hot vector，但图中我们看到输入和隐藏层是一个权重矩阵![equation](http://latex.codecogs.com/svg.latex?W_{V\times%20N})，那这个输入到隐藏层是如何计算的呢，论文和各种文章里会介绍将这4个向量拼成了一个![equation](http://latex.codecogs.com/svg.latex?4\times%20V)的向量，然后计算隐藏层的输出，这个解释会让大家很困惑，实际上做法是分别和![equation](http://latex.codecogs.com/svg.latex?W_{V\times%20N})做矩阵乘法然后计算平均值，换一个思维是实际上的输入是：![equation](http://latex.codecogs.com/svg.latex?(w_{t-2}+w_{t-1}+w_{t+1}+w_{t+2})/4)，这样理解起来就简单了，相当于还是一个V维的输入向量，这里面还有一个特殊的地方是隐藏层是没有激活函数的，所以隐藏层的输出向量![equation](http://latex.codecogs.com/svg.latex?h=W_{V\times%20N}^T\times%20\(w_{t-2}+w_{t-1}+w_{t+1}+w_{t+2}\)/4)，注意这里4是为了举例子，实际情况中根据窗口大小来调整。
+这里使用某个词![equation](http://latex.codecogs.com/svg.latex?\matchbf{w_t})前后的若干个词作为输入![equation](http://latex.codecogs.com/svg.latex?\matchbf{x})，![equation](http://latex.codecogs.com/svg.latex?\matchbf{w_t})作为要预测的输出![equation](http://latex.codecogs.com/svg.latex?\matchbf{y})，这里假设窗口大小为4，也就是用连续的5个词中间的词![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_t})作为![equation](http://latex.codecogs.com/svg.latex?\mathbf{y}), 前后各两个词作为输入![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t-2}}), ![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t-1}}), ![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t+1}}), ![equation](http://latex.codecogs.com/svg.latex?\mathbf{w_{t+2}})，这里的![equation](http://latex.codecogs.com/svg.latex?\mathbf{w})是一个one-hot vector，大小是词典的大小V。由于这里是4个one-hot vector，但图中我们看到输入和隐藏层是一个权重矩阵![equation](http://latex.codecogs.com/svg.latex?W_{V\times%20N})，那这个输入到隐藏层是如何计算的呢，论文和各种文章里会介绍将这4个向量拼成了一个![equation](http://latex.codecogs.com/svg.latex?4\times%20V)的向量，然后计算隐藏层的输出，这个解释会让大家很困惑，实际上做法是分别和![equation](http://latex.codecogs.com/svg.latex?W_{V\times%20N})做矩阵乘法然后计算平均值，换一个思维是实际上的输入是：![equation](http://latex.codecogs.com/svg.latex?(w_{t-2}+w_{t-1}+w_{t+1}+w_{t+2})/4)，这样理解起来就简单了，相当于还是一个V维的输入向量，这里面还有一个特殊的地方是隐藏层是没有激活函数的，所以隐藏层的输出向量![equation](http://latex.codecogs.com/svg.latex?h=W_{V\times%20N}^T\times%20\(w_{t-2}+w_{t-1}+w_{t+1}+w_{t+2}\)/4)，注意这里4是为了举例子，实际情况中根据窗口大小来调整。
 
 
 ### BOW loss function
@@ -41,7 +38,7 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 
 定义Loss function E如下：
 
-![equation](http://latex.codecogs.com/svg.latex?E=-\log%20p(w_o|w_{i,1},\ldots,w_{i,C))
+![equation](http://latex.codecogs.com/svg.latex?E=-\log%20p(w_o\mid%20w_{i,1},\ldots,w_{i,C}))
 
 ![equation](http://latex.codecogs.com/svg.latex?=-u_{j^*}+\log\sum_{j\prime=1}^{V}\exp(u_j^\prime))
 
@@ -71,7 +68,7 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 
 
 ## Skip-Gram
-![cbow](images/skipgram.png)
+![skipgram]({{ site.url }}/assets/images/skipgram.png)
 
 这个模型可以看做CBOW模型的翻转，现在输入变成了某一个词，输出变成了这个词的上下文(context)
 
@@ -80,12 +77,12 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 
 由于隐藏层到输出层的权重是共享的，所以每个输出![equation](http://latex.codecogs.com/svg.latex?y)是相同的
 
-![equation](http://latex.codecogs.com/svg.latex?p(w_{c,j}=w_{O,c}|W_I)=y_{c,j}=\frac{\exp(u_{c,j})}{\sum_{j^\prime=1}^{V}\exp(u_{j^\prime})})其中![equation](http://latex.codecogs.com/svg.latex?u_{c,j}=u_j=v^\prime_{w_j}^T\cdot%20h), ![equation](http://latex.codecogs.com/svg.latex?v^\prime_{w_j})是隐藏层到输出层参数矩阵的某一列
+![equation](http://latex.codecogs.com/svg.latex?p(w_{c,j}=w_{O,c}\mid%20W_I)=y_{c,j}=\frac{\exp(u_{c,j})}{\sum_{j^\prime=1}^{V}\exp(u_{j^\prime})})其中![equation](http://latex.codecogs.com/svg.latex?u_{c,j}=u_j=v^\prime_{w_j}^T\cdot%20h), ![equation](http://latex.codecogs.com/svg.latex?v^\prime_{w_j})是隐藏层到输出层参数矩阵的某一列
 
 ### Skip-Gram loss function
 我们先定义Loss Function， 最大化给定w情况下上下文的输出概率，反过来就是最小化这个概率的负数，如下：
 
-![equation](http://latex.codecogs.com/svg.latex?E=-\log%20p(w_{O,1},\ldots,w_{O,C}|w_I)=-\log\prod_{c=1}^C\frac{\exp(u_{c,j_c^*})}{\sum_{j^\prime=1}^{V}\exp(u_j^\prime)})
+![equation](http://latex.codecogs.com/svg.latex?E=-\log%20p(w_{O,1},\ldots,w_{O,C}\mid%20w_I)=-\log\prod_{c=1}^C\frac{\exp(u_{c,j_c^*})}{\sum_{j^\prime=1}^{V}\exp(u_j^\prime)})
 
 ![equation](http://latex.codecogs.com/svg.latex?=-\sum_{c=1}^{C}u_{j_c^*}+C\cdot\log\sum_{j^\prime=1}^{V}\exp(u_{j^\prime}))
 
@@ -93,7 +90,7 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 ![equation](http://latex.codecogs.com/svg.latex?=\frac{\partial{E}}{\partial{u_{c,j}}=\sum_{c=1}^{C}y_{c,j}-t_{c,j}=\sum_{c=1}^{C}e_{c,j}})
 
 
-为了简化，我们定义![equation](http://latex.codecogs.com/svg.latex?{EI}=\{{EI}_1,\ldots,{EI}_V\})，其中
+为了简化，我们定义![equation](http://latex.codecogs.com/svg.latex?{EI}=\{ {EI}_1,\ldots,{EI}_V\})，其中
 ![equation](http://latex.codecogs.com/svg.latex?{EI}_j=\sum_{c=1}^{C}e_{c,j})
 
 针对隐藏层到输出层的权重计算偏微分：
@@ -113,4 +110,5 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 
 # 参考
 [word2exp explaination](http://www-personal.umich.edu/~ronxin/pdf/w2vexp.pdf)
+
 [dl4j word2vec](https://deeplearning4j.org/word2vec.html)

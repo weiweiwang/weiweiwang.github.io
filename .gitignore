@@ -2,3 +2,4 @@
 *~
 *.pyc
 *.pid
+_site

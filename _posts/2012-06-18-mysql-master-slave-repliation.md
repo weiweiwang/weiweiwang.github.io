@@ -1,8 +1,8 @@
+---
 title: mysql master slave replication resync
-slug: mysql-master-slave-replication-resync
 category: sql_nosql
-tags: mysql,replication
-date: 2012-06-18
+tags: [mysql,replication]
+---
 
 # master（可以是一个slave）
 192.168.0.77

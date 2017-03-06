@@ -1,10 +1,8 @@
+---
 title: 常用shell命令
-slug: common-shell-command
 category: linux
-tags: bash,shell,log
-date: 2012-08-19
-
-[TOC]
+tags: [bash,shell,log]
+---
 
 # 测试文件
 ## test.txt

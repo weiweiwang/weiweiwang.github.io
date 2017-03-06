@@ -1,10 +1,8 @@
+---
 title: Android上的单元测试
-slug: android-unit-tests
 category: android
-tags: unit-test,android
-date: 2013-02-25
-
-[TOC]
+tags: [unit-test,android]
+---
 
 #工作流程
 ## Android Application Tests

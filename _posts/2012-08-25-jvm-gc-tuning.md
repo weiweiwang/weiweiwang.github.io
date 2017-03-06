@@ -1,18 +1,15 @@
+---
 title: Java虚拟机GC调整
-slug: jvm-gc-tuning
 category: programming
-tags: java,jvm,garbage collection
-date: 2012-08-25
-
-[TOC]
-
+tags: [java,jvm,garbage collection]
+---
 # Java垃圾回收介绍
 我们先来看一张对象生存期的图。横轴是对象分配后的生存期，纵轴是相应生存期的字节总数。从这张图我们可以看出绝大多数对象的生存期是很短暂的。
 比如程序中随处可见的局部变量。对于那些长期生存的变量，比如程序内部的计数器，cache等都需要长期占用内存，这些也就是图中右边的部分。当然这个图是对大多数程序的统计，不是所有的程序都符合这个图的，比如一个用java写的内存cache服务就可能完全不是这样的分布。
-![memory generation](images/jvm_mem_generation.gif)
+![memory generation]({{site_url}}/assets/images/jvm_mem_generation.gif)
 
 由于大多数程序具有上面所说的特征，所以jvm中的内存按照generation的方式进行管理。当一个generation被填满后，就会对这个generation进行回收。minor回收后仍然存活的对象会被迁移到major generation中。major generaiton满了之后也会进行一次回收。minor,major回收的代价是不同的，minor回收过程中大多数对象都是可以被释放的，而major回收的时候大多数对象都是不可释放的，所以major回收要比minor回收慢的多。由于分代管理的特点，我们在程序内存分配上也就会遇到分代分配内存来减少gc从而提供程序更好的性能。Java中的缺省的代分布大致如下（并行垃圾收集器除外）：
-![generation_structure](images/generation_structure.gif)
+![generation_structure]({{site_url}}/assets/images/generation_structure.gif)
 
 初始化的时候，最大的地址空间虚拟地保留住而没有分配出去，直到真的需要的时候为止。整个保留的对象地址空间被分给了年轻的和年老的代。
 

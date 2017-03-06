@@ -1,10 +1,9 @@
+---
 title: Java程序CPU使用分析
-slug: java-cpu-usage-analysis
 category: programming
-tags: java,cpu,usage,top,jstack,kill
+tags: [java,cpu,usage,top,jstack,kill]
 date: 2012-09-18
-
-[TOC]
+---
 
 # 用top找出cpu消耗过高的java进程
 

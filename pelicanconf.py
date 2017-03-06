@@ -3,7 +3,7 @@
 
 AUTHOR = u"wangweiwei"
 SITENAME = u"Careless Whisper"
-SITEURL = 'http://weiweiwang.github.com'
+SITEURL = 'http://weiweiwang.github.io'
 
 
 TIMEZONE = 'Asia/Shanghai'

@@ -1,10 +1,8 @@
+---
 title: ElasticSearch Configuration and Performance Tuning
-slug: elasticsearch-configuration-and-performance-tuning 
 category: search
-tags: elasticsearch configuration,performance tuning
-date: 2012-12-12
-
-[TOC]
+tags: [elasticsearch configuration,performance tuning]
+---
 
 #下载与安装
 ## 下载

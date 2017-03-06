@@ -1,10 +1,8 @@
+---
 title: mongodb cluster configuration
-slug: mongodb-cluster-configuration
 category: sql_nosql
-tags: nosql,mongodb,cluster,replica-set,sharding
-date: 2012-06-18
-
-[TOC]
+tags: [nosql,mongodb,cluster,replica-set,sharding]
+---
 
 # caution
 在实际部署的时候请注意替换下面例子中的ip地址,下面所有操作假设实在mongodb安装根目录中，比如/opt/mongodb

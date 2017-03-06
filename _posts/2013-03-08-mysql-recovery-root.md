@@ -1,10 +1,9 @@
+---
 title: 重置mysql的root密码
-slug: recovery-mysql-root-password
 category: sql_nosql
-tags: mysql,root,recovery,password
+tags: [mysql,root,recovery,password]
 date: 2013-03-08
-
-[TOC]
+---
 
 #查看当前的启动命令
 		ps auxf|grep mysql
