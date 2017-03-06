@@ -1,3 +1,11 @@
+title: word2vec学习笔记
+slug: get-familar-with-word2vector
+category: NLP
+tags: nlp,word2vector,cbow,skipgram
+date: 2017-03-06
+
+[TOC]
+
 #什么是词向量
 
 在介绍词向量之前我们先介绍下vector space model:
