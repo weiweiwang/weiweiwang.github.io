@@ -4,7 +4,7 @@ category: NLP
 tags: [nlp,word2vector,cbow,skipgram]
 ---
 
-#什么是词向量
+# 什么是词向量
 
 在介绍词向量之前我们先介绍下vector space model:
 
