@@ -1,6 +1,6 @@
-/output
-*~
+output
 *.pyc
 *.pid
 _site
 .sass-cache
+Gemfile.lock
