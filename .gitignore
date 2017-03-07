@@ -3,3 +3,4 @@
 *.pyc
 *.pid
 _site
+.sass-cache

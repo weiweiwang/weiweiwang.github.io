@@ -1,0 +1,30 @@
+<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h3>About</h3>
+            <p><em>巍巍</em>是一个砖瓦匠，这里断断续续会记录他的学习、思考、生活和一些杂事，目的就是为了给不灵光的记忆力留存一点线索</p>
+          </div>
+          <div class="sidebar-module">
+            <h3>Archives</h3>
+            <ol class="list-unstyled">
+             {% for post in site.posts %}
+    {% unless post.next %}
+      <h4>{{ post.date | date: '%Y' }}</h4>
+    {% else %}
+      {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
+      {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
+      {% if year != nyear %}
+        <h4>{{ post.date | date: '%Y' }}</h4>
+      {% endif %}
+    {% endunless %}
+
+    <li>{{ post.date | date:"%b" }} <a href="{{ post.url }}">{{ post.title }}</a></li>
+  {% endfor %}
+            </ol>
+          </div>
+          <div class="sidebar-module">
+            <h3>Elsewhere</h3>
+            <ol class="list-unstyled">
+              <li><a href="https://github.com/weiweiwang/weiweiwang.github.io">Github</a></li>
+            </ol>
+          </div>
+</div><!-- /.blog-sidebar -->

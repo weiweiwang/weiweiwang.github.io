@@ -1,8 +1,38 @@
-theme: jekyll-theme-cayman
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+title: Welcome to wangweiwei's cloud blog
+# email: ww dot wang dot cs at gmail dot com
+description: > # 巍巍是一个砖瓦匠，这里断断续续会记录他的学习、思考、生活和一些杂事，目的就是为了给不灵光的记忆力留存一点线索
+#baseurl: "" # the subpath of your site, e.g. /blog
+#url: "" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: elegate 
+github_username:  weiweiwang
+
+# Build settings
+markdown: kramdown
+theme: minima
+gems:
+  - jekyll-feed
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
 defaults:
   -
     scope:
-        path: "" # an empty string here means all files in the project
-        type: "posts" # previously `post` in Jekyll 2.2.    
+      path: "" # an empty string here means all files in the project
     values:
-        layout: "default"
+      layout: "post"

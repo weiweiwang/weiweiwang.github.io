@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+    {% include header.html %}
+
+  <body>
+    <div class="container">
+
+      <div class="blog-header">
+        <h1 class="blog-title">{{page.title}}</h1>
+        <p class="lead blog-description">{{page.page.excerpt}}</p>
+      </div>
+
+		<div>
+		      <div class="row">
+		        <div class="col-sm-8 blog-main">
+		         <div class="blog-post">
+						{{content}}	
+					</div>
+					</div><!-- /.blog-main -->
+					{% include sidebar.html %}
+			</div>
+		<div>
+	</div>
+
+    {% include footer.html %}
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </body>
+</html>
