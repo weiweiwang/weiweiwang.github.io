@@ -9,4 +9,4 @@ permalink: /about/
 
 本blog的代码参看
 {% include icon-github.html username="weiweiwang" %} /
-[weiweiwang](https://weiweiwang.github.com/weiweiwang/weiweiwang.github.io)
+[weiweiwang](https://weiweiwang.github.com/weiweiwang/weiweiwang.github.io), github markdown语法参看[mastering-markdown](https://guides.github.com/features/mastering-markdown/)
