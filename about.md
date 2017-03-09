@@ -10,3 +10,10 @@ permalink: /about/
 本blog的代码参看
 {% include icon-github.html username="weiweiwang" %} /
 [weiweiwang](https://weiweiwang.github.com/weiweiwang/weiweiwang.github.io), github markdown语法参看[mastering-markdown](https://guides.github.com/features/mastering-markdown/)
+
+# 联系方式
+
+添加好友记得备注你的信息和联系方式来源:-）
+
+* 微信: standbyme
+* [LinkedIn](https://www.linkedin.com/in/weiweiwangnju/)
