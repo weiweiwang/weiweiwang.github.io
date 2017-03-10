@@ -72,7 +72,21 @@ watson中是一个2-stage evaluation。第一步先查找当前`contextual node`
 
 在这个评估的过程中，`contextual node`的选择逻辑是，如果当前节点没有子节点，是一个叶子节点，则`contextual node`置为*Conversation starts*这个虚拟根节点。下一轮会从当前的`contextual node`节点开始做2-stage evaluation。在匹配`contextual node`子节点的时候，是按照子节点在UI中的顺序来匹配的。
 
-对于Jump to逻辑，watson的策略最近做了升级，参看这一段描述就明白了，也就是jump to的节点及其peer节点如果都匹配不上会提示匹配失败，下一轮匹配将会从这个dialog的根节点开始。如果想保持原来的逻辑，在jump to的节点同一level最后加一个peer node，然后让其jump to整个dialog tree的root level的第一个节点。
+
+#### 关于Jump to
+Jump to可以target到目的节点的condition或者response上，如果是到condition则会evaluate这个条件然后执行response中内容或者继续跳转，如果是response则会忽略这个节点的condition直接执行response内容。
+
+还有jump to的目的节点能够直接用`@{entity_name}`获取到方式获取到从上个节点输入中识别的实体信息。
+
+jump to node condition条件的执行策略如下
+>**Condition:** If the statement targets the condition part of the selected dialog node, the service checks first whether the condition of the targeted node evaluates to true.
+>
+* If the condition evaluates to true, the system processes this node immediately by updating the context with the dialog node context and the output with the dialog node output.
+* If the condition does not evaluate to true, the system continues the evaluation process of a condition of the next sibling node of the target dialog node and so on, until it finds a dialog node with a condition that evaluates to true.
+* If the system processes all the siblings and no condition evaluates to true, the basic fallback strategy is used, and the dialog evaluates the nodes at the top level too.
+
+
+不过对于Jump to逻辑，watson的策略最近做了升级，参看这一段描述就明白了，也就是jump to的节点及其peer节点如果都匹配不上会提示匹配失败，下一轮匹配将会从这个dialog的根节点开始。如果想保持原来的逻辑，在jump to的节点同一level最后加一个peer node，然后让其jump to整个dialog tree的root level的第一个节点。
 >**Note:** the processing of Jump to actions changed with the February 3, 2017 release. Previously, if you jumped to the condition of a node, and neither that node nor any of its peer nodes had a condition that was evaluated as true, the system would jump to the root-level node and look for a node whose condition matched the input. In some situations this processing created a loop, which prevented the dialog from progressing. Under the new process, if neither the target node nor its peers is evaluated as true, the dialog turn is ended. Any response that has been generated is returned to the user, and an error message is returned to the application: Goto failed from node DIALOG_NODE_ID. Did not match the condition of the target node and any of the conditions of its subsequent siblings. The next user input is handled at the root level of the dialog. This update might change the behavior of your dialog, if you have Jump to actions that target nodes whose conditions are false. If you wish to restore the old processing model, simply add a final peer node with a condition of true and in the response use a Jump to action that targets the condition of the first node at the root level of your dialog tree.
 
 
@@ -128,7 +142,12 @@ Watson中实体有用户自定义的和系统实体(system entities)，系统实
 ![Entities Configuration](/assets/images/watson-chinese-entities.png)
 
 #### 参数补全问题
-这个上面也描述了，目前还没想到简单的解决方案，有好的solution随时补充到这里
+这个上面也描述了，目前还没想到简单的解决方案，有好的solution随时补充到这里.
+
+昨天(2017-03-09)睡觉前想到一个解决方法，今天试了下确实可以
+[Book Hotel Demo Json File Download](/assets/data/watson-book-hotel-workspace.json)，思路就是每一层解决一个参数的识别问题，在识别intent后的子节点以及后续层，将参数通过context来传递下去，目前还遇到一个问题是最后一个节点用`$hotel_chain`来作为条件不work，但我增加一个peer节点同样用这个条件就ok了，懵逼了...，不知道是bug还是我弄错了啥
+
+![Bool Hotel Explain](/assets/images/watson-book-hotel-dialog.png)
 
 # 欢迎交流
 [联系方式点这里](/about)
