@@ -144,10 +144,47 @@ Watson中实体有用户自定义的和系统实体(system entities)，系统实
 #### 参数补全问题
 这个上面也描述了，目前还没想到简单的解决方案，有好的solution随时补充到这里.
 
-昨天(2017-03-09)睡觉前想到一个解决方法，今天试了下确实可以
+**[2017-03-10更新]**：昨天(2017-03-09)睡觉前想到一个解决方法，今天试了下确实可以
 [Book Hotel Demo Json File Download](/assets/data/watson-book-hotel-workspace.json)，思路就是每一层解决一个参数的识别问题，在识别intent后的子节点以及后续层，将参数通过context来传递下去，目前还遇到一个问题是最后一个节点用`$hotel_chain`来作为条件不work，但我增加一个peer节点同样用这个条件就ok了，懵逼了...，不知道是bug还是我弄错了啥
 
 ![Bool Hotel Explain](/assets/images/watson-book-hotel-dialog.png)
+
+**[2017-03-11更新]**：昨天的问题今天晚上回头看终于定位到原因了，今天我把下图节点
+的conditiaon修改为true仍然不work，我就开始怀疑底层的模型存储是不是出问题了。
+
+![Watson Persistence Bug](/assets/images/watson_dialog_persistence_bug.png)
+
+为了找出原因我把整个workspace导出成json文件，然后发现这个节点存储的状态还是以前的某个状态：
+{% highlight json%}
+    {
+      "go_to": null,
+      "output": {
+        "text": {
+          "values": ["@hotel_chain booked for you at $location on $time"],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "node_12_1489110007522",
+      "context": {"hotel_chain": "@hotel_chian"},
+      "created": "2017-03-10T01:25:54.965Z",
+      "updated": "2017-03-10T01:40:14.642Z",
+      "metadata": null,
+      "conditions": "@hotel_chain",
+      "description": null,
+      "dialog_node": "node_13_1489110014371",
+      "previous_sibling": null
+    }
+{% endhighlight %}
+
+我刷新整个页面，UI终于把这个底层模型展示出来了，我再修改为我预期的属性值，然后再尝试一轮对话发现就ok了，说明这个确实是UI界面和底层模型同步之间存在的bug，如果是网络异常或者什么原因同步不成功是要告知用户的，我在整个过程中没有看到任何提示或者警示。不过在这个json文件导出的时候也发现一个问题：`dialog_node`这个属性是UI中dialog的名字，如果不填充系统会用内部的某个id来代替，导出的json文件的可读性会受到很大影响，所以建议：**关键节点都要命名来提高可读性，会有利于debug**
+
+最终的worksapce模型下载：[Book Hotel Demo Final Json File Download](/assets/data/watson-book-hotel-final-workspace.json)
+
+最终的dialog tree:
+![Bool Hotel Final Dialog Tree](/assets/images/watson-book-hotel-final-dialog.png)
+
+
+
 
 # 欢迎交流
 [联系方式点这里](/about)
