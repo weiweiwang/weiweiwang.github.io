@@ -15,5 +15,7 @@ permalink: /about/
 
 添加好友记得备注你的信息和联系方式来源:-）
 
-* 微信: standbyme
+* 微信
+
+![weixin](/assets/images/standbyme.jpeg){:width="128px"}
 * [LinkedIn](https://www.linkedin.com/in/weiweiwangnju/)

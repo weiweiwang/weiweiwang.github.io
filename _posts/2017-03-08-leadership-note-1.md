@@ -2,7 +2,9 @@
 title: 领导梯队学习笔记(1)
 category: leadership
 tags: [leadership,梯队,技能,时间管理,工作理念]
+author: weiwei
 ---
+
 ![leadership](/assets/images/leadership.png){:width="800px"}
 
 

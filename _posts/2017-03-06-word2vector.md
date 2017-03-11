@@ -2,7 +2,10 @@
 title: word2vec学习笔记
 category: NLP
 tags: [nlp,word2vector,cbow,skipgram]
+author: weiwei
 ---
+* TOC
+{:toc}
 
 # 什么是词向量
 

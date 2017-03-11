@@ -2,7 +2,11 @@
 title: Chatbots调研-IBM Watson
 category: chatbot
 tags: [chatbot,ibm watson]
+author: weiwei
 ---
+
+* TOC
+{:toc}
 
 # 参考
 [IBM Watson How to build a chatbot][ibm-watson-how-to-build-a-chatbot]
@@ -22,15 +26,6 @@ tags: [chatbot,ibm watson]
 ![Watson Workspace Import](/assets/images/watson-workspace-import.png)
 
 没有账号可以到[这里](https://www.ibmwatsonconversation.com)注册试用账号，注册完导入上面下载的json就可以进行尝试了。
-
-# 配置
-#### Intents
-![Intents Configuration](/assets/images/watson-intents.png)
-
-#### Entities
-![Entities Configuration](/assets/images/watson-entities.png)
-
-
 
 # Watson的几个概念
 
@@ -53,6 +48,18 @@ Watson中的Dialog是无状态的，官方文档里是这么描述的：
 这里要区分开Dialog和Node的概念，Dialog是由Node构成的，Dialog无状态是合理的，而不是Node是无状态的，Node上下传递需要Context信息，所以Node是要有状态的。
 
 Watson中Dialog是以树状结构组织的，看一下workspace中book car demo就全懂了。
+
+# 配置
+#### Intents
+![Intents Configuration](/assets/images/watson-intents.png)
+
+#### Entities
+![Entities Configuration](/assets/images/watson-entities.png)
+
+#### Dialog
+对Dialog tree具体的理解和解释下面一节会展开
+![Book Car Dialog Tree](/assets/images/watson-book-car-dialog.png)
+
 
 
 # 理解和疑问
