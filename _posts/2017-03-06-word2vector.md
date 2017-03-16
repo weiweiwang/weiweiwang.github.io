@@ -90,7 +90,7 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 ![equation](http://latex.codecogs.com/svg.latex?=-\sum_{c=1}^{C}u_{j_c^*}+C\cdot\log\sum_{j^\prime=1}^{V}\exp(u_{j^\prime}))
 
 计算E的偏微分:
-![equation](http://latex.codecogs.com/svg.latex?=\frac{\partial{E}}{\partial{u_{c,j}}=\sum_{c=1}^{C}y_{c,j}-t_{c,j}=\sum_{c=1}^{C}e_{c,j}})
+![equation](http://latex.codecogs.com/svg.latex?=\frac{\partial{E}}{\partial{u_{c,j}}}=\sum_{c=1}^{C}(y_{c,j}-t_{c,j})=\sum_{c=1}^{C}e_{c,j})
 
 
 为了简化，我们定义![equation](http://latex.codecogs.com/svg.latex?{EI}=\{ {EI}_1,\ldots,{EI}_V\})，其中
@@ -109,6 +109,19 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 ![equation](http://latex.codecogs.com/svg.latex?v_{wI}=v_{wI}-\eta\cdot{EH}^T)其中![equation](http://latex.codecogs.com/svg.latex?{EH}_i=\sum_{j=1}^{V}{EI}_j\cdot%20w^\prime_{ij})
 
 
+# Sentence2Vec
+待调研，可参考如下文章：
+
+* [stentence vector from word vector](http://stackoverflow.com/questions/29760935/how-to-get-vector-for-a-sentence-from-the-word2vec-of-tokens-in-sentence)
+* [paragraph vector](https://cs.stanford.edu/~quocle/paragraph_vector.pdf)
+* [Distributed Representations of Words and Phrases
+and their Compositionality](https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf)
+
+>There are differet methods to get the sentence vectors :
+
+>Doc2Vec : you can train your dataset using Doc2Vec and then use the sentence vectors.
+Average of Word2Vec vectors : You can just take the average of all the word vectors in a sentence. This average vector will represent your sentence vector.
+Average of Word2Vec vectors with TF-IDF : this is one of the best approach which I will recommend. Just take the word vectors and multiply it with their TF-IDF scores. Just take the average and it will represent your sentence vector.
 
 
 # 参考
