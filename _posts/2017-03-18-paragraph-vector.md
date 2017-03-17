@@ -22,7 +22,7 @@ Deeplearning4j中对Doc2Vec是这样描述的，这里的Doc2Vec和Paragraph Vec
 
 
 # 原理介绍
-论文中提到的两个模型都是基于word vector衍生而来，所以建议先阅读[word2vec的blog](http://weiweiwang.github.io/nlp/2017/03/06/word2vector.html)或者相关论文
+论文中提到的两个模型都是基于word vector衍生而来，所以建议先阅读[word2vec的blog]({% post_url 2017-03-06-word2vector %})或者相关论文
 ## PV-DM
 这个模型和word vector中的CBOW非常相似，区别在于在输入层增加了一个paragraph token/id作为输入，这个输入也有单独的权重矩阵D，网络结构参看下图
 
