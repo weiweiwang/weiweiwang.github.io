@@ -125,11 +125,11 @@ Average of Word2Vec vectors with TF-IDF : this is one of the best approach which
 
 
 # 参考
+* [word2vec论文：Efficient Estimation of Word Representations in
+Vector Space](https://arxiv.org/pdf/1301.3781.pdf)
 * [word2exp explaination](http://www-personal.umich.edu/~ronxin/pdf/w2vexp.pdf)
 * [dl4j word2vec](https://deeplearning4j.org/word2vec.html)
 * [Distributed Representations of Words and Phrases
 and their Compositionality](https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf)
 * [paragraph vector](https://cs.stanford.edu/~quocle/paragraph_vector.pdf)
-* [Efficient Estimation of Word Representations in
-Vector Space](https://arxiv.org/pdf/1301.3781.pdf)
 * [搜狗数据集](http://www.sogou.com/labs/resource/ca.php)
