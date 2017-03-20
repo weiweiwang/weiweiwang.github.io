@@ -190,7 +190,7 @@ Watson中实体有用户自定义的和系统实体(system entities)，系统实
 最终的dialog tree:
 ![Bool Hotel Final Dialog Tree](/assets/images/watson-book-hotel-final-dialog.png)
 
-
+**[2017-03-20更新]**: Book Hotel的参数填充被我整复杂了，雪峰给我建议了一个更[简单的方案](/assets/data/watson-workspace-order-dish.json),右键下载然后导入即可
 
 
 # 欢迎交流
