@@ -370,7 +370,7 @@ api.ai中领域知识的解释如下：
 
 api.ai支持的领域可以参看[这里](https://docs.api.ai/docs/domains)
 
-# 比较
+# 和IBM Watson Conversation比较
 相比较IBM Watson值得借鉴的地方：
 
 * 调试信息: 在evaluation过程中提供intent相关的匹配信息，辅助调试和优化配置

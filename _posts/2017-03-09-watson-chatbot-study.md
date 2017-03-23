@@ -96,6 +96,13 @@ jump to node condition条件的执行策略如下
 不过对于Jump to逻辑，watson的策略最近做了升级，参看这一段描述就明白了，也就是jump to的节点及其peer节点如果都匹配不上会提示匹配失败，下一轮匹配将会从这个dialog的根节点开始。如果想保持原来的逻辑，在jump to的节点同一level最后加一个peer node，然后让其jump to整个dialog tree的root level的第一个节点。
 >**Note:** the processing of Jump to actions changed with the February 3, 2017 release. Previously, if you jumped to the condition of a node, and neither that node nor any of its peer nodes had a condition that was evaluated as true, the system would jump to the root-level node and look for a node whose condition matched the input. In some situations this processing created a loop, which prevented the dialog from progressing. Under the new process, if neither the target node nor its peers is evaluated as true, the dialog turn is ended. Any response that has been generated is returned to the user, and an error message is returned to the application: Goto failed from node DIALOG_NODE_ID. Did not match the condition of the target node and any of the conditions of its subsequent siblings. The next user input is handled at the root level of the dialog. This update might change the behavior of your dialog, if you have Jump to actions that target nodes whose conditions are false. If you wish to restore the old processing model, simply add a final peer node with a condition of true and in the response use a Jump to action that targets the condition of the first node at the root level of your dialog tree.
 
+#### Response
+dialog中response具有三个功能
+* 更新对话上下文
+* 提供文本响应
+* Jump to
+
+并且这三个功能也是按照这个顺序来逐一处理的
 
 #### Context变量
 在Node编辑器重点击![](https://www.ibm.com/watson/developercloud/doc/conversation/images/json_16.png)可以修改context变量。在文档中我没看到在child node中如果获取上一轮识别的实体变量，我目前是用如下的方式解决的，也就是将这个变量放到上一轮的contex中，下一轮用`${variable_name}`方式访问，比如我在某些节点的response是这样的`your car is ready, have a nice trip to @location at $time`。context变量在上下两个节点之间传递的时候更新策略是相同属性名的替换，不同属性名的merge。
@@ -115,6 +122,27 @@ jump to node condition条件的执行策略如下
   }
 }
 {% endhighlight %}
+
+前后不同节点对相同变量的覆盖逻辑是基础类型直接覆盖，json对象类型，会merge属性，json对象中的同名基础属性仍然是覆盖方案
+> If the context already contains some of the variables that are being updated, the update process depends on the variable type. If it is a primitive type, such as a boolean, number, a string or a JSON Array, the variable is simply overwritten. If it is a complex type such as JSON object, a JSON merge procedure is used to update the variable. The merge procedure merges the properties that are already defined in the context with the new properties defined by the context of the dialog node that is being processed. If some existing property is updated, it is overwritten.
+
+##### 参数数组
+很多时候某个实体需要出现多次，比如订餐，买票，你可能需要定一份牛腩，2份米饭，这时候就需要用到数组来作为context参数，举例
+{% highlight json %}
+ {
+  "context": {
+    "dish_array": "<?$dish_array.append(entities['dish'].toJsonArray())?>",
+    "location": "@location"
+  }
+ }
+{% endhighlight %}
+我在文档中没有看到如何直接append array, 我试了`$dish_array.append(entities['dish'])`发现是空的，后来在
+[这里](http://stackoverflow.com/questions/40313518/cannot-append-values-to-an-entity)找到一个toJsonArray的例子。
+
+这里面还有一个问题是如何model数量，比如我说：我要一份面条，一份土豆丝，数量要用另一个数组来model了，但麻烦的是有可能用户说的是我要面条，一份土豆丝，这时候语义理解、数量和实体的关联就要做好，避免对不上。
+
+#### Webhook
+watson中没有webhook机制，这就要求端上不要直接请求watson，都走应用服务器中转，应用服务器来处理watson的返回、做二次修改后再返回给终端，也就起到了类似webhook的功效。
 
 #### 实体的挖掘和匹配
 Watson中实体有用户自定义的和系统实体(system entities)，系统实体是通过大量语料挖掘的，用户自定义的实体就是一个完整的entity。假设system entities已经ready，实体识别就回归到倒排索引检索的问题了，不过这里面还有泛化的问题，数量词这些以及特殊字符(比如表示美元的$符号)需要做预处理，并且这个预处理在索引和查询的时候都需要。像时间啊、百分比、货币这种特别明确的entity，用正则基本就可以解决的差不多了，中文的数字比如`二十一`这种识别也可以用正则来处理，当然可能有更好的方法能解决适应性问题和多语问题。
