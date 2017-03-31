@@ -9,7 +9,7 @@ author: weiwei
 {:toc}
 
 # IBM Watson和api.ai中可以借鉴的点
-## IBM Watson
+## api.ai
 * Test Console中要提供调试信息
 * Response Variants
 * 参数自动补全机制
@@ -25,6 +25,7 @@ author: weiwei
 * Jump to
 * 系统实体
 * Conditional Response
+* Conditional Jump to
 * Response Variants
 
 
@@ -35,7 +36,9 @@ author: weiwei
 ### 意图匹配
 word vector & paragraph vector(not good)
 
+
 ### 实体识别
+
 
 ### 自学习和改进
 
