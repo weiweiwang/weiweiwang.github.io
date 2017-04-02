@@ -38,7 +38,33 @@ word vector & paragraph vector(not good)
 
 
 ### 实体识别
-
+[api.ai系统实体](https://docs.api.ai/docs/concept-entities#section-system-entities)
+* @sys.date
+	* @sys.date-time，比如2014-08-09 17:30:00
+	* @sys.date，比如2014-12-31
+	* @sys.date-period，比如014-01-01/2014-12-31
+	* @sys.time，比如13:30:00
+	* @sys.time-period，比如13:30:00/14:30:00
+* @sys.color
+* @sys.unit
+	* @sys.unit-area
+	* @sys.unit-currency
+	* @sys.unit-information
+	* @sys.unit-length
+	* @sys.unit-speed
+	* @sys.unit-volume
+	* @sys.unit-weight
+	* @sys.percentage
+	* @sys.temperature
+	* @sys.duration
+	* @sys.age 
+* @sys.url
+* @sys.number
+	* @sys.number，包括@sys.cardinal和@sys.ordinal
+	* @sys.cardinal，比如一，二，3，4
+	* @sys.ordinal，比如第三，第十
+	* @sys.number-integer
+	* @sys.number-sequence 
 
 ### 自学习和改进
 
