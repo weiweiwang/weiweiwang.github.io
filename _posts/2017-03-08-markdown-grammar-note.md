@@ -91,6 +91,14 @@ But let's throw in a <b>tag</b>.
 Quote break.
 
 > This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote. 
+ 
+# Reference/Anchor
+如果要引用某个header可以使用如下的方式
+
+```
+[跳回参考Header](#参考)
+```
+[跳回参考Header](#参考)
 
 
 [mastering-markdown]:https://guides.github.com/features/mastering-markdown/
