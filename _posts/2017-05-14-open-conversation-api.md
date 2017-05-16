@@ -98,7 +98,7 @@ conversation.api=http://caap.prototypeplus.org/api/v2/conversation
 }
 ```
 
-## category字段说明5
+## category字段说明
 * text
 ```
 {
