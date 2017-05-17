@@ -26,6 +26,7 @@ markdown: kramdown
 theme: minima
 gems:
   - jekyll-feed
+  - jekyll-github-metadata
 exclude:
   - Gemfile
   - Gemfile.lock
@@ -36,3 +37,8 @@ defaults:
       path: "" # an empty string here means all files in the project
     values:
       layout: "post"
+
+# Google services
+google_analytics: UA-99322373-1
+
+repository: weiweiwang/weiweiwang.github.io
