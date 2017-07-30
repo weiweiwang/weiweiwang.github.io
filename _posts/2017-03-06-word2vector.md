@@ -116,6 +116,7 @@ word2vector本身是一个单隐层神经网络，用训练完的网络的输入
 
 
 # 参考
+* [word2vec 中的数学原理详解](http://www.cnblogs.com/peghoty/p/3857839.html)
 * [word2vec论文：Efficient Estimation of Word Representations in
 Vector Space](https://arxiv.org/pdf/1301.3781.pdf)
 * [word2exp explaination](http://www-personal.umich.edu/~ronxin/pdf/w2vexp.pdf)
