@@ -30,7 +30,7 @@ tags: [基金,ETF,国债,债券,指数,沪深300]
 
 *
 作为个人投资者如何对主动型基金做价值评估？比如1块钱的产品，我能否打个7折买到，但难度在于这个基金是否值1块钱都很难判断，即使用程序猿的手段把基金持仓的股票数据都扒拉下来做个粗略的PE、ROE、股息率分析也不靠谱，因为大多数主动型基金的换手率都太高（下图是001679这只基金的换手率情况），根本跟不上基金经理的节奏。对于无法判断价值的投资品，原则上不应该投资，即使能判断价值，也要看看价格是否合理。
-![turnover](../assets/images/fund_turnover.png)
+![turnover]({{ site.url }}/assets/images/fund_turnover.png)
 
 *
 基金经理的变更也是家常便饭，换了个人投资风格会有很大的变化，过去的优良业绩完全无法预测未来，并且越是过去业绩优良，下一步持续创造高业绩的可能性会降低，因为好业绩增加了基金的规模，提高了基金公司和基金经理躺赢的可能性，同时大规模资金也加大了管理难度
@@ -47,7 +47,7 @@ tags: [基金,ETF,国债,债券,指数,沪深300]
 投资宽基指数加上债券，定期rebalance，rebalance调整的依据是宽基指数的估值水平。
 
 宽基指数有比较简单的估值方法，就是通过PE百分位来判断当前的估值水平，下图是雪球基金对沪深300的估值分析信息。
-![index_valuation](../assets/images/index_valuation.png)
+![index_valuation]({{ site.url }}/assets/images/index_valuation.png)
 
 同时考虑到持仓需要平衡现金和宽基指数，为了让现金部分也有收益，现金部分可以投资于债券类基金。
 
@@ -72,37 +72,37 @@ tags: [基金,ETF,国债,债券,指数,沪深300]
 
 投资起始时间从2015年1月初到2020年1月初，投资结束时间都统一为2022年底，测算从任一年年初开始投资10万元的投资累积收益情况如下:
 
-![index_and_debt_invest_profit.png](../assets/images/index_and_debt_invest_profit.png)
+![index_and_debt_invest_profit.png]({{ site.url }}/assets/images/index_and_debt_invest_profit.png)
 
 ## 和沪深300的比较
 
 本文选取了沪深300指数(000300)、场内ETF(510300)、指数基金易方达沪深300ETF(110020)
 作为对比分析，各产品的年度收益数据来自于东方财富官网，比如沪深300和易方达沪深300ETF连接基金(110020)的收益截图如下：
-![index300_and_fund_profit](../assets/images/index300_and_fund_profit.png)
+![index300_and_fund_profit]({{ site.url }}/assets/images/index300_and_fund_profit.png)
 结合本文方案，经过整理得到几个投资方案的年度收益数据：
-![index_annual_ret.png](../assets/images/index_annual_ret.png)
+![index_annual_ret.png]({{ site.url }}/assets/images/index_annual_ret.png)
 
 基于这个年度收益，形成几个方案的投资周期总收益对比：
-![index_and_debt_invest_profit_comp.png](../assets/images/index_and_debt_invest_profit_comp.png)
+![index_and_debt_invest_profit_comp.png]({{ site.url }}/assets/images/index_and_debt_invest_profit_comp.png)
 
 基于上述分析，我们可以看到通过指数PE百分比来定期rebalance债券和指数的持仓，长期可以获得明显优于指数的收益，长期复合年化有很大把握在6%以上。
 
 ## 是否要更频繁的rebalance？
 
 更频繁的rebalance在2015-2022的投资周期内的效果是负向的，可能在不同投资周期下正负向影响都有可能，但1年rebalance一次可以作为最为默认选择。
-![rebalance.png](../assets/images/rebalance.png)
+![rebalance.png]({{ site.url }}/assets/images/rebalance.png)
 
 ## 投资择时的影响?
 
 由于本文的策略在启动投资的时候已经考虑了当前市场的热度来平衡在指数和债券上的仓位分配，站在长期投资角度本文的方案对投资时机有较好的包容度。
 在2015年1-6月随机选择了一些时间启动投资，投资结束时间都是2022年底，测算的收益情况如下：
 
-![invest_timing.png](../assets/images/invest_timing.png)
+![invest_timing.png]({{ site.url }}/assets/images/invest_timing.png)
 
 ## 对债券收益率的敏感度？
 
 债券收益率从3%降低到2.5%、2%的情况下，对复合收益的影响如下：
-![debt_risk_free_sensitive.png](../assets/images/debt_risk_free_sensitive.png)
+![debt_risk_free_sensitive.png]({{ site.url }}/assets/images/debt_risk_free_sensitive.png)
 从以上数据看，复合收益率的影响大约为80%*债券收益下降幅度，所以还是值得努力寻找更高收益率的债券投资对象。
 
 ## 如何实际操作
@@ -113,7 +113,7 @@ tags: [基金,ETF,国债,债券,指数,沪深300]
 
 ## 详细测算数据
 
-[下载详细测算数据](../assets/documents/index-debt-12m-Jan-01.xlsx)
+[下载详细测算数据]({{ site.url }}/assets/documents/index-debt-12m-Jan-01.xlsx)
 
 不排除测算过程中有瑕疵，发现问题的读者可以邮件我elegate@qq.com
 
