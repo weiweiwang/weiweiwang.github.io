@@ -15,15 +15,19 @@
 # in the templates via {{ site.myvariable }}.
 title: Welcome to wangweiwei's cloud blog
 # email: ww dot wang dot cs at gmail dot com
-description: > # 巍巍是一个砖瓦匠，这里断断续续会记录他的学习、思考、生活和一些杂事，目的就是为了给不灵光的记忆力留存一点线索
+description: [断断续续记录自己的学习、思考、生活和一些杂事，目的是为了给不灵光的记忆力留存一点线索]
 #baseurl: "" # the subpath of your site, e.g. /blog
 #url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: elegate 
-github_username:  weiweiwang
+twitter_username: elegate
+github_username: weiweiwang
 
 # Build settings
 markdown: kramdown
-theme: minima
+#theme: minima
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+  - jekyll-remote-theme # add this line to the plugins list if you already have one
+
 gems:
   - jekyll-feed
   - jekyll-github-metadata
@@ -32,8 +36,7 @@ exclude:
   - Gemfile.lock
 
 defaults:
-  -
-    scope:
+  - scope:
       path: "" # an empty string here means all files in the project
     values:
       layout: "post"
