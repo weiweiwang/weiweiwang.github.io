@@ -132,7 +132,7 @@ tags: [基金,ETF,国债,债券,指数,沪深300]
 
 [下载沪深300+债券组合详细测算数据]({{ site.url }}/assets/documents/index-debt-12m-Jan-01.xlsx)
 
-不排除测算过程中有瑕疵，发现问题的读者可以邮件我elegate@qq.com
+不排除测算过程中有瑕疵，发现问题的读者可以邮件我: elegate at qq dot com
 
 # 参考数据来源
 
