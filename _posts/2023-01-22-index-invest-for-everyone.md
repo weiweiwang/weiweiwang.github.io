@@ -78,7 +78,7 @@ tags: [基金,ETF,国债,债券,指数,沪深300]
 
 投资起始时间从2015年1月初到2020年1月初，投资结束时间都统一为2022年底，测算从任一年年初开始投资10万元的投资累积收益情况如下:
 
-![index_and_debt_invest_profit.png]({{ site.url }}/assets/images/index_and_debt_invest_profit.png)
+![index_and_debt_invest_profit_000300.png]({{ site.url }}/assets/images/index_and_debt_invest_profit_000300.png)
 
 ## 和沪深300的比较
 
@@ -117,9 +117,20 @@ tags: [基金,ETF,国债,债券,指数,沪深300]
 * 债券类，目前我选择的是某只债券基金(001316)
   ，从2016年开始每年一直保持正收益，2016-2022年的年化复合收益为6.44%，买入0.1%费率，持有一年以上卖出0.1%费率，这里也能体现一年rebalance一次的好处，能降低费率。
 
+## 沪深300和上证50、中证500的对比
+同样用本文的方法投资上证50和中证500，分别可以得到如下上证50和中证500的收益数据分析。
+
+![index_and_debt_invest_profit_000016.png]({{ site.url }}/assets/images/index_and_debt_invest_profit_000016.png)
+
+![index_and_debt_invest_profit_000905.png]({{ site.url }}/assets/images/index_and_debt_invest_profit_000905.png)
+
+通过上述分析数据可以看出，相比较沪深300ETF+债券的投资组合：
+* 上证50+债券组合略逊色于沪深300。
+* 中证500+债券组合从2019年开始可以跑赢沪深300，在此之前年均收益要比沪深300差很多。
+* 
 ## 详细测算数据
 
-[下载详细测算数据]({{ site.url }}/assets/documents/index-debt-12m-Jan-01.xlsx)
+[下载沪深300组合详细测算数据]({{ site.url }}/assets/documents/index-debt-12m-Jan-01.xlsx)
 
 不排除测算过程中有瑕疵，发现问题的读者可以邮件我elegate@qq.com
 
