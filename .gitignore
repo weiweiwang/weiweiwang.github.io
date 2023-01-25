@@ -2,4 +2,6 @@
 *~
 *.pyc
 *.pid
+.idea/
 _site
+.DS_Store

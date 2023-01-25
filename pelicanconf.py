@@ -5,47 +5,43 @@ AUTHOR = u"wangweiwei"
 SITENAME = u"Careless Whisper"
 SITEURL = 'http://weiweiwang.github.io'
 
-
 TIMEZONE = 'Asia/Shanghai'
 
 GITHUB_URL = 'http://github.com/weiweiwang/'
 
 PDF_GENERATOR = False
-MD_EXTENSIONS=['toc']
+MD_EXTENSIONS = ['toc']
 DEFAULT_PAGINATION = 5
 FEED_ALL_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
-DEFAULT_METADATA = (('wangweiwei', 'weiweiwang'),('internet','cloud computing'),('search','nosql'),)
+DEFAULT_METADATA = (
+    ('wangweiwei', 'weiweiwang'), ('internet', 'cloud computing'), ('search', 'nosql'), ('invest', 'quant'),)
 
+DEFAULT_LANG = 'zh'
+DEFAULT_DATE_FORMAT = ('%Y/%B/%d %A')
 
-DEFAULT_LANG='zh'
-DEFAULT_DATE_FORMAT=('%Y/%B/%d %A')
+LOCALE = ('zh_CN.utf8', 'en_US.utf8')
 
-LOCALE=('zh_CN.utf8','en_US.utf8')
-
-STATIC_PATHS=['images',"upload"]
-DISQUS_SITENAME='cloudornot'
+STATIC_PATHS = ['images', "upload"]
+DISQUS_SITENAME = 'cloudornot'
 
 # Blogroll
-LINKS =  (
-		('Xieyu','http://xieyu.github.com'),
-		(u'刘未鹏','http://mindhacks.cn'),
-         )
+LINKS = (
+    ('Xieyu', 'http://xieyu.github.com'),
+    (u'刘未鹏', 'http://mindhacks.cn'),
+)
 
 # Social widget
 SOCIAL = (
-          (u'新浪微博','http://weibo.com/lolorosa'),
-         )
+    (u'新浪微博', 'http://weibo.com/lolorosa'),
+)
 
-DEFAULT_PAGINATION = 20
+# DEFAULT_PAGINATION = 20
 
-THEME='sneakyidea'
+THEME = 'sneakyidea'
 
 MENUITEMS = (('Tags', 'tags.html'),)
 
-GOOGLE_ANALYTICS='UA-7072537-7'
+GOOGLE_ANALYTICS = 'UA-7072537-7'
 
 FILES_TO_COPY = (('googleb1b731a5802d3353.html', 'googleb1b731a5802d3353.html'),)
-
-
-
