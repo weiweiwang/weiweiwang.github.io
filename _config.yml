@@ -13,12 +13,12 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Welcome to wangweiwei's cloud blog
+title: Welcome to weiwei's cloud blog
 # email: ww dot wang dot cs at gmail dot com
-description: [断断续续记录自己的学习、思考、生活和一些杂事，目的是为了给不灵光的记忆力留存一点线索]
+description: 断断续续记录自己的学习、思考、生活和一些杂事，目的是为了给不灵光的记忆力留存一点线索
 #baseurl: "" # the subpath of your site, e.g. /blog
 #url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: elegate
+#twitter_username: elegate
 github_username: weiweiwang
 
 # Build settings
