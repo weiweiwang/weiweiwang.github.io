@@ -47,7 +47,7 @@ tags: [人脸检测，face detection]
 # 祝大家新年快乐
 
 [//]: # ([![Watch the video]&#40;https://cdn.avatar.dmc-ai.cn/avatar/images/2024/02/06/EkJrDM47NuWPVrMr.jpeg&#41;]&#40;https://cdn.avatar.dmc-ai.cn/avatar/videos/2024/02/02/UQSWmRdskw29BM7b.mp4&#41;)
-<video src="https://cdn.avatar.dmc-ai.cn/avatar/videos/2024/02/02/UQSWmRdskw29BM7b.mp4" controls="controls" style="max-width: 730px;">
+<video src="https://cdn.avatar.dmc-ai.cn/avatar/videos/2024/02/02/UQSWmRdskw29BM7b.mp4" controls="controls" style="max-width: 256px;">
 </video>
 
 # 参考
