@@ -45,8 +45,10 @@ tags: [人脸检测，face detection]
 
 
 # 祝大家新年快乐
-[![Watch the video](https://cdn.avatar.dmc-ai.cn/avatar/images/2024/02/06/EkJrDM47NuWPVrMr.jpeg)](https://cdn.avatar.dmc-ai.cn/avatar/videos/2024/02/02/UQSWmRdskw29BM7b.mp4)
 
+[//]: # ([![Watch the video]&#40;https://cdn.avatar.dmc-ai.cn/avatar/images/2024/02/06/EkJrDM47NuWPVrMr.jpeg&#41;]&#40;https://cdn.avatar.dmc-ai.cn/avatar/videos/2024/02/02/UQSWmRdskw29BM7b.mp4&#41;)
+<video src="https://cdn.avatar.dmc-ai.cn/avatar/videos/2024/02/02/UQSWmRdskw29BM7b.mp4" controls="controls" style="max-width: 730px;">
+</video>
 
 # 参考
 * [Photoroom](https://www.photoroom.com/): 图片处理工具，抠图换背景效果很不错
