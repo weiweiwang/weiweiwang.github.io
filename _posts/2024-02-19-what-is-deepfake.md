@@ -46,24 +46,24 @@ For those interested in exploring deepfake technology and its implications furth
     </thead>
     <body>
     <tr>
-        <td> <img src="{{ site.url }}/assets/images/df-01.png"  alt="1" width = 360px ></td>
+        <td> <img src="{{ site.url }}/assets/images/df-01.png"  alt="1" width="360px" ></td>
         <td>
-        <video src="{{ site.url }}/assets/videos/df-01-orig.mp4" controls="controls" style="max-width: 360px;">
+        <video src="{{ site.url }}/assets/videos/df-01-orig.mp4" controls="controls" style="max-width: 240px;">
         </video>
         </td>
         <td>
-        <video src="{{ site.url }}/assets/videos/df-01-swap.mp4" controls="controls" style="max-width: 360px;">
+        <video src="{{ site.url }}/assets/videos/df-01-swap.mp4" controls="controls" style="max-width: 240px;">
         </video>
         </td>
     </tr> 
     <tr>
-        <td> <img src="{{ site.url }}/assets/images/df-02.jpg"  alt="1" width = 360px ></td>
+        <td> <img src="{{ site.url }}/assets/images/df-02.png"  alt="1" width="360px"></td>
         <td>
-        <video src="{{ site.url }}/assets/videos/df-02-orig.mp4" controls="controls" style="max-width: 360px;">
+        <video src="{{ site.url }}/assets/videos/df-02-orig.mp4" controls="controls" style="max-width: 240px;">
         </video>
         </td>
         <td>
-        <video src="{{ site.url }}/assets/videos/df-02-swap.mp4" controls="controls" style="max-width: 360px;">
+        <video src="{{ site.url }}/assets/videos/df-02-swap.mp4" controls="controls" style="max-width: 240px;">
         </video>
         </td>
       </tr>
