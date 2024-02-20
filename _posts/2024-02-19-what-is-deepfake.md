@@ -3,7 +3,7 @@ layout: post
 title: What is deepfake(s)?
 author: weiwei
 category: ai
-tags: [deepfake,deepfakes,deepfakes web,deepfake ai,deepfake maker,celebrity deepfakes]
+tags: [ deepfake,deepfakes,deepfakes web,deepfake ai,deepfake maker,celebrity deepfakes,deepfake porn,deepfake celebrity ]
 ---
 
 * TOC
@@ -72,6 +72,6 @@ For those interested in exploring deepfake technology and its implications furth
 
 ## Conclusion
 
-Deepfake technology embodies the dual-edged sword of AI, blending unparalleled creative potential with significant ethical challenges. As this technology continues to evolve, it will be crucial for society to foster a dialogue that considers both its positive applications and its potential for misuse, ensuring that the digital future remains both innovative and secure. 
+Deepfake technology embodies the dual-edged sword of AI, blending unparalleled creative potential with significant ethical challenges. As this technology continues to evolve, it will be crucial for society to foster a dialogue that considers both its positive applications and its potential for misuse(e.g. deepfake porn of celebrity), ensuring that the digital future remains both innovative and secure. 
 
 By understanding the workings, implications, and ethical dimensions of deepfakes, we can better navigate the complex landscape of modern digital media, striving for a future where technology serves to enhance, rather than undermine, the fabric of reality.
